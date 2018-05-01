@@ -9,7 +9,7 @@
 #include <cstring>
 
 #include "helpers/Glut.hpp"
-#include "includes/Stats.hpp"
+#include "Stats.hpp"
 #include "includes/Game.hpp"
 
 Stats::Stats(const Color &color) : _color(color) {}

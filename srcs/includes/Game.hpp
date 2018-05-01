@@ -37,6 +37,10 @@ public:
   void draw();
 
   void keyboard(unsigned char key, int x, int y) const;
+  
+  void mouse(int x, int y) const;
+
+  void mouseButtons(int button, int state, int x, int y) const;
 
   const float getTime() const;
 
@@ -59,6 +63,10 @@ private:
   void initDrawCallback() const;
 
   void initKeyboardCallback() const;
+
+  void initMouseCallback() const;
+  
+  void initMouseButtonsCallback() const;
 
   void initKeyboardMap();
 
@@ -88,6 +96,8 @@ private:
 
 // Extern C
 extern "C" {
-static void drawCallback();
-static void keyboardCallback(unsigned char key, int x, int y);
+  static void drawCallback();
+  static void keyboardCallback(unsigned char key, int x, int y);
+  static void mouseCallback(int x, int y);
+  static void mouseButtonsCallback(int button, int state, int x, int y);
 }

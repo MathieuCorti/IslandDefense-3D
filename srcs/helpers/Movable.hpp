@@ -21,7 +21,7 @@ protected:
   float _speed;
 
 public:
-  Movable(float _speed, Vector3f& coordinates);
+  Movable(float _speed, Vector3f coordinates);
 
   explicit Movable(float _speed);
 

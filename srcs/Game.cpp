@@ -10,7 +10,9 @@
 #include "includes/Game.hpp"
 #include "includes/UI.hpp"
 #include "includes/Config.hpp"
-#include "includes/Stats.hpp"
+#include "Stats.hpp"
+#include "includes/TestCube.hpp"
+#include "includes/Camera.hpp"
 
 // PUBLIC
 int Game::start(int argc, char **argv) {
@@ -97,11 +99,23 @@ void Game::keyboard(unsigned char key, int x, int y) const {
   }
 }
 
+void Game::mouse(int x, int y) const {
+  
+}
+
+void Game::mouseButtons(int button, int state, int x, int y) const {
+  
+}
+
 // PRIVATE
 
 void Game::initKeyboardMap() {
   _keyboardMap = {
-      {27,  [](int, int) { exit(EXIT_SUCCESS); }},
+      { 27 , [](int, int) { exit(EXIT_SUCCESS);  } },
+      { 'a' , [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(LEFT);  } },
+      { 'd' , [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(RIGHT); } },
+      { 'w' , [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(UP);  } },
+      { 's' , [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(DOWN);  } },
   };
 }
 
@@ -111,6 +125,14 @@ void Game::initDrawCallback() const {
 
 void Game::initKeyboardCallback() const {
   glutKeyboardFunc(keyboardCallback);
+}
+
+void Game::initMouseCallback() const {
+  glutMotionFunc(mouseCallback);
+}
+
+void Game::initMouseButtonsCallback() const {
+  glutMouseFunc(mouseButtonsCallback);
 }
 
 void Game::initGlut() {
@@ -123,10 +145,12 @@ void Game::initGlut() {
 void Game::initEntities() {
 //  _entities.insert(std::make_pair(GAME_UI, std::make_shared<UI>(entities)));
   _entities.insert(std::make_pair(GameEntity::STATS, std::make_shared<Stats>()));
+  _entities.insert(std::make_pair(GameEntity::TEST_CUBE, std::make_shared<TestCube>()));
+  _entities.insert(std::make_pair(GameEntity::CAMERA, std::make_shared<Camera>()));
 }
 
 const float Game::getTime() const {
-  return _time / SPEED;
+  return _time / GAME_SPEED;
 }
 
 const float &Game::getDeltaTime() const {
@@ -162,10 +186,16 @@ const Game::EntityList &Game::getEntities() const {
 
 // EXTERN C
 extern "C" {
-static void drawCallback() {
-  Game::getInstance().draw();
-}
-static void keyboardCallback(unsigned char key, int x, int y) {
-  Game::getInstance().keyboard(key, x, y);
-}
+  static void drawCallback() {
+    Game::getInstance().draw();
+  }
+  static void keyboardCallback(unsigned char key, int x, int y) {
+    Game::getInstance().keyboard(key, x, y);
+  }
+  static void mouseCallback(int x, int y) {
+    Game::getInstance().mouse(x, y);
+  }
+  static void mouseButtonsCallback(int button, int state, int x, int y) {
+    Game::getInstance().mouseButtons(button, state, x, y);
+  }
 }

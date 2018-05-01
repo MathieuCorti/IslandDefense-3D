@@ -7,14 +7,15 @@
 
 #pragma once
 
-#include "../helpers/Displayable.hpp"
+#include "helpers/Displayable.hpp"
+#include "includes/Config.hpp"
 
 class Stats : public Displayable {
 private:
   Color _color;
 
 public:
-  explicit Stats(const Color &color = Color(255, 255, 0));
+  explicit Stats(const Color &color = YELLOW);
 
   bool update() override { return false; }
 

@@ -4,7 +4,7 @@
 
 #include "helpers/Movable.hpp"
 
-Movable::Movable(float _speed, Vector3f& coordinates) : Displayable(coordinates), _speed(_speed) {}
+Movable::Movable(float _speed, Vector3f coordinates) : Displayable(coordinates), _speed(_speed) {}
 
 Movable::Movable(float _speed) : _speed(_speed) {}
 

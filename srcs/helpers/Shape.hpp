@@ -17,6 +17,7 @@
 
 #include "Displayable.hpp"
 #include "Color.hpp"
+#include "../includes/Config.hpp"
 
 class Shape;
 typedef std::list<Shape> Shapes;
@@ -49,13 +50,13 @@ public:
   }
 
   explicit Shape(std::vector<Vector3f> parts = std::vector<Vector3f>(), GLenum mode = GL_POLYGON,
-                 Color color = Color(1, 1, 1));
+                 Color color = BLACK);
 
   explicit Shape(std::vector<Vector3f> parts, GLenum mode, const float &deltaX, const float &deltaY,
-                 Color color = Color(1, 1, 1));
+                 Color color = BLACK);
 
   explicit Shape(const float &deltaX, const float &deltaY, std::vector<Vector3f> parts = std::vector<Vector3f>(),
-                 GLenum mode = GL_POLYGON, Color color = Color(1, 1, 1));
+                 GLenum mode = GL_POLYGON, Color color = BLACK);
 
   // TODO : New Bounding box in 3D
 //  BoundingBox getBoundingBox() const {
