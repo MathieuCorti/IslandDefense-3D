@@ -17,8 +17,8 @@ int Game::start(int argc, char **argv) {
   // Init
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
-  glutInitWindowSize(600, 600);
-  glutCreateWindow("Island Defense 2D");
+  glutInitWindowSize(GAME_WIDTH, GAME_HEIGHT);
+  glutCreateWindow(GAME_NAME);
 
   // Start
   initDrawCallback();
