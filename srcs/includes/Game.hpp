@@ -18,6 +18,7 @@
 #include "../helpers/Displayable.hpp"
 #include "../helpers/Movable.hpp"
 #include "Config.hpp"
+#include "Waves.hpp"
 
 class Game {
 
@@ -76,6 +77,26 @@ private:
 
   void move(const GameEntity &entityName, Direction direction) {
     std::dynamic_pointer_cast<Movable>(_entities[entityName])->move(direction);
+  }
+
+  void toggleTangeants(const GameEntity &entityName) {
+    std::dynamic_pointer_cast<Waves>(_entities[entityName])->toggleTangeants();
+  }
+
+  void toggleNormals(const GameEntity &entityName) {
+    std::dynamic_pointer_cast<Waves>(_entities[entityName])->toggleNormals();
+  }
+
+  void toggleWireframe(const GameEntity &entityName) {
+    std::dynamic_pointer_cast<Waves>(_entities[entityName])->toggleWireframe();
+  }
+
+  void doubleVertices(const GameEntity &entityName) {
+    std::dynamic_pointer_cast<Waves>(_entities[entityName])->doubleVertices();
+  }
+
+  void halveSegments(const GameEntity &entityName) {
+    std::dynamic_pointer_cast<Waves>(_entities[entityName])->halveSegments();
   }
 
   // Singleton

@@ -17,5 +17,7 @@
 // ENTITIES
 enum GameEntity {
   STATS,
+  WAVES,
+  AXES,
   UI
 };

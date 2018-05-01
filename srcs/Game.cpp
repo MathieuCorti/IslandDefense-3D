@@ -8,9 +8,8 @@
 #include <vector>
 
 #include "includes/Game.hpp"
-#include "includes/UI.hpp"
-#include "includes/Config.hpp"
 #include "includes/Stats.hpp"
+#include "includes/Waves.hpp"
 
 // PUBLIC
 int Game::start(int argc, char **argv) {
@@ -64,6 +63,8 @@ void Game::draw() {
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
 
+  gluLookAt(0.5, 0.5, 0.5, 0, 0, 0, 0, 1, 0);
+
   if (gameOver()) {
   } else {
     for (const auto &entity : _entities) {
@@ -102,6 +103,13 @@ void Game::keyboard(unsigned char key, int x, int y) const {
 void Game::initKeyboardMap() {
   _keyboardMap = {
       {27,  [](int, int) { exit(EXIT_SUCCESS); }},
+
+      // WAVES COMMANDS
+      {'n', [this](int, int) { toggleNormals(WAVES); }},
+      {'t', [this](int, int) { toggleTangeants(WAVES); }},
+      {'w', [this](int, int) { toggleWireframe(WAVES); }},
+      {'+', [this](int, int) { doubleVertices(WAVES); }},
+      {'-', [this](int, int) { halveSegments(WAVES); }}
   };
 }
 
@@ -121,8 +129,9 @@ void Game::initGlut() {
 }
 
 void Game::initEntities() {
-//  _entities.insert(std::make_pair(GAME_UI, std::make_shared<UI>(entities)));
   _entities.insert(std::make_pair(GameEntity::STATS, std::make_shared<Stats>()));
+  _entities.insert(std::make_pair(GameEntity::WAVES, std::make_shared<Waves>()));
+//  _entities.insert(std::make_pair(GameEntity::AXES, std::make_shared<Axes>()));
 }
 
 const float Game::getTime() const {

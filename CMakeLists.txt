@@ -23,7 +23,7 @@ add_executable(IslandDefense3D
         srcs/Displayable.cpp
         srcs/Movable.cpp
         srcs/includes/Config.hpp 
-        srcs/helpers/Vector3f.hpp srcs/Stats.cpp srcs/includes/Stats.hpp)
+        srcs/helpers/Vector3f.hpp srcs/Stats.cpp srcs/includes/Stats.hpp srcs/Waves.cpp srcs/includes/Waves.hpp srcs/helpers/Axes.hpp)
 
 find_package(OpenGL REQUIRED)
 find_package(GLUT REQUIRED)
