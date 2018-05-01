@@ -9,8 +9,8 @@ void Displayable::draw() const {
   for (Shape shape: _shapes) {
     glBegin(shape.mode);
     shape.applyColor();
-    for (Coordinates coordinates: shape.parts) {
-      glVertex2d(coordinates.x + _x, coordinates.y + _y);
+    for (Vector3f coordinates: shape.parts) {
+      glVertex3d(coordinates.x + _coordinates.x, coordinates.y + _coordinates.z, coordinates.z + _coordinates.z);
     }
     glEnd();
   }

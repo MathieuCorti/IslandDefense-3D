@@ -7,29 +7,35 @@
 
 #pragma once
 
+#include "Vector3f.hpp"
+#include "Glut.hpp"
+
 class Entity {
 protected:
-  float _x;
-  float _y;
+  Vector3f _coordinates;
 
 public:
 
-  explicit Entity(float x = 0, float y = 0) : _x(x), _y(y) {}
+  explicit Entity(Vector3f& coordinates) : _coordinates(coordinates) {}
 
-  float getX() const {
-    return _x;
+  Vector3f getCoordinates() const {
+    return  _coordinates;
+  }
+  
+  void setCoordinates(Vector3f& coordinates) {
+    Entity::_coordinates = coordinates;
   }
 
   void setX(float x) {
-    Entity::_x = x;
-  }
-
-  float getY() const {
-    return _y;
+    Entity::_coordinates.x = x;
   }
 
   void setY(float y) {
-    Entity::_y = y;
+    Entity::_coordinates.y = y;
+  }
+
+  void setZ(float z) {
+    Entity::_coordinates.z = z;
   }
 
 };

@@ -18,7 +18,6 @@
 
 #include "../helpers/Displayable.hpp"
 #include "../helpers/Movable.hpp"
-#include "Entities.hpp"
 #include "Config.hpp"
 
 #define SPEED 3

@@ -21,20 +21,12 @@
 class Shape;
 typedef std::list<Shape> Shapes;
 
-struct Coordinates {
-  Coordinates(float x, float y, float z) : x(x), y(y), z(z) {}
-
-  float x;
-  float y;
-  float z;
-};
-
 struct BoundingBox {
 //  BoundingBox(const Coordinates &upperLeft, const Coordinates &lowerRight) : upperLeft(upperLeft),
 //                                                                             lowerRight(lowerRight) {}
 
-  Coordinates upperLeft;
-  Coordinates lowerRight;
+  Vector3f upperLeft;
+  Vector3f lowerRight;
 };
 
 struct Shape {
@@ -47,7 +39,7 @@ public:
   const float &_deltaX;
   const float &_deltaY;
 
-  std::vector<Coordinates> parts;
+  std::vector<Vector3f> parts;
   float size;
   GLenum mode;
   Color color;
@@ -56,13 +48,13 @@ public:
     glColor4f(color.r, color.g, color.b, color.a);
   }
 
-  explicit Shape(std::vector<Coordinates> parts = std::vector<Coordinates>(), GLenum mode = GL_POLYGON,
+  explicit Shape(std::vector<Vector3f> parts = std::vector<Vector3f>(), GLenum mode = GL_POLYGON,
                  Color color = Color(1, 1, 1));
 
-  explicit Shape(std::vector<Coordinates> parts, GLenum mode, const float &deltaX, const float &deltaY,
+  explicit Shape(std::vector<Vector3f> parts, GLenum mode, const float &deltaX, const float &deltaY,
                  Color color = Color(1, 1, 1));
 
-  explicit Shape(const float &deltaX, const float &deltaY, std::vector<Coordinates> parts = std::vector<Coordinates>(),
+  explicit Shape(const float &deltaX, const float &deltaY, std::vector<Vector3f> parts = std::vector<Vector3f>(),
                  GLenum mode = GL_POLYGON, Color color = Color(1, 1, 1));
 
 //  BoundingBox getBoundingBox() const {

@@ -20,7 +20,7 @@ class Displayable : public Entity {
 public:
   typedef std::shared_ptr<Displayable> Ptr;
 
-  explicit Displayable(float x = 0, float y = 0) : Entity(x, y) {}
+  explicit Displayable(Vector3f coordinates = Vector3f()) : Entity(coordinates) {}
 
   virtual void draw() const;
 
