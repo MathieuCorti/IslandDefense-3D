@@ -6,9 +6,11 @@
 //
 
 #include <vector>
+
 #include "includes/Game.hpp"
 #include "includes/UI.hpp"
 #include "includes/Config.hpp"
+#include "includes/Stats.hpp"
 
 // PUBLIC
 int Game::start(int argc, char **argv) {
@@ -120,6 +122,7 @@ void Game::initGlut() {
 
 void Game::initEntities() {
 //  _entities.insert(std::make_pair(GAME_UI, std::make_shared<UI>(entities)));
+  _entities.insert(std::make_pair(GameEntity::STATS, std::make_shared<Stats>()));
 }
 
 const float Game::getTime() const {

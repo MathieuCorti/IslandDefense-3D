@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "../helpers/Glut.hpp"
-
 #include <string>
 #include <vector>
 #include <cstdio>
@@ -16,18 +14,17 @@
 #include <map>
 #include <memory>
 
+#include "../helpers/Glut.hpp"
 #include "../helpers/Displayable.hpp"
 #include "../helpers/Movable.hpp"
 #include "Config.hpp"
-
-#define SPEED 3
 
 class Game {
 
 // TYPEDEFS
 private:
   typedef std::map<unsigned char, std::function<void(int x, int y)>> KeyboardMap;
-  typedef std::map<std::string, Displayable::Ptr> EntityList;
+  typedef std::map<GameEntity, Displayable::Ptr> EntityList;
 
 public:
   static Game &getInstance() {
@@ -77,7 +74,7 @@ private:
 
   // Helpers
 
-  void move(const std::string &entityName, Direction direction) {
+  void move(const GameEntity &entityName, Direction direction) {
     std::dynamic_pointer_cast<Movable>(_entities[entityName])->move(direction);
   }
 

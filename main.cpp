@@ -1,6 +1,15 @@
-#include <iostream>
+//
+//  main.cpp
+//  IslandDefense3D
+//
+//  Created by Mathieu Corti on 5/01/18.
+//
 
-int main() {
-  std::cout << "Hello, World!" << std::endl;
-  return 0;
+#include <cstdlib>
+
+#include "srcs/includes/Game.hpp"
+
+int main(int argc, char **argv) {
+  Game::getInstance().start(argc, argv);
+  return EXIT_SUCCESS;
 }

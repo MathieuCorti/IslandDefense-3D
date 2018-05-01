@@ -9,3 +9,10 @@
 
 // GAME
 #define MILLI 1000.0f
+#define SPEED 3
+
+// ENTITIES
+enum GameEntity {
+  STATS,
+  UI
+};
