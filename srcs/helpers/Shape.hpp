@@ -57,6 +57,7 @@ public:
   explicit Shape(const float &deltaX, const float &deltaY, std::vector<Vector3f> parts = std::vector<Vector3f>(),
                  GLenum mode = GL_POLYGON, Color color = Color(1, 1, 1));
 
+  // TODO : New Bounding box in 3D
 //  BoundingBox getBoundingBox() const {
 //    auto xExtremes = std::minmax_element(parts.begin(), parts.end(),
 //                                         [](const Coordinates &lhs, const Coordinates &rhs) {
@@ -71,6 +72,7 @@ public:
 //                       Coordinates(xExtremes.second->x + _deltaX, yExtremes.second->y + _deltaY));
 //  }
 
+  // TODO : New Collide with box in 3D
 //  bool collideWith(BoundingBox bb) const {
 //    BoundingBox bb1 = getBoundingBox();
 //    BoundingBox bb2 = bb;
@@ -83,6 +85,8 @@ public:
 //    return collideWith(shape.getBoundingBox());
 //  }
 //  
+  
+  // TODO : New Collide box in 3D
 //  static bool collide(const Shapes shapes1, const Shapes shapes2) {
 //    for (const auto &shape1: shapes1) {
 //      for (const auto &shape2: shapes2) {

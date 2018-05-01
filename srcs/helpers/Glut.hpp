@@ -11,9 +11,7 @@
 #   include <GLUT/glut.h>
 #   include <OpenGL/OpenGL.h>
 #else
-
 #   include <GL/glu.h>
 #   include <GL/glut.h>
 #   include <GL/gl.h>
-
 #endif

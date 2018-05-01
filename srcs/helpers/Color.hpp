@@ -7,6 +7,7 @@
 
 #pragma once
 
+/// Color rgb with value 0-255
 struct Color {
   float r;
   float g;
