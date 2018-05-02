@@ -13,7 +13,7 @@
 enum Direction {
   UP    , DOWN  , // X
   LEFT  , RIGHT , // Y
-  FRONT , BACK    // Z
+  FORWARD , BACKWARD    // Z
 };
 
 class Movable : public Displayable {

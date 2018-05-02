@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "helpers/Displayable.hpp"
-#include "includes/Config.hpp"
+#include "../helpers/Displayable.hpp"
+#include "Config.hpp"
 
 class Stats : public Displayable {
 private:

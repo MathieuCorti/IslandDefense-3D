@@ -30,7 +30,8 @@
 // ENTITIES
 enum GameEntity {
   STATS,
-  UI,
-  TEST_CUBE,
-  CAMERA
+  CAMERA,
+  WAVES,
+  AXES,
+  UI
 };

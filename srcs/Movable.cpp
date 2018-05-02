@@ -22,10 +22,10 @@ void Movable::move(Direction direction) {
     case RIGHT:
       setX(getCoordinates().x + getSpeed());
       break;
-    case FRONT:
+    case FORWARD:
       setZ(getCoordinates().z + getSpeed());
       break;
-    case BACK:
+    case BACKWARD:
       setZ(getCoordinates().z - getSpeed());
       break;
   }

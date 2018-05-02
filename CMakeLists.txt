@@ -22,9 +22,16 @@ add_executable(IslandDefense3D
         srcs/Shape.cpp
         srcs/Displayable.cpp
         srcs/Movable.cpp
-        srcs/includes/Config.hpp 
-        srcs/helpers/Vector3f.hpp srcs/Stats.cpp srcs/Stats.hpp srcs/Camera.cpp srcs/includes/Camera.hpp srcs/TestCube.cpp srcs/includes/TestCube.hpp)
-
+        srcs/includes/Config.hpp
+        srcs/helpers/Vector3f.hpp
+        srcs/includes/Stats.hpp 
+        srcs/Camera.cpp 
+        srcs/includes/Camera.hpp
+        srcs/Stats.cpp 
+        srcs/includes/Stats.hpp
+        srcs/Waves.cpp 
+        srcs/includes/Waves.hpp
+        srcs/helpers/Axes.hpp)
 find_package(OpenGL REQUIRED)
 find_package(GLUT REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIRS}  ${GLUT_INCLUDE_DIRS})

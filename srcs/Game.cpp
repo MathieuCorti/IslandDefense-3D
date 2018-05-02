@@ -10,9 +10,10 @@
 #include "includes/Game.hpp"
 #include "includes/UI.hpp"
 #include "includes/Config.hpp"
-#include "Stats.hpp"
-#include "includes/TestCube.hpp"
+#include "includes/Stats.hpp"
 #include "includes/Camera.hpp"
+#include "includes/Stats.hpp"
+#include "includes/Waves.hpp"
 
 // PUBLIC
 int Game::start(int argc, char **argv) {
@@ -28,6 +29,7 @@ int Game::start(int argc, char **argv) {
   initKeyboardMap();
   initGlut();
   initEntities();
+  initMouseCallback();
   glutIdleFunc(idleFunc);
   glutMainLoop();
   return EXIT_SUCCESS;
@@ -66,6 +68,9 @@ void Game::draw() {
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
 
+//  auto camera = std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->getCoordinates();
+//  gluLookAt(camera.x, camera.y, 1.0f, 0, 0, 0, 0, 1, 0);
+
   if (gameOver()) {
   } else {
     for (const auto &entity : _entities) {
@@ -99,8 +104,9 @@ void Game::keyboard(unsigned char key, int x, int y) const {
   }
 }
 
-void Game::mouse(int x, int y) const {
-  
+void Game::mouse(int x, int y) {
+  auto camera = std::dynamic_pointer_cast<Camera>(_entities[GameEntity::CAMERA]);
+  camera->rotation(x, y);
 }
 
 void Game::mouseButtons(int button, int state, int x, int y) const {
@@ -114,8 +120,15 @@ void Game::initKeyboardMap() {
       { 27 , [](int, int) { exit(EXIT_SUCCESS);  } },
       { 'a' , [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(LEFT);  } },
       { 'd' , [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(RIGHT); } },
-      { 'w' , [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(UP);  } },
-      { 's' , [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(DOWN);  } },
+      { 'w' , [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(FORWARD);  } },
+      { 's' , [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(BACKWARD);  } },
+
+      // WAVES COMMANDS
+      {'n', [this](int, int) { toggleNormals(WAVES); }},
+      {'t', [this](int, int) { toggleTangeants(WAVES); }},
+      {'w', [this](int, int) { toggleWireframe(WAVES); }},
+      {'+', [this](int, int) { doubleVertices(WAVES); }},
+      {'-', [this](int, int) { halveSegments(WAVES); }}
   };
 }
 
@@ -143,10 +156,10 @@ void Game::initGlut() {
 }
 
 void Game::initEntities() {
-//  _entities.insert(std::make_pair(GAME_UI, std::make_shared<UI>(entities)));
   _entities.insert(std::make_pair(GameEntity::STATS, std::make_shared<Stats>()));
-  _entities.insert(std::make_pair(GameEntity::TEST_CUBE, std::make_shared<TestCube>()));
   _entities.insert(std::make_pair(GameEntity::CAMERA, std::make_shared<Camera>()));
+  _entities.insert(std::make_pair(GameEntity::WAVES, std::make_shared<Waves>()));
+//  _entities.insert(std::make_pair(GameEntity::AXES, std::make_shared<Axes>()));
 }
 
 const float Game::getTime() const {
