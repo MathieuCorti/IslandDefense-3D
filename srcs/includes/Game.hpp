@@ -63,11 +63,11 @@ private:
 
   void initDrawCallback() const;
 
+  void initReshapeCallback() const;
+
   void initKeyboardCallback() const;
 
   void initMouseCallback() const;
-  
-  void initMouseButtonsCallback() const;
 
   void initKeyboardMap();
 
@@ -118,7 +118,7 @@ private:
 // Extern C
 extern "C" {
   static void drawCallback();
+  static void reshapeCallback(int w, int h);
   static void keyboardCallback(unsigned char key, int x, int y);
   static void mouseCallback(int x, int y);
-  static void mouseButtonsCallback(int button, int state, int x, int y);
 }

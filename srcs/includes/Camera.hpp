@@ -12,33 +12,26 @@
 #include "../helpers/Movable.hpp"
 #include "../helpers/Displayable.hpp"
 
-class Camera: public Movable {
+class Camera : public Movable {
 private:
-  float    _psi;
-  float    _theta;
-  float    _rotationSpeed;
-  float    _translationSpeed;
-  int      _time;
-  int      _lastMouseX;
-  int      _lastMouseY;
-  int      _coef;
+  float _rotationSpeed;
+  float _translationSpeed;
+  float _xRot;
+  float _yRot;
+  float _time;
+  int _lastMouseX;
+  int _lastMouseY;
 
 public:
 
   Camera();
-  
+
   bool update() override;
 
-  void draw() const override ;
-  
+  void draw() const override;
+
   void move(Direction direction) override;
 
   void rotation(int x, int y);
-  
-  Vector3f getSight() const {
-    return { _coordinates.x + sin(_theta) * sin(_psi),
-             _coordinates.y + cos(_psi),
-             _coordinates.z + cos(_theta)*sin(_psi) };
-  }
 };
 

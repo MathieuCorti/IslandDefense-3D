@@ -15,7 +15,7 @@ public:
 
   bool update() override;
 
-  float computeHeight(float x) const;
+  float computeHeight(float x, float z) const;
 
   float computeSlope(float x) const;
 
@@ -32,6 +32,11 @@ public:
   typedef std::vector<Vector3f> vertices;
 
 private:
+
+  float sineWave(float x, float z, float wavelength, float amplitude, float kx, float kz) const;
+
+  void drawDebug() const;
+
   vertices _vertices;
   int _tesselation;
   float _wavelength;

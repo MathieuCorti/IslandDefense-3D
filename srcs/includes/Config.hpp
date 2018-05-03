@@ -29,9 +29,10 @@
 
 // ENTITIES
 enum GameEntity {
-  STATS,
   CAMERA,
-  WAVES,
   AXES,
-  UI
+  WAVES,
+  SKYBOX,
+  STATS,
+  UI,
 };

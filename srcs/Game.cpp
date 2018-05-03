@@ -8,12 +8,9 @@
 #include <vector>
 
 #include "includes/Game.hpp"
-#include "includes/UI.hpp"
-#include "includes/Config.hpp"
-#include "includes/Stats.hpp"
 #include "includes/Camera.hpp"
-#include "includes/Stats.hpp"
-#include "includes/Waves.hpp"
+#include "helpers/Axes.hpp"
+#include "helpers/Skybox.hpp"
 
 // PUBLIC
 int Game::start(int argc, char **argv) {
@@ -25,12 +22,13 @@ int Game::start(int argc, char **argv) {
 
   // Start
   initDrawCallback();
+  initReshapeCallback();
   initKeyboardCallback();
   initKeyboardMap();
   initGlut();
-  initEntities();
   initMouseCallback();
   glutIdleFunc(idleFunc);
+  initEntities();
   glutMainLoop();
   return EXIT_SUCCESS;
 }
@@ -65,14 +63,13 @@ void Game::draw() {
   glClearColor(0.0, 0.0, 0.0, 0.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  gluPerspective(75.0f, 1.0f, 0.01f, 2.0f);
+  glMatrixMode(GL_MODELVIEW);
 
-//  auto camera = std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->getCoordinates();
-//  gluLookAt(camera.x, camera.y, 1.0f, 0, 0, 0, 0, 1, 0);
-
-  if (gameOver()) {
-  } else {
+  if (!gameOver()) {
     for (const auto &entity : _entities) {
       entity.second->draw();
       for (GLenum err = 0; (err = glGetError());) {
@@ -109,24 +106,22 @@ void Game::mouse(int x, int y) {
   camera->rotation(x, y);
 }
 
-void Game::mouseButtons(int button, int state, int x, int y) const {
-  
-}
-
 // PRIVATE
 
 void Game::initKeyboardMap() {
   _keyboardMap = {
-      { 27 , [](int, int) { exit(EXIT_SUCCESS);  } },
-      { 'a' , [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(LEFT);  } },
-      { 'd' , [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(RIGHT); } },
-      { 'w' , [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(FORWARD);  } },
-      { 's' , [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(BACKWARD);  } },
+      {27,  [](int, int) { exit(EXIT_SUCCESS); }},
+      {'q', [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(LEFT); }},
+      {'d', [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(RIGHT); }},
+      {'z', [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(FORWARD); }},
+      {'s', [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(BACKWARD); }},
+      {'a', [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(UP); }},
+      {'e', [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(DOWN); }},
 
       // WAVES COMMANDS
       {'n', [this](int, int) { toggleNormals(WAVES); }},
       {'t', [this](int, int) { toggleTangeants(WAVES); }},
-      {'w', [this](int, int) { toggleWireframe(WAVES); }},
+      {'W', [this](int, int) { toggleWireframe(WAVES); }},
       {'+', [this](int, int) { doubleVertices(WAVES); }},
       {'-', [this](int, int) { halveSegments(WAVES); }}
   };
@@ -136,30 +131,28 @@ void Game::initDrawCallback() const {
   glutDisplayFunc(drawCallback);
 }
 
+void Game::initReshapeCallback() const {
+  glutReshapeFunc(reshapeCallback);
+}
+
 void Game::initKeyboardCallback() const {
   glutKeyboardFunc(keyboardCallback);
 }
 
 void Game::initMouseCallback() const {
-  glutMotionFunc(mouseCallback);
-}
-
-void Game::initMouseButtonsCallback() const {
-  glutMouseFunc(mouseButtonsCallback);
+  glutPassiveMotionFunc(mouseCallback);
 }
 
 void Game::initGlut() {
-  glMatrixMode(GL_PROJECTION);
-  glOrtho(-1.0, 1.0, -1.0, 1.0, -2.0, 2.0);
-  glMatrixMode(GL_MODELVIEW);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void Game::initEntities() {
-  _entities.insert(std::make_pair(GameEntity::STATS, std::make_shared<Stats>()));
   _entities.insert(std::make_pair(GameEntity::CAMERA, std::make_shared<Camera>()));
+//  _entities.insert(std::make_pair(GameEntity::STATS, std::make_shared<Stats>()));
   _entities.insert(std::make_pair(GameEntity::WAVES, std::make_shared<Waves>()));
-//  _entities.insert(std::make_pair(GameEntity::AXES, std::make_shared<Axes>()));
+  _entities.insert(std::make_pair(GameEntity::SKYBOX, std::make_shared<Skybox>()));
+  _entities.insert(std::make_pair(GameEntity::AXES, std::make_shared<Axes>()));
 }
 
 const float Game::getTime() const {
@@ -180,7 +173,6 @@ void Game::updateTime() {
 
   _lastTime = _time;
 
-
   _deltaTime = _time - _lastFrameRateT;
   if (_deltaTime > _frameRateInterval) {
     _frameRate = _frames / _deltaTime;
@@ -199,16 +191,20 @@ const Game::EntityList &Game::getEntities() const {
 
 // EXTERN C
 extern "C" {
-  static void drawCallback() {
-    Game::getInstance().draw();
-  }
-  static void keyboardCallback(unsigned char key, int x, int y) {
-    Game::getInstance().keyboard(key, x, y);
-  }
-  static void mouseCallback(int x, int y) {
-    Game::getInstance().mouse(x, y);
-  }
-  static void mouseButtonsCallback(int button, int state, int x, int y) {
-    Game::getInstance().mouseButtons(button, state, x, y);
-  }
+static void drawCallback() {
+  Game::getInstance().draw();
+}
+static void reshapeCallback(int w, int h) {
+  glViewport(0, 0, (GLsizei) w, (GLsizei) h); //set the viewporttothecurrentwindow specifications
+  glMatrixMode(GL_PROJECTION); //set the matrix to projection
+  glLoadIdentity();
+  gluPerspective(75.0f, (GLfloat) w / (GLfloat) h, 1.0, 1000.0); //set the perspective (angle of sight, width, height, ,depth)
+  glMatrixMode(GL_MODELVIEW); //set the matrix back to model
+}
+static void keyboardCallback(unsigned char key, int x, int y) {
+  Game::getInstance().keyboard(key, x, y);
+}
+static void mouseCallback(int x, int y) {
+  Game::getInstance().mouse(x, y);
+}
 }

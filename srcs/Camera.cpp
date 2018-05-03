@@ -7,68 +7,72 @@
 
 #include "helpers/Glut.hpp"
 #include "includes/Camera.hpp"
+#include "includes/Game.hpp"
 
-Camera::Camera(): Movable(CAMERA_SPEED, Vector3f(0, 0.1, 0)), 
-                  _psi(float(4 * M_PI / 7)), _theta(float(M_PI / 4)), 
-                  _rotationSpeed(0.01), _translationSpeed(0.2),
-                  _lastMouseX(GAME_WIDTH / 2), _lastMouseY(GAME_HEIGHT / 2),
-                  _coef(1000) {
-}
-
-bool Camera::update() {
-  return false;
+Camera::Camera() : Movable(CAMERA_SPEED, Vector3f(0.0f, 0.8f, 0.0f)),
+                   _xRot(0.0f), _yRot(45.0f),
+                   _rotationSpeed(0.01), _translationSpeed(0.5f),
+                   _lastMouseX(0), _lastMouseY(0) {
 }
 
 void Camera::draw() const {
-  auto sight = getSight();
-//  std::cout << "x: " << _coordinates.x << " | "
-//            << "y: " << _coordinates.y << " | "
-//            << "z: " << _coordinates.z << " | " << std::endl;
-  gluLookAt( _coordinates.x, _coordinates.y, _coordinates.z,
-             sight.x, sight.y, sight.z,
-             0, 1.0f, 0);
+  glRotatef(_xRot, 1.0, 0.0, 0.0);
+  glRotatef(_yRot, 0.0, 1.0, 0.0);
+  glTranslated(-_coordinates.x, -_coordinates.y, -_coordinates.z);
+  std::cout << _xRot << " " << _yRot << " " << _coordinates.x << " " << _coordinates.y << " " << _coordinates.z << std::endl;
 }
 
 void Camera::rotation(int x, int y) {
-  _theta -= static_cast<float>(x - _lastMouseX) * _rotationSpeed;
-  _psi += static_cast<float>(y - _lastMouseY) * _rotationSpeed;
-  if(_psi <= 0.1) {
-    _psi = 0.1;
-  } else if(_psi >= 0.95 * M_PI) {
-    _psi = float(0.95 * M_PI);
-  }
+  int diffx = x - _lastMouseX;
+  int diffy = y - _lastMouseY;
+  _xRot += (float) diffy;
+  _yRot += (float) diffx;
+  _xRot = _xRot > 90 ? 90 : _xRot;
+  _xRot = _xRot < -90 ? -90 : _xRot;
   _lastMouseX = x;
   _lastMouseY = y;
 }
 
 void Camera::move(Direction direction) {
-  auto t = static_cast<float>(glutGet(GLUT_ELAPSED_TIME) - _time);
-  _time = glutGet(GLUT_ELAPSED_TIME);
+  float xrotrad, yrotrad;
 
   switch (direction) {
     case UP:
-//      setY(getCoordinates().y + getSpeed());
+      _xRot += 1;
+      _xRot = _xRot > 90 ? 90 : _xRot;
       break;
     case DOWN:
-//      setY(getCoordinates().y - getSpeed());
+      _xRot -= 1;
+      _xRot = _xRot < -90 ? -90 : _xRot;
       break;
     case LEFT:
-      _coordinates.x -= (sin(_theta - M_PI/2)*sin(_psi) * _translationSpeed * t) / _coef;
-      _coordinates.z -= (cos(_theta - M_PI/2)*sin(_psi) * _translationSpeed * t) / _coef;
+      yrotrad = (_yRot / 180.0f * (float) M_PI);
+      _coordinates.x -= std::cos(yrotrad) * _translationSpeed * _time;
+      _coordinates.z -= std::sin(yrotrad) * _translationSpeed * _time;
       break;
     case RIGHT:
-      _coordinates.x -= (sin(_theta + M_PI/2)*sin(_psi) * _translationSpeed * t) / _coef;
-      _coordinates.z -= (cos(_theta + M_PI/2)*sin(_psi) * _translationSpeed * t) / _coef;
+      yrotrad = (_yRot / 180.0f * (float) M_PI);
+      _coordinates.x += std::cos(yrotrad) * _translationSpeed * _time;
+      _coordinates.z += std::sin(yrotrad) * _translationSpeed * _time;
       break;
     case FORWARD:
-      _coordinates.x += (sin(_theta)*sin(_psi)  * _translationSpeed * t) / _coef;
-      _coordinates.y += (cos(_psi)              * _translationSpeed * t) / _coef;
-      _coordinates.z += (cos(_theta)*sin(_psi)  * _translationSpeed * t) / _coef;
+      yrotrad = (_yRot / 180.0f * (float) M_PI);
+      xrotrad = (_xRot / 180.0f * (float) M_PI);
+      _coordinates.x += std::sin(yrotrad) * _translationSpeed * _time;
+      _coordinates.z -= std::cos(yrotrad) * _translationSpeed * _time;
+      _coordinates.y -= std::sin(xrotrad) * _translationSpeed * _time;
       break;
     case BACKWARD:
-      _coordinates.x -= (sin(_theta)*sin(_psi)  * _translationSpeed * t) / _coef;
-      _coordinates.y -= (cos(_psi)              * _translationSpeed * t) / _coef;
-      _coordinates.z -= (cos(_theta)*sin(_psi)  * _translationSpeed * t) / _coef;
+      yrotrad = (_yRot / 180.0f * (float) M_PI);
+      xrotrad = (_xRot / 180.0f * (float) M_PI);
+      _coordinates.x -= std::sin(yrotrad) * _translationSpeed * _time;
+      _coordinates.z += std::cos(yrotrad) * _translationSpeed * _time;
+      _coordinates.y += std::sin(xrotrad) * _translationSpeed * _time;
       break;
   }
+}
+
+bool Camera::update() {
+  _time = Game::getInstance().getDeltaTime();
+  return false;
 }

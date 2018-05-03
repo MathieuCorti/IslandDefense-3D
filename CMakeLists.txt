@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.5)
 project(IslandDefense3D)
 
 set(CMAKE_CXX_FLAGS "-Wno-deprecated-declarations")
@@ -31,9 +31,12 @@ add_executable(IslandDefense3D
         srcs/includes/Stats.hpp
         srcs/Waves.cpp 
         srcs/includes/Waves.hpp
-        srcs/helpers/Axes.hpp)
+        srcs/helpers/Axes.hpp
+        srcs/helpers/Skybox.hpp
+        srcs/helpers/SOIL.h)
 find_package(OpenGL REQUIRED)
 find_package(GLUT REQUIRED)
-include_directories(${OPENGL_INCLUDE_DIRS}  ${GLUT_INCLUDE_DIRS})
+find_library(SOIL SOIL)
+include_directories(${OPENGL_INCLUDE_DIRS} ${GLUT_INCLUDE_DIRS})
 
-target_link_libraries(IslandDefense3D ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})
+target_link_libraries(IslandDefense3D ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${SOIL})

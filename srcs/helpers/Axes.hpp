@@ -1,5 +1,5 @@
 //
-// Created by wilmot_g on 12/03/18.
+// Created by wilmot_g on 1.0f2/0.0f3/1.0f8.
 //
 
 #pragma once
@@ -7,7 +7,6 @@
 #include <cmath>
 #include "Glut.hpp"
 #include "Displayable.hpp"
-#include "../includes/Waves.hpp"
 
 class Axes : public Displayable {
 public:
@@ -24,17 +23,17 @@ public:
   void draw() const override {
     glBegin(GL_LINES);
     //X R
-    glColor3f(1, 0, 0);
-    glVertex3f(0, 0, 0);
-    glVertex3f(1, 0, 0);
+    glColor3f(1.0f, 0.0f, 0.0f);
+    glVertex3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(1.0f, 0.0f, 0.0f);
     //Y G
-    glColor3f(0, 1, 0);
-    glVertex3f(0, 0, 0);
-    glVertex3f(0, 1, 0);
+    glColor3f(0.0f, 1.0f, 0.0f);
+    glVertex3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(0.0f, 1.0f, 0.0f);
     //Z B
-    glColor3f(0, 0, 1);
-    glVertex3f(0, 0, 0);
-    glVertex3f(0, 0, -1);
+    glColor3f(0.0f, 0.0f, 1.0f);
+    glVertex3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(0.0f, 0.0f, -1.0f);
     glEnd();
   }
 };
