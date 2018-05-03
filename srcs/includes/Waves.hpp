@@ -9,40 +9,46 @@
 
 class Waves : public Displayable {
 public:
+
+  typedef std::vector<std::vector<std::pair<Vector3f, Vector3f>>> vertices;
+
   Waves();
 
   void draw() const override;
 
   bool update() override;
 
-  float computeHeight(float x, float z) const;
+  static float computeHeight(float x, float z);
 
-  float computeSlope(float x) const;
+  static float computeSlope(float x, float z);
+
+  static float maxHeight();
 
   void toggleTangeants();
 
   void toggleNormals();
 
-  void toggleWireframe();
-
   void doubleVertices();
 
   void halveSegments();
 
-  typedef std::vector<Vector3f> vertices;
+  static float _wavelength;
+  static float _amplitude;
+  static float _time;
+  static float _maxHeight;
 
 private:
 
-  float sineWave(float x, float z, float wavelength, float amplitude, float kx, float kz) const;
+  static float sineNormal(float x, float z, float wavelength, float amplitude, float kx, float kz);
+
+  static float sineWave(float x, float z, float wavelength, float amplitude, float kx, float kz);
 
   void drawDebug() const;
 
+  void drawWaves() const;
+
   vertices _vertices;
   int _tesselation;
-  float _wavelength;
-  float _amplitude;
-  float _time;
   bool _showTangeant;
   bool _showNormal;
-  bool _showWireframe;
 };

@@ -10,12 +10,18 @@
 
 class Axes : public Displayable {
 public:
-  static void drawVector(Vector3f a, Vector3f b, float s, bool normalize) {
-    float magnitude = std::sqrt(b.x * b.x + b.y * b.y);
-    b.x = (normalize ? b.x / magnitude : b.x) * s;
-    b.y = (normalize ? b.y / magnitude : b.y) * s;
-    b.z = (normalize ? b.z / magnitude : b.z) * s;
+  static void normalize(Vector3f &b) {
+    float magnitude = std::sqrt(b.x * b.x + b.y * b.y + b.z * b.z);
+    b.x /= magnitude;
+    b.y /= magnitude;
+    b.z /= magnitude;
+  }
 
+  static void drawVector(Vector3f a, Vector3f b, float s, bool normalize) {
+    Axes::normalize(b);
+    b.x *= s;
+    b.y *= s;
+    b.z *= s;
     glVertex3f(a.x, a.y, a.z);
     glVertex3f(a.x + b.x, a.y + b.y, a.z + b.z);
   }

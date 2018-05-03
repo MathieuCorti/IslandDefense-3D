@@ -9,9 +9,9 @@
 #include "includes/Camera.hpp"
 #include "includes/Game.hpp"
 
-Camera::Camera() : Movable(CAMERA_SPEED, Vector3f(0.0f, 0.8f, 0.0f)),
-                   _xRot(0.0f), _yRot(45.0f),
-                   _rotationSpeed(0.01), _translationSpeed(0.5f),
+Camera::Camera() : Movable(CAMERA_SPEED, Vector3f(0.5f, 0.8f, 0.5f)),
+                   _xRot(45.0f), _yRot(-45.0f),
+                   _rotationSpeed(0.01), _translationSpeed(1.0f),
                    _lastMouseX(0), _lastMouseY(0) {
 }
 
@@ -19,7 +19,6 @@ void Camera::draw() const {
   glRotatef(_xRot, 1.0, 0.0, 0.0);
   glRotatef(_yRot, 0.0, 1.0, 0.0);
   glTranslated(-_coordinates.x, -_coordinates.y, -_coordinates.z);
-  std::cout << _xRot << " " << _yRot << " " << _coordinates.x << " " << _coordinates.y << " " << _coordinates.z << std::endl;
 }
 
 void Camera::rotation(int x, int y) {

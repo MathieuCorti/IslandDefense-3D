@@ -32,8 +32,9 @@ add_executable(IslandDefense3D
         srcs/Waves.cpp 
         srcs/includes/Waves.hpp
         srcs/helpers/Axes.hpp
-        srcs/helpers/Skybox.hpp
-        srcs/helpers/SOIL.h)
+        srcs/includes/Skybox.hpp
+        srcs/Skybox.cpp
+        srcs/helpers/SOIL.h srcs/Island.cpp srcs/includes/Island.hpp srcs/helpers/Perlin.hpp)
 find_package(OpenGL REQUIRED)
 find_package(GLUT REQUIRED)
 find_library(SOIL SOIL)

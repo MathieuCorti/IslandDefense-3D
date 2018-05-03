@@ -60,6 +60,7 @@ private:
   EntityList _entities;
   float _time, _lastTime, _deltaTime = 0.0;
   float _lastFrameRateT, _frameRateInterval, _frameRate, _frames;
+  bool _showWireframe = false;
 
   void initDrawCallback() const;
 
@@ -71,7 +72,7 @@ private:
 
   void initKeyboardMap();
 
-  void initGlut();
+  void initBlend();
 
   void initEntities();
 
@@ -93,10 +94,6 @@ private:
 
   void toggleNormals(const GameEntity &entityName) {
     std::dynamic_pointer_cast<Waves>(_entities[entityName])->toggleNormals();
-  }
-
-  void toggleWireframe(const GameEntity &entityName) {
-    std::dynamic_pointer_cast<Waves>(_entities[entityName])->toggleWireframe();
   }
 
   void doubleVertices(const GameEntity &entityName) {

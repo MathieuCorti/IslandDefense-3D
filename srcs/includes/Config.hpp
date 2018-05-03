@@ -31,8 +31,9 @@
 enum GameEntity {
   CAMERA,
   AXES,
-  WAVES,
   SKYBOX,
+  ISLAND,
+  WAVES,
   STATS,
   UI,
 };

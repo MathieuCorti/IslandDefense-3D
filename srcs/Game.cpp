@@ -10,13 +10,15 @@
 #include "includes/Game.hpp"
 #include "includes/Camera.hpp"
 #include "helpers/Axes.hpp"
-#include "helpers/Skybox.hpp"
+#include "includes/Skybox.hpp"
+#include "includes/Stats.hpp"
+#include "includes/Island.hpp"
 
 // PUBLIC
 int Game::start(int argc, char **argv) {
   // Init
   glutInit(&argc, argv);
-  glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
+  glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
   glutInitWindowSize(GAME_WIDTH, GAME_HEIGHT);
   glutCreateWindow(GAME_NAME);
 
@@ -25,7 +27,7 @@ int Game::start(int argc, char **argv) {
   initReshapeCallback();
   initKeyboardCallback();
   initKeyboardMap();
-  initGlut();
+  initBlend();
   initMouseCallback();
   glutIdleFunc(idleFunc);
   initEntities();
@@ -60,14 +62,22 @@ void Game::update() {
 }
 
 void Game::draw() {
-  glClearColor(0.0, 0.0, 0.0, 0.0);
+  glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   glLoadIdentity();
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  gluPerspective(75.0f, 1.0f, 0.01f, 2.0f);
+  gluPerspective(75.0f, 1.0f, 0.01f, 3.0f);
   glMatrixMode(GL_MODELVIEW);
+
+  glEnable(GL_DEPTH_TEST);
+
+  if (_showWireframe) {
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  } else {
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  }
 
   if (!gameOver()) {
     for (const auto &entity : _entities) {
@@ -121,7 +131,7 @@ void Game::initKeyboardMap() {
       // WAVES COMMANDS
       {'n', [this](int, int) { toggleNormals(WAVES); }},
       {'t', [this](int, int) { toggleTangeants(WAVES); }},
-      {'W', [this](int, int) { toggleWireframe(WAVES); }},
+      {'W', [this](int, int) { _showWireframe = !_showWireframe; }},
       {'+', [this](int, int) { doubleVertices(WAVES); }},
       {'-', [this](int, int) { halveSegments(WAVES); }}
   };
@@ -143,16 +153,17 @@ void Game::initMouseCallback() const {
   glutPassiveMotionFunc(mouseCallback);
 }
 
-void Game::initGlut() {
+void Game::initBlend() {
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void Game::initEntities() {
   _entities.insert(std::make_pair(GameEntity::CAMERA, std::make_shared<Camera>()));
-//  _entities.insert(std::make_pair(GameEntity::STATS, std::make_shared<Stats>()));
+  _entities.insert(std::make_pair(GameEntity::STATS, std::make_shared<Stats>()));
   _entities.insert(std::make_pair(GameEntity::WAVES, std::make_shared<Waves>()));
   _entities.insert(std::make_pair(GameEntity::SKYBOX, std::make_shared<Skybox>()));
-  _entities.insert(std::make_pair(GameEntity::AXES, std::make_shared<Axes>()));
+  _entities.insert(std::make_pair(GameEntity::ISLAND, std::make_shared<Island>()));
+//  _entities.insert(std::make_pair(GameEntity::AXES, std::make_shared<Axes>()));
 }
 
 const float Game::getTime() const {
@@ -195,11 +206,11 @@ static void drawCallback() {
   Game::getInstance().draw();
 }
 static void reshapeCallback(int w, int h) {
-  glViewport(0, 0, (GLsizei) w, (GLsizei) h); //set the viewporttothecurrentwindow specifications
-  glMatrixMode(GL_PROJECTION); //set the matrix to projection
+  glViewport(0, 0, (GLsizei) w, (GLsizei) h);
+  glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  gluPerspective(75.0f, (GLfloat) w / (GLfloat) h, 1.0, 1000.0); //set the perspective (angle of sight, width, height, ,depth)
-  glMatrixMode(GL_MODELVIEW); //set the matrix back to model
+  gluPerspective(75.0f, (GLfloat) w / (GLfloat) h, 0.01f, 3.0);
+  glMatrixMode(GL_MODELVIEW);
 }
 static void keyboardCallback(unsigned char key, int x, int y) {
   Game::getInstance().keyboard(key, x, y);
