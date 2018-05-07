@@ -32,8 +32,10 @@ enum GameEntity {
   CAMERA,
   AXES,
   SKYBOX,
+  BOAT,
   ISLAND,
   WAVES,
   STATS,
   UI,
+  GAME_ENTITIES_EOF
 };

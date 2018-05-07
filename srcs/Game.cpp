@@ -7,12 +7,13 @@
 
 #include <vector>
 
+#include "helpers/Axes.hpp"
 #include "includes/Game.hpp"
 #include "includes/Camera.hpp"
-#include "helpers/Axes.hpp"
 #include "includes/Skybox.hpp"
 #include "includes/Stats.hpp"
 #include "includes/Island.hpp"
+#include "includes/Boat.hpp"
 
 // PUBLIC
 int Game::start(int argc, char **argv) {
@@ -121,19 +122,27 @@ void Game::mouse(int x, int y) {
 void Game::initKeyboardMap() {
   _keyboardMap = {
       {27,  [](int, int) { exit(EXIT_SUCCESS); }},
-      {'q', [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(LEFT); }},
-      {'d', [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(RIGHT); }},
-      {'z', [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(FORWARD); }},
-      {'s', [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(BACKWARD); }},
-      {'a', [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(UP); }},
-      {'e', [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(DOWN); }},
+        
+      // CAMERA COMMANDS
+      {'q', [this](int, int) { move(GameEntity::CAMERA, LEFT);      }},
+      {'d', [this](int, int) { move(GameEntity::CAMERA, RIGHT);     }},
+      {'z', [this](int, int) { move(GameEntity::CAMERA, FORWARD);   }},
+      {'s', [this](int, int) { move(GameEntity::CAMERA, BACKWARD);  }},
+      {'a', [this](int, int) { move(GameEntity::CAMERA, UP);        }},
+      {'e', [this](int, int) { move(GameEntity::CAMERA, DOWN);      }},
 
       // WAVES COMMANDS
-      {'n', [this](int, int) { toggleNormals(WAVES); }},
-      {'t', [this](int, int) { toggleTangeants(WAVES); }},
-      {'W', [this](int, int) { _showWireframe = !_showWireframe; }},
-      {'+', [this](int, int) { doubleVertices(WAVES); }},
-      {'-', [this](int, int) { halveSegments(WAVES); }}
+      {'n', [this](int, int) { toggleNormals(WAVES);                }},
+      {'t', [this](int, int) { toggleTangeants(WAVES);              }},
+      {'W', [this](int, int) { _showWireframe = !_showWireframe;    }},
+      {'+', [this](int, int) { doubleVertices(WAVES);               }},
+      {'-', [this](int, int) { halveSegments(WAVES);                }},
+      
+      // TEST BOAT COMMANDS
+      {'j', [this](int, int) { move(GameEntity::BOAT, LEFT);      }},
+      {'l', [this](int, int) { move(GameEntity::BOAT, RIGHT);     }},
+      {'i', [this](int, int) { move(GameEntity::BOAT, UP);        }},
+      {'k', [this](int, int) { move(GameEntity::BOAT, DOWN);      }}
   };
 }
 
@@ -163,6 +172,7 @@ void Game::initEntities() {
   _entities.insert(std::make_pair(GameEntity::WAVES, std::make_shared<Waves>()));
   _entities.insert(std::make_pair(GameEntity::SKYBOX, std::make_shared<Skybox>()));
   _entities.insert(std::make_pair(GameEntity::ISLAND, std::make_shared<Island>()));
+  _entities.insert(std::make_pair(GameEntity::BOAT, std::make_shared<Boat>(RED)));
 //  _entities.insert(std::make_pair(GameEntity::AXES, std::make_shared<Axes>()));
 }
 
