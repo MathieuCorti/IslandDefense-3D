@@ -9,8 +9,8 @@
 #include "includes/Camera.hpp"
 #include "includes/Game.hpp"
 
-Camera::Camera() : Movable(CAMERA_SPEED, Vector3f(0.5f, 0.8f, 0.5f)),
-                   _xRot(45.0f), _yRot(-45.0f),
+Camera::Camera() : Movable(CAMERA_SPEED, Vector3f(-0.8f, 0.53f, -0.30f)),
+                   _xRot(30.0f), _yRot(-245.0f),
                    _rotationSpeed(0.01), _translationSpeed(1.0f),
                    _lastMouseX(0), _lastMouseY(0) {
 }
@@ -18,7 +18,7 @@ Camera::Camera() : Movable(CAMERA_SPEED, Vector3f(0.5f, 0.8f, 0.5f)),
 void Camera::draw() const {
   glRotatef(_xRot, 1.0, 0.0, 0.0);
   glRotatef(_yRot, 0.0, 1.0, 0.0);
-  glTranslated(-_coordinates.x, -_coordinates.y, -_coordinates.z);
+  glTranslatef(-_coordinates.x, -_coordinates.y, -_coordinates.z);
 }
 
 void Camera::rotation(int x, int y) {
@@ -32,34 +32,34 @@ void Camera::rotation(int x, int y) {
   _lastMouseY = y;
 }
 
-void Camera::move(Direction direction) {
+void Camera::move(Direction direction, int coef) {
   float xrotrad, yrotrad;
 
   switch (direction) {
     case UP:
       _xRot += 1;
-      _xRot = _xRot > 90 ? 90 : _xRot;
+      _xRot = _xRot > 90 ? 90 : _xRot * coef;
       break;
     case DOWN:
       _xRot -= 1;
-      _xRot = _xRot < -90 ? -90 : _xRot;
+      _xRot = _xRot < -90 ? -90 : _xRot * coef;
       break;
     case LEFT:
       yrotrad = (_yRot / 180.0f * (float) M_PI);
-      _coordinates.x -= std::cos(yrotrad) * _translationSpeed * _time;
-      _coordinates.z -= std::sin(yrotrad) * _translationSpeed * _time;
+      _coordinates.x -= std::cos(yrotrad) * _translationSpeed * _time * coef;
+      _coordinates.z -= std::sin(yrotrad) * _translationSpeed * _time * coef;
       break;
     case RIGHT:
       yrotrad = (_yRot / 180.0f * (float) M_PI);
-      _coordinates.x += std::cos(yrotrad) * _translationSpeed * _time;
-      _coordinates.z += std::sin(yrotrad) * _translationSpeed * _time;
+      _coordinates.x += std::cos(yrotrad) * _translationSpeed * _time * coef;
+      _coordinates.z += std::sin(yrotrad) * _translationSpeed * _time * coef;
       break;
     case FORWARD:
       yrotrad = (_yRot / 180.0f * (float) M_PI);
       xrotrad = (_xRot / 180.0f * (float) M_PI);
-      _coordinates.x += std::sin(yrotrad) * _translationSpeed * _time;
-      _coordinates.z -= std::cos(yrotrad) * _translationSpeed * _time;
-      _coordinates.y -= std::sin(xrotrad) * _translationSpeed * _time;
+      _coordinates.x += std::sin(yrotrad) * _translationSpeed * _time * coef;
+      _coordinates.z -= std::cos(yrotrad) * _translationSpeed * _time * coef;
+      _coordinates.y -= std::sin(xrotrad) * _translationSpeed * _time * coef;
       break;
     case BACKWARD:
       yrotrad = (_yRot / 180.0f * (float) M_PI);

@@ -30,7 +30,7 @@ public:
 
   void draw() const override;
 
-  void move(Direction direction) override;
+  void move(Direction direction, int coef) override;
 
   void rotation(int x, int y);
 };

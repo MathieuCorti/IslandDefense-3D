@@ -30,6 +30,7 @@
 // ENTITIES
 enum GameEntity {
   CAMERA,
+  LIGHT,
   AXES,
   SKYBOX,
   BOAT,

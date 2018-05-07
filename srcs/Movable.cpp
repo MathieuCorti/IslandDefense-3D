@@ -8,25 +8,25 @@ Movable::Movable(float _speed, Vector3f coordinates) : Displayable(coordinates),
 
 Movable::Movable(float _speed) : _speed(_speed) {}
 
-void Movable::move(Direction direction) {
+void Movable::move(Direction direction, int coef) {
   switch (direction) {
     case UP:
-      setY(getCoordinates().y + getSpeed());
+      setY(getCoordinates().y + getSpeed() * coef);
       break;
     case DOWN:
-      setY(getCoordinates().y - getSpeed());
+      setY(getCoordinates().y - getSpeed() * coef);
       break;
     case LEFT:
-      setX(getCoordinates().x - getSpeed());
+      setX(getCoordinates().x - getSpeed() * coef);
       break;
     case RIGHT:
-      setX(getCoordinates().x + getSpeed());
+      setX(getCoordinates().x + getSpeed() * coef);
       break;
     case FORWARD:
-      setZ(getCoordinates().z + getSpeed());
+      setZ(getCoordinates().z + getSpeed() * coef);
       break;
     case BACKWARD:
-      setZ(getCoordinates().z - getSpeed());
+      setZ(getCoordinates().z - getSpeed() * coef);
       break;
   }
 }

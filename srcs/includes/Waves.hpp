@@ -24,10 +24,6 @@ public:
 
   static float maxHeight();
 
-  void toggleTangeants();
-
-  void toggleNormals();
-
   void doubleVertices();
 
   void halveSegments();
@@ -49,6 +45,4 @@ private:
 
   vertices _vertices;
   int _tesselation;
-  bool _showTangeant;
-  bool _showNormal;
 };

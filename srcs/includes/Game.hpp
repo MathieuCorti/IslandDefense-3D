@@ -41,14 +41,16 @@ public:
   
   void mouse(int x, int y);
 
-  void mouseButtons(int button, int state, int x, int y) const;
-
   const float getTime() const;
 
   const float &getDeltaTime() const;
 
   const float &getFrameRate() const;
-  
+
+  const bool getShowTangeant() const;
+
+  const bool getShowNormal() const;
+
   const EntityList &getEntities() const;
 
   Game(const Game &) = delete;
@@ -61,6 +63,8 @@ private:
   float _time, _lastTime, _deltaTime = 0.0;
   float _lastFrameRateT, _frameRateInterval, _frameRate, _frames;
   bool _showWireframe = false;
+  bool _showTangeant = false;
+  bool _showNormal = false;
 
   void initDrawCallback() const;
 
@@ -86,14 +90,6 @@ private:
 
   void move(const GameEntity &entityName, Direction direction) {
     std::dynamic_pointer_cast<Movable>(_entities[entityName])->move(direction);
-  }
-
-  void toggleTangeants(const GameEntity &entityName) {
-    std::dynamic_pointer_cast<Waves>(_entities[entityName])->toggleTangeants();
-  }
-
-  void toggleNormals(const GameEntity &entityName) {
-    std::dynamic_pointer_cast<Waves>(_entities[entityName])->toggleNormals();
   }
 
   void doubleVertices(const GameEntity &entityName) {
