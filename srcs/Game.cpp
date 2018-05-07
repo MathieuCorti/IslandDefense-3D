@@ -13,6 +13,7 @@
 #include "includes/Skybox.hpp"
 #include "includes/Stats.hpp"
 #include "includes/Island.hpp"
+#include "includes/Light.hpp"
 
 // PUBLIC
 int Game::start(int argc, char **argv) {
@@ -127,10 +128,16 @@ void Game::initKeyboardMap() {
       {'s', [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(BACKWARD); }},
       {'a', [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(UP); }},
       {'e', [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(DOWN); }},
+      {'Q', [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(LEFT, 3); }},
+      {'D', [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(RIGHT, 3); }},
+      {'Z', [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(FORWARD, 3); }},
+      {'S', [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(BACKWARD, 3); }},
+      {'A', [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(UP, 3); }},
+      {'E', [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(DOWN, 3); }},
 
       // WAVES COMMANDS
-      {'n', [this](int, int) { toggleNormals(WAVES); }},
-      {'t', [this](int, int) { toggleTangeants(WAVES); }},
+      {'n', [this](int, int) { _showNormal = !_showNormal; }},
+      {'t', [this](int, int) { _showTangeant = !_showTangeant; }},
       {'W', [this](int, int) { _showWireframe = !_showWireframe; }},
       {'+', [this](int, int) { doubleVertices(WAVES); }},
       {'-', [this](int, int) { halveSegments(WAVES); }}
@@ -159,6 +166,7 @@ void Game::initBlend() {
 
 void Game::initEntities() {
   _entities.insert(std::make_pair(GameEntity::CAMERA, std::make_shared<Camera>()));
+  _entities.insert(std::make_pair(GameEntity::LIGHT, std::make_shared<Light>()));
   _entities.insert(std::make_pair(GameEntity::STATS, std::make_shared<Stats>()));
   _entities.insert(std::make_pair(GameEntity::WAVES, std::make_shared<Waves>()));
   _entities.insert(std::make_pair(GameEntity::SKYBOX, std::make_shared<Skybox>()));
@@ -198,6 +206,14 @@ const float &Game::getFrameRate() const {
 
 const Game::EntityList &Game::getEntities() const {
   return _entities;
+}
+
+const bool Game::getShowTangeant() const {
+  return _showTangeant;
+}
+
+const bool Game::getShowNormal() const {
+  return _showNormal;
 }
 
 // EXTERN C

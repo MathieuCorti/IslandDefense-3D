@@ -13,8 +13,6 @@ float Waves::_maxHeight = 0.0f;
 
 Waves::Waves() {
   _tesselation = 64;
-  _showTangeant = false;
-  _showNormal = false;
   update();
 }
 
@@ -75,15 +73,15 @@ bool Waves::update() {
 }
 
 void Waves::drawDebug() const {
-  if (_showTangeant || _showNormal) {
+  if (Game::getInstance().getShowTangeant() || Game::getInstance().getShowNormal()) {
     glBegin(GL_LINES);
     for (auto row : _vertices) {
       for (auto pair : row) {
-        if (_showTangeant) {
+        if (Game::getInstance().getShowTangeant()) {
           glColor4f(0.0f, 1.0f, 1.0f, 1.0f);
           Axes::drawVector(pair.first, Vector3f(pair.second.y, -pair.second.x, pair.second.z), 0.1f, true); //dx, dy, 0.0f
         }
-        if (_showNormal) {
+        if (Game::getInstance().getShowNormal()) {
           glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
           Axes::drawVector(pair.first, pair.second, 0.1f, true); //-dy, dx, 0.0f
         }
@@ -99,11 +97,6 @@ void Waves::drawWaves() const {
   glEnable(GL_NORMALIZE);
   glEnable(GL_BLEND);
   glEnable(GL_COLOR_MATERIAL);
-
-  GLfloat pos[] = {1.0f, 1.0f, 1.0f, 1.0f};
-  glLightfv(GL_LIGHT0, GL_POSITION, pos);
-  GLfloat lightColorDiffuse[] = {0.7f, 0.7f, 0.7f, 0.0f};
-  glLightfv(GL_LIGHT0, GL_DIFFUSE, lightColorDiffuse);
 
   GLfloat specular[] = {0.7f, 0.7f, 0.9f, 1.0f};
   glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
@@ -134,14 +127,6 @@ void Waves::drawWaves() const {
 void Waves::draw() const {
   drawWaves();
   drawDebug();
-}
-
-void Waves::toggleTangeants() {
-  _showTangeant = !_showTangeant;
-}
-
-void Waves::toggleNormals() {
-  _showNormal = !_showNormal;
 }
 
 void Waves::doubleVertices() {

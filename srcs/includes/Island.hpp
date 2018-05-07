@@ -19,7 +19,9 @@ public:
 
 private:
 
-  Vector3f perlinNormal(float i, float j);
+  Vector3f computeNormalPerlin(float i, float j);
+
+  Vector3f computeNormal(const Vector3f &p1, const Vector3f &p2, const Vector3f &p3);
 
   float islandPerlin(float x, float y) const;
 
