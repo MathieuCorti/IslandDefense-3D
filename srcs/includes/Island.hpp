@@ -11,7 +11,15 @@
 class Island : public Displayable {
 public:
 
-  typedef std::vector<std::vector<std::pair<Vector3f, Vector3f>>> vertices;
+  typedef struct s_triangle {
+    s_triangle(Vector3f p1, Vector3f p2, Vector3f p3, Vector3f n) : p1(p1), p2(p2), p3(p3), n(n) {}
+
+    Vector3f p1;
+    Vector3f p2;
+    Vector3f p3;
+    Vector3f n;
+  } triangle;
+  typedef std::vector<triangle> triangles;
 
   Island();
 
@@ -26,5 +34,5 @@ private:
   float islandPerlin(float x, float y) const;
 
   float _zmax, _xmax, _tess;
-  vertices _vertices;
+  triangles _triangle;
 };

@@ -9,8 +9,8 @@
 #include "includes/Camera.hpp"
 #include "includes/Game.hpp"
 
-Camera::Camera() : Movable(CAMERA_SPEED, Vector3f(0.5f, 0.8f, 0.5f)),
-                   _xRot(45.0f), _yRot(-45.0f),
+Camera::Camera() : Movable(CAMERA_SPEED, Vector3f(-0.8f, 0.53f, -0.30f)),
+                   _xRot(30.0f), _yRot(-245.0f),
                    _rotationSpeed(0.01), _translationSpeed(1.0f),
                    _lastMouseX(0), _lastMouseY(0) {
 }
