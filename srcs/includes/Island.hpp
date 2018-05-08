@@ -12,16 +12,15 @@ class Island : public Displayable {
 public:
 
   typedef struct s_vertex {
-    s_vertex(Vector3f p, Vector3f p2, Vector3f n) : p(p), p2(p2), n(n) {}
+    s_vertex(Vector3f p, Vector3f n) : p(p), n(n) {}
+
+    s_vertex(Vector3f p) : p(p) {}
 
     typedef std::shared_ptr<s_vertex> Ptr;
 
     Vector3f p;
-    Vector3f p2;
     Vector3f n;
   } Vertex;
-
-  typedef std::vector<Vertex::Ptr> Vertices;
 
   typedef struct s_triangle {
     s_triangle(Vertex::Ptr v1, Vertex::Ptr v2, Vertex::Ptr v3, Vector3f n) : v1(v1),
@@ -29,15 +28,17 @@ public:
                                                                              v3(v3),
                                                                              n(n) {}
 
+    typedef std::shared_ptr<s_triangle> Ptr;
+
     Vertex::Ptr v1;
     Vertex::Ptr v2;
     Vertex::Ptr v3;
     Vector3f n;
   } Triangle;
 
-  typedef std::vector<std::vector<Triangle>> Triangles;
+  typedef std::vector<std::vector<Triangle::Ptr>> Triangles;
 
-  typedef std::vector<std::vector<Vector3f>> PointMap;
+  typedef std::vector<std::vector<Vertex::Ptr>> Vertices;
 
   Island();
 
@@ -57,6 +58,7 @@ private:
 
   float _zmax, _xmax, _tess;
   Triangles _triangles;
+  Vertices _vertices;
 };
 
 inline std::ostream &operator<<(std::ostream &os, const Island::Vertex &v) {
