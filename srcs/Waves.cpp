@@ -45,7 +45,7 @@ float Waves::computeSlope(float x, float z) {
                  sineNormal(x, z, (float) M_PI / 2.5f, 1.0f / 7.0f, 1.0f * (float) M_PI, 2.0f * (float) M_PI));
 }
 
-bool Waves::update() {
+void Waves::update() {
   _time += Game::getInstance().getDeltaTime();
 
   float xStep = 2.0f / _tesselation;
@@ -68,8 +68,6 @@ bool Waves::update() {
     }
     _vertices.push_back(row);
   }
-
-  return false;
 }
 
 void Waves::drawDebug() const {

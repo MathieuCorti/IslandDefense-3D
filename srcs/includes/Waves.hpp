@@ -16,7 +16,7 @@ public:
 
   void draw() const override;
 
-  bool update() override;
+  void update() override;
 
   static float computeHeight(float x, float z);
 

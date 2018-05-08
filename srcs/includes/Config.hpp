@@ -17,7 +17,10 @@
 #define GAME_SPEED 3
 
 // CAMERA
-#define CAMERA_SPEED 1
+#define CAMERA_TRANSLATION_SPEED 1.0f
+#define CAMERA_ROTATION_SPEED 0.01f
+#define CAMERA_X_ROT_START 30.0f
+#define CAMERA_Y_ROT_START (-245.0f)
 
 // Colors
 #define BLACK   Color(0, 0, 0)

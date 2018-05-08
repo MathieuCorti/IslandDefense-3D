@@ -15,7 +15,6 @@
 class Camera : public Movable {
 private:
   float _rotationSpeed;
-  float _translationSpeed;
   float _xRot;
   float _yRot;
   float _time;
@@ -26,7 +25,7 @@ public:
 
   Camera();
 
-  bool update() override;
+  void update() override;
 
   void draw() const override;
 

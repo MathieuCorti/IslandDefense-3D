@@ -6,6 +6,7 @@
 //
 
 #include "includes/Boat.hpp"
+#include "includes/Waves.hpp"
 
 Boat::Boat(const Color color) : Movable(0.05f, Vector3f(0.3f, 0.0f, 0.0f)) {
   _shapes.push_back(Shape({
@@ -45,4 +46,8 @@ Boat::Boat(const Color color) : Movable(0.05f, Vector3f(0.3f, 0.0f, 0.0f)) {
 void Boat::draw() const {
   glEnable(GL_BLEND);
   Displayable::draw();
+}
+
+void Boat::update() {
+  _coordinates.y = Waves::computeHeight(_coordinates.x, _coordinates.z);
 }

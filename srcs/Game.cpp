@@ -55,7 +55,8 @@ void Game::update() {
 
   // Update entities
   for (auto it = _entities.cbegin(); it != _entities.cend();) {
-    if (it->second->update()) {
+    it->second->update();
+    if (!it->second->isDisplayed()) {
       it = _entities.erase(it++);
     } else {
       ++it;
@@ -114,7 +115,7 @@ void Game::keyboard(unsigned char key, int x, int y) const {
 }
 
 void Game::mouse(int x, int y) {
-  auto camera = std::dynamic_pointer_cast<Camera>(_entities[GameEntity::CAMERA]);
+  static auto camera = std::dynamic_pointer_cast<Camera>(_entities[GameEntity::CAMERA]);
   camera->rotation(x, y);
 }
 
@@ -124,31 +125,31 @@ void Game::initKeyboardMap() {
   _keyboardMap = {
       {27,  [](int, int) { exit(EXIT_SUCCESS); }},
 
-      {'q', [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(LEFT); }},
-      {'d', [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(RIGHT); }},
-      {'z', [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(FORWARD); }},
-      {'s', [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(BACKWARD); }},
-      {'a', [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(UP); }},
-      {'e', [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(DOWN); }},
-      {'Q', [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(LEFT, 3); }},
-      {'D', [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(RIGHT, 3); }},
-      {'Z', [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(FORWARD, 3); }},
-      {'S', [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(BACKWARD, 3); }},
-      {'A', [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(UP, 3); }},
-      {'E', [this](int, int) { std::dynamic_pointer_cast<Movable>(_entities[GameEntity::CAMERA])->move(DOWN, 3); }},
+      {'q', [this](int, int) { move(GameEntity::CAMERA, LEFT);        }},
+      {'d', [this](int, int) { move(GameEntity::CAMERA, RIGHT);       }},
+      {'z', [this](int, int) { move(GameEntity::CAMERA, FORWARD);     }},
+      {'s', [this](int, int) { move(GameEntity::CAMERA, BACKWARD);    }},
+      {'a', [this](int, int) { move(GameEntity::CAMERA, UP);          }},
+      {'e', [this](int, int) { move(GameEntity::CAMERA, DOWN);        }},
+      {'Q', [this](int, int) { move(GameEntity::CAMERA, LEFT, 3);     }},
+      {'D', [this](int, int) { move(GameEntity::CAMERA, RIGHT, 3);    }},
+      {'Z', [this](int, int) { move(GameEntity::CAMERA, FORWARD, 3);  }},
+      {'S', [this](int, int) { move(GameEntity::CAMERA, BACKWARD, 3); }},
+      {'A', [this](int, int) { move(GameEntity::CAMERA, UP, 3);       }},
+      {'E', [this](int, int) { move(GameEntity::CAMERA, DOWN, 3);     }},
 
       // WAVES COMMANDS
-      {'n', [this](int, int) { _showNormal = !_showNormal; }},
-      {'t', [this](int, int) { _showTangeant = !_showTangeant; }},
-      {'W', [this](int, int) { _showWireframe = !_showWireframe; }},
-      {'+', [this](int, int) { doubleVertices(WAVES); }},
-      {'-', [this](int, int) { halveSegments(WAVES); }},
+      {'n', [this](int, int) { _showNormal = !_showNormal;            }},
+      {'t', [this](int, int) { _showTangeant = !_showTangeant;        }},
+      {'W', [this](int, int) { _showWireframe = !_showWireframe;      }},
+      {'+', [this](int, int) { doubleVertices(WAVES);                 }},
+      {'-', [this](int, int) { halveSegments(WAVES);                  }},
 
       // TEST BOAT COMMANDS
-      {'j', [this](int, int) { move(GameEntity::BOAT, LEFT);      }},
-      {'l', [this](int, int) { move(GameEntity::BOAT, RIGHT);     }},
-      {'i', [this](int, int) { move(GameEntity::BOAT, UP);        }},
-      {'k', [this](int, int) { move(GameEntity::BOAT, DOWN);      }}
+      {'j', [this](int, int) { move(GameEntity::BOAT, LEFT);          }},
+      {'l', [this](int, int) { move(GameEntity::BOAT, RIGHT);         }},
+      {'i', [this](int, int) { move(GameEntity::BOAT, FORWARD);       }},
+      {'k', [this](int, int) { move(GameEntity::BOAT, BACKWARD);      }}
   };
 }
 

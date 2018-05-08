@@ -15,5 +15,7 @@ public:
   Boat(const Color color);
   
   void draw() const override;
+
+  void update() override;
 };
 
