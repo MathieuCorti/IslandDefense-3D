@@ -23,6 +23,13 @@ struct Vector3f {
     return *this;
   }
 
+  Vector3f &invert() {
+    x = -x;
+    y = -y;
+    z = -z;
+    return *this;
+  }
+
   float x;
   float y;
   float z;

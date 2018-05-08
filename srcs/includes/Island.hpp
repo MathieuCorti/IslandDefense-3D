@@ -12,12 +12,12 @@ class Island : public Displayable {
 public:
 
   typedef struct s_vertex {
-    s_vertex(Vector3f &p1, Vector3f &p2, Vector3f n) : p1(p1), p2(p2), n(n) {}
+    s_vertex(Vector3f p, Vector3f p2, Vector3f n) : p(p), p2(p2), n(n) {}
 
     typedef std::shared_ptr<s_vertex> Ptr;
 
-    Vector3f &p1;
-    Vector3f &p2;
+    Vector3f p;
+    Vector3f p2;
     Vector3f n;
   } Vertex;
 
@@ -49,13 +49,17 @@ private:
 
   float islandPerlin(float x, float y) const;
 
+  void generateTopTriangles();
+
+  void generateBottomTriangles();
+
+  void computePerVertexNormal();
+
   float _zmax, _xmax, _tess;
   Triangles _triangles;
-  PointMap _points;
-  Vertices _vertices;
 };
 
 inline std::ostream &operator<<(std::ostream &os, const Island::Vertex &v) {
-  os << v.p1 << "\t" << v.p2 << "\t" << v.n;
+  os << v.p << "\t" << "\t" << v.n;
   return os;
 }
