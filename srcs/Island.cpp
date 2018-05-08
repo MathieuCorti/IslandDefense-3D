@@ -74,8 +74,8 @@ void Island::generateTopTriangles() {
       const Vertex::Ptr p3 = pointUpRow.at(j);
       const Vertex::Ptr p4 = pointUpRow.at(j + 1);
 
-      newRow.emplace_back(std::make_shared<Triangle>(p1, p2, p3, computeNormal(p3->p, p2->p, p1->p)));
-      newRow.emplace_back(std::make_shared<Triangle>(p3, p2, p4, computeNormal(p4->p, p2->p, p3->p)));
+      newRow.emplace_back(std::make_shared<Triangle>(p1, p2, p3, computeNormal(p1->p, p2->p, p3->p).invert()));
+      newRow.emplace_back(std::make_shared<Triangle>(p3, p2, p4, computeNormal(p3->p, p2->p, p4->p).invert()));
     }
     _triangles.emplace_back(newRow);
   }
