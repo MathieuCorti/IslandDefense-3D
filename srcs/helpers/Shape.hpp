@@ -59,7 +59,7 @@ public:
                  GLenum mode = GL_POLYGON, Color color = BLACK);
 
   // TODO : New Bounding box in 3D
-//  BoundingBox getBoundingBox() const {
+  BoundingBox getBoundingBox() const {
 //    auto xExtremes = std::minmax_element(parts.begin(), parts.end(),
 //                                         [](const Coordinates &lhs, const Coordinates &rhs) {
 //                                           return lhs.x > rhs.x;
@@ -71,7 +71,7 @@ public:
 //
 //    return BoundingBox(Coordinates(xExtremes.first->x + _deltaX, yExtremes.first->y + _deltaY),
 //                       Coordinates(xExtremes.second->x + _deltaX, yExtremes.second->y + _deltaY));
-//  }
+  }
 
   // TODO : New Collide with box in 3D
 //  bool collideWith(BoundingBox bb) const {

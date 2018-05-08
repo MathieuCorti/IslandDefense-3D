@@ -88,8 +88,8 @@ private:
 
   // Helpers
 
-  void move(const GameEntity &entityName, Direction direction) {
-    std::dynamic_pointer_cast<Movable>(_entities[entityName])->move(direction);
+  void move(const GameEntity &entityName, Direction direction, int coef = 1) {
+    std::dynamic_pointer_cast<Movable>(_entities[entityName])->move(direction, coef);
   }
 
   void doubleVertices(const GameEntity &entityName) {

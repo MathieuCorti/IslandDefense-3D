@@ -24,15 +24,13 @@ public:
 
   virtual void draw() const;
 
-  virtual bool update() {
-    return false;
-  };
+  virtual void update() {};
 
   const Shapes &getShapes() const;
 
-  virtual const std::list<Displayable *> &getCollidables();
+  bool isDisplayed() const;
 
 protected:
   Shapes _shapes = Shapes();
-  std::list<Displayable *> _collidables;
+  bool   _isDisplayed = true;
 };

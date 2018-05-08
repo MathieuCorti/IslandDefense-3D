@@ -17,7 +17,5 @@ private:
 public:
   explicit Stats(const Color &color = YELLOW);
 
-  bool update() override { return false; }
-
   void draw() const override;
 };

@@ -10,7 +10,7 @@ void Displayable::draw() const {
     glBegin(shape.mode);
     shape.applyColor();
     for (Vector3f coordinates: shape.parts) {
-      glVertex3d(coordinates.x + _coordinates.x, coordinates.y + _coordinates.z, coordinates.z + _coordinates.z);
+      glVertex3d(coordinates.x + _coordinates.x, coordinates.y + _coordinates.y, coordinates.z + _coordinates.z);
     }
     glEnd();
   }
@@ -20,6 +20,6 @@ const Shapes &Displayable::getShapes() const {
   return _shapes;
 }
 
-const std::list<Displayable *> &Displayable::getCollidables() {
-  return _collidables;
+bool Displayable::isDisplayed() const {
+  return _isDisplayed;
 }
