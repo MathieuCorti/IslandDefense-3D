@@ -34,7 +34,7 @@ typedef std::list<Shape> Shapes;
 typedef struct s_vertex {
   s_vertex(Vector3f p, Vector3f n) : p(p), n(n) {}
 
-  s_vertex(Vector3f p) : p(p) {}
+  explicit s_vertex(Vector3f p) : p(p) {}
 
   typedef std::shared_ptr<s_vertex> Ptr;
 

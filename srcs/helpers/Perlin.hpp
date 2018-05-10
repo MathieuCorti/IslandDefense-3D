@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <stdio.h>
+#include <cstdio>
 
 static int SEED = 0;
 

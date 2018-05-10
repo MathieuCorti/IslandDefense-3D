@@ -20,10 +20,6 @@ private:
 
   void generateTopTriangles();
 
-  void generateBottomTriangles();
-
-  void computePerVertexNormal();
-
   float _zmax, _xmax, _tess;
   Vertices _vertices;
 };

@@ -6,8 +6,6 @@
 #include "includes/Game.hpp"
 #include "helpers/Axes.hpp"
 
-float Waves::_wavelength = (float) M_PI / 2;
-float Waves::_amplitude = 0.1f;
 float Waves::_time = 0.0f;
 float Waves::_maxHeight = 0.0f;
 
@@ -73,10 +71,10 @@ void Waves::update() {
       const std::vector<Vertex::Ptr> &pointUpRow = _vertices[i + 1];
       std::vector<Triangle> parts;
       for (int j = 0; j < pointRow.size() - 1; j++) {
-        const Vertex::Ptr p1 = pointRow.at(j);
-        const Vertex::Ptr p2 = pointRow.at(j + 1);
-        const Vertex::Ptr p3 = pointUpRow.at(j);
-        const Vertex::Ptr p4 = pointUpRow.at(j + 1);
+        const Vertex::Ptr p1 = pointRow[j];
+        const Vertex::Ptr p2 = pointRow[j + 1];
+        const Vertex::Ptr p3 = pointUpRow[j];
+        const Vertex::Ptr p4 = pointUpRow[j + 1];
 
         parts.emplace_back(p1, p2, p3);
         parts.emplace_back(p3, p2, p4);

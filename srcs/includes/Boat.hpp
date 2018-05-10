@@ -12,8 +12,8 @@
 
 class Boat : public Movable {
 public:
-  
-  Boat(Color color);
+
+  explicit Boat(Color color);
   
   void draw() const override;
 

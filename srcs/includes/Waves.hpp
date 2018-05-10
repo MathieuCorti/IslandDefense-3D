@@ -28,8 +28,6 @@ public:
 
   void toggleAnimation();
 
-  static float _wavelength;
-  static float _amplitude;
   static float _time;
   static float _maxHeight;
 

@@ -10,7 +10,9 @@
 
 Island::Island() : _xmax(0.1), _zmax(0.1), _tess(64.0f) {
   generateTopTriangles();
-  computePerVertexNormal();
+  for (Shape &shape : _shapes) {
+    shape.computePerVertexNormal();
+  }
 }
 
 void Island::generateTopTriangles() {
@@ -78,12 +80,6 @@ void Island::generateTopTriangles() {
       parts.emplace_back(p3, p2, p4, Triangle::computeNormal(p3->p, p2->p, p4->p));
     }
     _shapes.emplace_back(parts, GL_TRIANGLES, Color(1.0f, 0.5f, 0.0f, 1.0f));
-  }
-}
-
-void Island::computePerVertexNormal() {
-  for (Shape &shape : _shapes) {
-    shape.computePerVertexNormal();
   }
 }
 

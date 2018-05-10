@@ -25,7 +25,7 @@ public:
 
   explicit Movable(float _speed);
 
-  virtual void move(Direction direction, int coef = 1);
+  virtual void move(Direction direction, int coef);
 
   void moveTo(Vector3f& coordinates);
 
