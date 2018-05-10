@@ -20,85 +20,98 @@
 #include "../includes/Config.hpp"
 
 class Shape;
+
 typedef std::list<Shape> Shapes;
 
-struct BoundingBox {
+//struct BoundingBox {
 //  BoundingBox(const Coordinates &upperLeft, const Coordinates &lowerRight) : upperLeft(upperLeft),
 //                                                                             lowerRight(lowerRight) {}
 
-  Vector3f upperLeft;
-  Vector3f lowerRight;
-};
+//  Vector3f upperLeft;
+//  Vector3f lowerRight;
+//};
+
+typedef struct s_vertex {
+  s_vertex(Vector3f p, Vector3f n) : p(p), n(n) {}
+
+  s_vertex(Vector3f p) : p(p) {}
+
+  typedef std::shared_ptr<s_vertex> Ptr;
+
+  Vector3f p;
+  Vector3f n;
+} Vertex;
+
+typedef std::vector<std::vector<Vertex::Ptr>> Vertices;
+
+typedef struct s_triangle {
+  s_triangle(Vertex::Ptr v1, Vertex::Ptr v2, Vertex::Ptr v3, Vector3f n) : v1(std::move(v1)),
+                                                                           v2(std::move(v2)),
+                                                                           v3(std::move(v3)),
+                                                                           n(n) {}
+
+  s_triangle(Vertex::Ptr v1, Vertex::Ptr v2, Vertex::Ptr v3) : v1(std::move(v1)),
+                                                               v2(std::move(v2)),
+                                                               v3(std::move(v3)) {}
+
+  Vertex::Ptr v1;
+  Vertex::Ptr v2;
+  Vertex::Ptr v3;
+  Vector3f n;
+
+  static Vector3f computeNormal(const Vector3f &p1, const Vector3f &p2, const Vector3f &p3) {
+    Vector3f u = {p2.x - p1.x,
+                  p2.y - p1.y,
+                  p2.z - p1.z};
+    Vector3f v = {p3.x - p1.x,
+                  p3.y - p1.y,
+                  p3.z - p1.z};
+    Vector3f n = {u.y * v.z - u.z * v.y,
+                  u.z * v.x - u.x * v.z,
+                  u.x * v.y - u.y * v.x};
+    return n.normalize().invert();
+  }
+
+  s_triangle &computeNormal() {
+    Vector3f u = {v2->p.x - v1->p.x,
+                  v2->p.y - v1->p.y,
+                  v2->p.z - v1->p.z};
+    Vector3f v = {v3->p.x - v1->p.x,
+                  v3->p.y - v1->p.y,
+                  v3->p.z - v1->p.z};
+    n = {u.y * v.z - u.z * v.y,
+                  u.z * v.x - u.x * v.z,
+                  u.x * v.y - u.y * v.x};
+    n.normalize();
+    n.invert();
+    return *this;
+  }
+
+} Triangle;
+
+typedef std::vector<Triangle> Triangles;
 
 struct Shape {
 private:
 
-  static constexpr float defaultDelta = 0;
-
 public:
+  Triangles _parts;
+  float _size;
+  GLenum _mode;
+  Color _color;
 
-  const float &_deltaX;
-  const float &_deltaY;
+  void applyColor() const;
 
-  std::vector<Vector3f> parts;
-  float size;
-  GLenum mode;
-  Color color;
+  void computePerVertexNormal();
 
-  void applyColor() const {
-    glColor4f(color.r, color.g, color.b, color.a);
-  }
-
-  explicit Shape(std::vector<Vector3f> parts = std::vector<Vector3f>(), GLenum mode = GL_POLYGON,
-                 Color color = BLACK);
-
-  explicit Shape(std::vector<Vector3f> parts, GLenum mode, const float &deltaX, const float &deltaY,
-                 Color color = BLACK);
-
-  explicit Shape(const float &deltaX, const float &deltaY, std::vector<Vector3f> parts = std::vector<Vector3f>(),
-                 GLenum mode = GL_POLYGON, Color color = BLACK);
+  explicit Shape(Triangles triangle, GLenum mode = GL_TRIANGLES, Color color = BLACK);
 
   // TODO : New Bounding box in 3D
-  BoundingBox getBoundingBox() const {
-//    auto xExtremes = std::minmax_element(parts.begin(), parts.end(),
-//                                         [](const Coordinates &lhs, const Coordinates &rhs) {
-//                                           return lhs.x > rhs.x;
-//                                         });
-//    auto yExtremes = std::minmax_element(parts.begin(), parts.end(),
-//                                         [](const Coordinates &lhs, const Coordinates &rhs) {
-//                                           return lhs.y > rhs.y;
-//                                         });
-//
-//    return BoundingBox(Coordinates(xExtremes.first->x + _deltaX, yExtremes.first->y + _deltaY),
-//                       Coordinates(xExtremes.second->x + _deltaX, yExtremes.second->y + _deltaY));
-  }
+//  BoundingBox getBoundingBox() const {}
 
   // TODO : New Collide with box in 3D
-//  bool collideWith(BoundingBox bb) const {
-//    BoundingBox bb1 = getBoundingBox();
-//    BoundingBox bb2 = bb;
-//
-//    return bb1.upperLeft.x > bb2.lowerRight.x && bb1.lowerRight.x < bb2.upperLeft.x &&
-//           bb1.upperLeft.y > bb2.lowerRight.y && bb1.lowerRight.y < bb2.upperLeft.y;
-//  }
-//
-//  bool collideWith(const Shape &shape) const {
-//    return collideWith(shape.getBoundingBox());
-//  }
-//  
-  
+//  bool collideWith(BoundingBox bb) const {}
+
   // TODO : New Collide box in 3D
-//  static bool collide(const Shapes shapes1, const Shapes shapes2) {
-//    for (const auto &shape1: shapes1) {
-//      for (const auto &shape2: shapes2) {
-//        if (shape1.collideWith(shape2)) {
-//          return  true;
-//        }
-//      }
-//    }
-//    return false;
-//  }
-
+//  static bool collide(const Shapes shapes1, const Shapes shapes2) {}
 };
-
-typedef std::list<Shape> Shapes;

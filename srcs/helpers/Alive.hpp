@@ -12,24 +12,24 @@
 class Alive {
 
 protected:
-  const int totalHealth;
-  int currentHealth;
+  const int _totalHealth;
+  int _currentHealth;
 
 public:
 
-  explicit Alive(int health) : currentHealth(health), totalHealth(health) {}
+  explicit Alive(int health) : _currentHealth(health), _totalHealth(health) {}
 
   int takeDamage(int amount) {
     const int newHealth = getCurrentHealth() - amount;
-    return currentHealth = newHealth < 0 ? 0 : newHealth;
+    return _currentHealth = newHealth < 0 ? 0 : newHealth;
   }
 
   int getCurrentHealth() {
-    return currentHealth;
+    return _currentHealth;
   }
 
   int getTotalHealth() {
-    return totalHealth;
+    return _totalHealth;
   }
 
   float getPercentHealthLeft() {

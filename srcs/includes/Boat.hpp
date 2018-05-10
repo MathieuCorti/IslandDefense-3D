@@ -8,14 +8,20 @@
 #pragma once
 
 #include "../helpers/Movable.hpp"
+#include "Cannon.hpp"
 
 class Boat : public Movable {
 public:
   
-  Boat(const Color color);
+  Boat(Color color);
   
   void draw() const override;
 
   void update() override;
+
+  Cannon::Ptr getCannon() const;
+
+private:
+  Cannon::Ptr _cannon;
 };
 

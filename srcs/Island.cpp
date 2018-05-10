@@ -67,54 +67,24 @@ void Island::generateTopTriangles() {
   for (int i = 0; i < _vertices.size() - 1; i++) {
     const std::vector<Vertex::Ptr> &pointRow = _vertices[i];
     const std::vector<Vertex::Ptr> &pointUpRow = _vertices[i + 1];
-    std::vector<Triangle::Ptr> newRow;
+    std::vector<Triangle> parts;
     for (int j = 0; j < pointRow.size() - 1; j++) {
       const Vertex::Ptr p1 = pointRow.at(j);
       const Vertex::Ptr p2 = pointRow.at(j + 1);
       const Vertex::Ptr p3 = pointUpRow.at(j);
       const Vertex::Ptr p4 = pointUpRow.at(j + 1);
 
-      newRow.emplace_back(std::make_shared<Triangle>(p1, p2, p3, computeNormal(p1->p, p2->p, p3->p).invert()));
-      newRow.emplace_back(std::make_shared<Triangle>(p3, p2, p4, computeNormal(p3->p, p2->p, p4->p).invert()));
+      parts.emplace_back(p1, p2, p3, Triangle::computeNormal(p1->p, p2->p, p3->p));
+      parts.emplace_back(p3, p2, p4, Triangle::computeNormal(p3->p, p2->p, p4->p));
     }
-    _triangles.emplace_back(newRow);
+    _shapes.emplace_back(parts, GL_TRIANGLES, Color(1.0f, 0.5f, 0.0f, 1.0f));
   }
 }
 
 void Island::computePerVertexNormal() {
-  for (auto &row : _triangles) {
-    for (auto &t : row) {
-      t->v1->n.x += t->n.x;
-      t->v1->n.y += t->n.y;
-      t->v1->n.z += t->n.z;
-      t->v2->n.x += t->n.x;
-      t->v2->n.y += t->n.y;
-      t->v2->n.z += t->n.z;
-      t->v3->n.x += t->n.x;
-      t->v3->n.y += t->n.y;
-      t->v3->n.z += t->n.z;
-    }
+  for (Shape &shape : _shapes) {
+    shape.computePerVertexNormal();
   }
-  for (auto &row : _triangles) {
-    for (auto &t : row) {
-      t->v1->n.normalize();
-      t->v2->n.normalize();
-      t->v3->n.normalize();
-    }
-  }
-}
-
-Vector3f Island::computeNormal(const Vector3f &p1, const Vector3f &p2, const Vector3f &p3) {
-  Vector3f u = {p2.x - p1.x,
-                p2.y - p1.y,
-                p2.z - p1.z};
-  Vector3f v = {p3.x - p1.x,
-                p3.y - p1.y,
-                p3.z - p1.z};
-  Vector3f n = {u.y * v.z - u.z * v.y,
-                u.z * v.x - u.x * v.z,
-                u.x * v.y - u.y * v.x};
-  return n.normalize();
 }
 
 float Island::islandPerlin(float x, float z) const {
@@ -138,34 +108,10 @@ void Island::draw() const {
   glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
 
   glShadeModel(GL_SMOOTH);
-  glColor4f(1.0f, 0.5f, 0.0f, 1.0f);
-  glBegin(GL_TRIANGLES);
-  for (auto &row : _triangles) {
-    for (auto &t : row) {
-      glNormal3f(t->v1->n.x, t->v1->n.y, t->v1->n.z);
-      glVertex3f(t->v1->p.x, t->v1->p.y, t->v1->p.z);
-      glNormal3f(t->v2->n.x, t->v2->n.y, t->v2->n.z);
-      glVertex3f(t->v2->p.x, t->v2->p.y, t->v2->p.z);
-      glNormal3f(t->v3->n.x, t->v3->n.y, t->v3->n.z);
-      glVertex3f(t->v3->p.x, t->v3->p.y, t->v3->p.z);
-    }
-  }
-  glEnd();
+  Displayable::draw();
+
   glDisable(GL_COLOR_MATERIAL);
   glDisable(GL_BLEND);
   glDisable(GL_LIGHT0);
   glDisable(GL_LIGHTING);
-
-  glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
-  if (Game::getInstance().getShowNormal()) {
-    glBegin(GL_LINES);
-    for (auto &row : _triangles) {
-      for (auto &t : row) {
-        Axes::drawVector(t->v1->p, t->v1->n, 0.1f, true);
-        Axes::drawVector(t->v2->p, t->v2->n, 0.1f, true);
-        Axes::drawVector(t->v3->p, t->v3->n, 0.1f, true);
-      }
-    }
-    glEnd();
-  }
 }
