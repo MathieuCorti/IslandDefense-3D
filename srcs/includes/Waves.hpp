@@ -10,8 +10,6 @@
 class Waves : public Displayable {
 public:
 
-  typedef std::vector<std::vector<std::pair<Vector3f, Vector3f>>> vertices;
-
   Waves();
 
   void draw() const override;
@@ -39,10 +37,6 @@ private:
 
   static float sineWave(float x, float z, float wavelength, float amplitude, float kx, float kz);
 
-  void drawDebug() const;
-
-  void drawWaves() const;
-
-  vertices _vertices;
-  int _tesselation;
+  Vertices _vertices;
+  int _tess;
 };

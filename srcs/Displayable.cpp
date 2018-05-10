@@ -30,6 +30,7 @@ void Displayable::draw() const {
     glBegin(GL_LINES);
     for (const Shape &row : _shapes) {
       for (const Triangle &t : row._parts) {
+        glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
         Axes::drawVector(t.v1->p, t.v1->n, 0.1f, true);
         Axes::drawVector(t.v2->p, t.v2->n, 0.1f, true);
         Axes::drawVector(t.v3->p, t.v3->n, 0.1f, true);

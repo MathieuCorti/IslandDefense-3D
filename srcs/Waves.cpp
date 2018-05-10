@@ -12,7 +12,7 @@ float Waves::_time = 0.0f;
 float Waves::_maxHeight = 0.0f;
 
 Waves::Waves() {
-  _tesselation = 64;
+  _tess = 64;
   update();
 }
 
@@ -37,7 +37,7 @@ float Waves::sineNormal(float x, float z, float w, float a, float kx, float kz) 
   kx /= w;
   kz /= w;
   float shift = w * _time / 4.0f;
-  return a * (kx + kz) / 2 * std::cos(kx * x + kz * z + shift);
+  return a * kx * std::cos(kx * x + kz * z + shift);
 }
 
 float Waves::computeSlope(float x, float z) {
@@ -48,48 +48,48 @@ float Waves::computeSlope(float x, float z) {
 void Waves::update() {
   _time += Game::getInstance().getDeltaTime();
 
-  float xStep = 2.0f / _tesselation;
-  float zStep = 2.0f / _tesselation;
+  float xStep = 2.0f / _tess;
+  float zStep = 2.0f / _tess;
+  float xmax = 1.0;
+  float zmax = 1.0;
 
+//  if (_animate) {
   _vertices.clear();
-  for (int j = 0; j < _tesselation; j++) {
-    float z = -1.0f + j * zStep;
-    std::vector<std::pair<Vector3f, Vector3f>> row;
-    for (int i = 0; i <= _tesselation; i++) {
-      float x = -1.0f + i * xStep;
+  float z;
+  for (int i = 0; i <= _tess; i++) {
+    z = -zmax + i * zStep;
+    std::vector<Vertex::Ptr> row;
+    for (int j = 0; j <= _tess; j++) {
+      float x = -xmax + j * xStep;
       float dx = 1.0f;
       float dy = computeSlope(x, z);
       float y = computeHeight(x, z);
-      float y2 = computeHeight(x, z + zStep);
-      row.emplace_back(Vector3f(x, y2, z + zStep), Vector3f(-dy, dx, 0)); //Point
-      row.emplace_back(Vector3f(x, y, z), Vector3f(-dy, dx, 0)); //Normal
+      row.emplace_back(std::make_shared<Vertex>(Vector3f(x, y, z), Vector3f(-dy, dx, 0)));
       _maxHeight = std::max(_maxHeight, y);
-      _maxHeight = std::max(_maxHeight, y2);
     }
-    _vertices.push_back(row);
+    _vertices.emplace_back(row);
   }
+
+  _shapes.clear();
+  for (int i = 0; i < _vertices.size() - 1; i++) {
+    const std::vector<Vertex::Ptr> &pointRow = _vertices[i];
+    const std::vector<Vertex::Ptr> &pointUpRow = _vertices[i + 1];
+    std::vector<Triangle> parts;
+    for (int j = 0; j < pointRow.size() - 1; j++) {
+      const Vertex::Ptr p1 = pointRow.at(j);
+      const Vertex::Ptr p2 = pointRow.at(j + 1);
+      const Vertex::Ptr p3 = pointUpRow.at(j);
+      const Vertex::Ptr p4 = pointUpRow.at(j + 1);
+
+      parts.emplace_back(p1, p2, p3);
+      parts.emplace_back(p3, p2, p4);
+    }
+    _shapes.emplace_back(parts, GL_TRIANGLES, Color(0.0f, 0.5f, 1.0f, 0.8f));
+  }
+//  }
 }
 
-void Waves::drawDebug() const {
-  if (Game::getInstance().getShowTangeant() || Game::getInstance().getShowNormal()) {
-    glBegin(GL_LINES);
-    for (auto row : _vertices) {
-      for (auto pair : row) {
-        if (Game::getInstance().getShowTangeant()) {
-          glColor4f(0.0f, 1.0f, 1.0f, 1.0f);
-          Axes::drawVector(pair.first, Vector3f(pair.second.y, -pair.second.x, pair.second.z), 0.1f, true); //dx, dy, 0.0f
-        }
-        if (Game::getInstance().getShowNormal()) {
-          glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
-          Axes::drawVector(pair.first, pair.second, 0.1f, true); //-dy, dx, 0.0f
-        }
-      }
-    }
-    glEnd();
-  }
-}
-
-void Waves::drawWaves() const {
+void Waves::draw() const {
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
   glEnable(GL_NORMALIZE);
@@ -105,16 +105,32 @@ void Waves::drawWaves() const {
   GLfloat shininess = 80.0f;
   glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
 
-  glColor4f(0.0f, 0.5f, 1.0f, 0.8f);
-  for (auto row : _vertices) {
-    glBegin(GL_TRIANGLE_STRIP);
-    for (auto pair : row) {
-      glNormal3f(pair.second.x, pair.second.y, pair.second.z);
-      glVertex3f(pair.first.x, pair.first.y, pair.first.z);
+  Displayable::draw();
+  if (Game::getInstance().getShowTangeant()) {
+    glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
+    glDisable(GL_COLOR_MATERIAL);
+    glDisable(GL_BLEND);
+    glDisable(GL_LIGHT0);
+    glDisable(GL_LIGHTING);
+    glBegin(GL_LINES);
+    for (const Shape &row : _shapes) {
+      for (const Triangle &t : row._parts) {
+        glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
+        //Tangent
+        glColor4f(0.0f, 1.0f, 1.0f, 1.0f);
+        Axes::drawVector(t.v1->p, Vector3f(t.v1->n.y, -t.v1->n.x, t.v1->n.z), 0.1f, true);
+        Axes::drawVector(t.v2->p, Vector3f(t.v2->n.y, -t.v2->n.x, t.v2->n.z), 0.1f, true);
+        Axes::drawVector(t.v3->p, Vector3f(t.v3->n.y, -t.v3->n.x, t.v3->n.z), 0.1f, true);
+
+        //Binormal (But really not)
+        glColor4f(1.0f, 0.0f, 1.0f, 1.0f);
+        Axes::drawVector(t.v1->p, Vector3f(t.v1->n.z, -t.v1->n.x, t.v1->n.y), 0.1f, true);
+        Axes::drawVector(t.v2->p, Vector3f(t.v2->n.z, -t.v2->n.x, t.v2->n.y), 0.1f, true);
+        Axes::drawVector(t.v3->p, Vector3f(t.v3->n.z, -t.v3->n.x, t.v3->n.y), 0.1f, true);
+      }
     }
     glEnd();
   }
-
   glDisable(GL_COLOR_MATERIAL);
   glDisable(GL_BLEND);
   glDisable(GL_NORMALIZE);
@@ -122,18 +138,13 @@ void Waves::drawWaves() const {
   glDisable(GL_LIGHTING);
 }
 
-void Waves::draw() const {
-  drawWaves();
-  drawDebug();
-}
-
 void Waves::doubleVertices() {
-  Waves::_tesselation *= 2;
+  Waves::_tess *= 2;
   _vertices.clear();
 }
 
 void Waves::halveSegments() {
-  Waves::_tesselation /= 2;
-  Waves::_tesselation = _tesselation < 4 ? 4 : _tesselation;
+  Waves::_tess /= 2;
+  Waves::_tess = _tess < 4 ? 4 : _tess;
   _vertices.clear();
 }

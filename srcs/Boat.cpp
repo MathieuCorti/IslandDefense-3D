@@ -64,12 +64,8 @@ void Boat::draw() const {
 void Boat::update() {
   _coordinates.y = Waves::computeHeight(_coordinates.x, _coordinates.z);
   float slope = Waves::computeSlope(_coordinates.x, _coordinates.z);
-  float dot = _coordinates.x * 1 + _coordinates.y * slope;
-  float det = _coordinates.x * slope - _coordinates.y * 1;
-  _angle.z = static_cast<float>(std::atan2(det, dot) * 180 / M_PI + 180);
-//  dot = _coordinates.z * 1 + _coordinates.y * slope;
-//  det = _coordinates.z * slope - _coordinates.y * 1;
-//  _angle.x = static_cast<float>(std::atan2(det, dot) * 180 / M_PI);
+  _angle.z = static_cast<float>(std::atan(slope) * 180.0f / M_PI);
+  _angle.x = -_angle.z;
   _cannon->update();
 }
 
