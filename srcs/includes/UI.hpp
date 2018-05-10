@@ -9,7 +9,7 @@
 
 
 #include "../helpers/Displayable.hpp"
-#include "../helpers/Shape.hpp"
+#include "Shape.hpp"
 #include "../helpers/Alive.hpp"
 
 class UI : public Displayable {

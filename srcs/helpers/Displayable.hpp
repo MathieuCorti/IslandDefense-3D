@@ -10,7 +10,7 @@
 #include <memory>
 #include "Entity.hpp"
 #include "Color.hpp"
-#include "Shape.hpp"
+#include "../includes/Shape.hpp"
 #include "Alive.hpp"
 
 class Shape;

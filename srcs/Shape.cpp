@@ -3,7 +3,7 @@
 //
 
 #include <utility>
-#include "helpers/Shape.hpp"
+#include "includes/Shape.hpp"
 
 Shape::Shape(Triangles parts, GLenum mode, Color color) : _color(color),
                                                          _parts(std::move(parts)),

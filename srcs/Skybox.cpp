@@ -8,12 +8,12 @@
 #include "includes/Skybox.hpp"
 
 Skybox::Skybox() {
-  _texture[0] = loadTexture("./assets/sbw.png");
-  _texture[1] = loadTexture("./assets/sbs.png");
-  _texture[2] = loadTexture("./assets/sbe.png");
-  _texture[3] = loadTexture("./assets/sbn.png");
-  _texture[4] = loadTexture("./assets/sbt.png");
-  _texture[5] = loadTexture("./assets/sbb.png");
+  _texture[0] = TextureLoader::loadTexture("./assets/sbw.png");
+  _texture[1] = TextureLoader::loadTexture("./assets/sbs.png");
+  _texture[2] = TextureLoader::loadTexture("./assets/sbe.png");
+  _texture[3] = TextureLoader::loadTexture("./assets/sbn.png");
+  _texture[4] = TextureLoader::loadTexture("./assets/sbt.png");
+  _texture[5] = TextureLoader::loadTexture("./assets/sbb.png");
 }
 
 void Skybox::draw() const {
@@ -107,7 +107,7 @@ void Skybox::draw() const {
   glPopAttrib();
 }
 
-GLuint Skybox::loadTexture(const char *filename) {
+GLuint TextureLoader::loadTexture(const char *filename) {
   GLuint tex = SOIL_load_OGL_texture(filename, SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y);
   if (!tex) {
     std::cout << "error" << std::endl;

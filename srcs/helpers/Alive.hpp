@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "Shape.hpp"
+#include "../includes/Shape.hpp"
 
 class Alive {
 

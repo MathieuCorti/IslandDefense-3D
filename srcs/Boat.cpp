@@ -16,17 +16,17 @@ Boat::Boat(const Color color) : Movable(0.05f, Vector3f(-0.3f, 0.0f, 0.0f)) {
   Vertex::Ptr bbr = std::make_shared<Vertex>(Vector3f(0.0f, -0.05f, -0.05f));
   Vertex::Ptr bbl = std::make_shared<Vertex>(Vector3f(0.0f, -0.05f, 0.05f));
 
-  Shape shape = Shape({Triangle(ttr, ttl, tbl).computeNormal(), // TOP
-                       Triangle(tbl, tbr, ttr).computeNormal(), // TOP
-                       Triangle(ttl, ttr, bbr).computeNormal(), // FRONT
-                       Triangle(bbr, bbl, ttl).computeNormal(), // FRONT
-                       Triangle(tbl, tbr, bbr).computeNormal(), // BACK
-                       Triangle(bbr, bbl, tbl).computeNormal(), // BACK
-                       Triangle(ttl, tbl, bbl).computeNormal(), // LEFT
-                       Triangle(ttr, tbr, bbr).computeNormal()  // RIGHT
-                      }, GL_POLYGON, color);
+  Triangles triangles;
+  Triangle(ttr, ttl, tbl).subdivide(2, triangles); // TOP
+  Triangle(tbl, tbr, ttr).subdivide(2, triangles); // TOP
+  Triangle(ttl, ttr, bbr).subdivide(2, triangles); // FRONT
+  Triangle(bbr, bbl, ttl).subdivide(2, triangles); // FRONT
+  Triangle(tbr, tbl, bbl).subdivide(2, triangles); // BACK
+  Triangle(bbl, bbr, tbr).subdivide(2, triangles); // BACK
+  Triangle(tbl, ttl, bbl).subdivide(2, triangles); // LEFT
+  Triangle(ttr, tbr, bbr).subdivide(2, triangles);  // RIGHT
+  Shape shape = Shape(triangles, GL_TRIANGLES, color);
   shape.computePerVertexNormal();
-
   _shapes.push_back(shape);
   _cannon = std::make_shared<Cannon>(0, 3.0f, color);
 }
@@ -37,7 +37,7 @@ void Boat::draw() const {
   glEnable(GL_BLEND);
   glEnable(GL_COLOR_MATERIAL);
 
-  GLfloat specular[] = {0.1f, 0.1f, 0.1f, 0.0f};
+  GLfloat specular[] = {1.0f, 0.3f, 0.5f, 1.0f};
   glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
   GLfloat diffuse[] = {0.5f, 0.5f, 0.5f, 1.0f};
   glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);

@@ -1,35 +1,12 @@
 //
-//  Shape.hpp
-//  IslandDefense
-//
-//  Created by Mathieu Corti on 3/16/18.
+// Created by wilmot_g on 10/05/18.
 //
 
 #pragma once
 
-#include "Glut.hpp"
-
-#include <list>
-#include <utility>
 #include <vector>
-#include <algorithm>
-#include <iostream>
-
-#include "Displayable.hpp"
-#include "Color.hpp"
-#include "../includes/Config.hpp"
-
-class Shape;
-
-typedef std::list<Shape> Shapes;
-
-//struct BoundingBox {
-//  BoundingBox(const Coordinates &upperLeft, const Coordinates &lowerRight) : upperLeft(upperLeft),
-//                                                                             lowerRight(lowerRight) {}
-
-//  Vector3f upperLeft;
-//  Vector3f lowerRight;
-//};
+#include <memory>
+#include "Vector3f.hpp"
 
 typedef struct s_vertex {
   s_vertex(Vector3f p, Vector3f n) : p(p), n(n) {}
@@ -80,38 +57,37 @@ typedef struct s_triangle {
                   v3->p.y - v1->p.y,
                   v3->p.z - v1->p.z};
     n = {u.y * v.z - u.z * v.y,
-                  u.z * v.x - u.x * v.z,
-                  u.x * v.y - u.y * v.x};
+         u.z * v.x - u.x * v.z,
+         u.x * v.y - u.y * v.x};
     n.normalize();
     n.invert();
     return *this;
   }
 
+  static void subdivide(s_triangle t, int n, std::vector<s_triangle> &result) {
+    if (n == 0) {
+      result.push_back(t.computeNormal());
+    } else {
+      Vertex::Ptr v12 = std::make_shared<Vertex>(Vector3f(0.5f * (t.v1->p.x + t.v2->p.x),
+                                                          0.5f * (t.v1->p.y + t.v2->p.y),
+                                                          0.5f * (t.v1->p.z + t.v2->p.z)));
+      Vertex::Ptr v13 = std::make_shared<Vertex>(Vector3f(0.5f * (t.v1->p.x + t.v3->p.x),
+                                                          0.5f * (t.v1->p.y + t.v3->p.y),
+                                                          0.5f * (t.v1->p.z + t.v3->p.z)));
+      Vertex::Ptr v23 = std::make_shared<Vertex>(Vector3f(0.5f * (t.v2->p.x + t.v3->p.x),
+                                                          0.5f * (t.v2->p.y + t.v3->p.y),
+                                                          0.5f * (t.v2->p.z + t.v3->p.z)));
+
+      subdivide(s_triangle(t.v1, v12, v13, t.n), n - 1, result);
+      subdivide(s_triangle(v12, t.v2, v23, t.n), n - 1, result);
+      subdivide(s_triangle(v13, v23, t.v3, t.n), n - 1, result);
+      subdivide(s_triangle(v12, v23, v13, t.n), n - 1, result);
+    }
+  }
+
+  void subdivide(int n, std::vector<s_triangle> &result) {
+    subdivide(*this, n, result);
+  }
 } Triangle;
 
 typedef std::vector<Triangle> Triangles;
-
-struct Shape {
-private:
-
-public:
-  Triangles _parts;
-  float _size;
-  GLenum _mode;
-  Color _color;
-
-  void applyColor() const;
-
-  void computePerVertexNormal();
-
-  explicit Shape(Triangles triangle, GLenum mode = GL_TRIANGLES, Color color = BLACK);
-
-  // TODO : New Bounding box in 3D
-//  BoundingBox getBoundingBox() const {}
-
-  // TODO : New Collide with box in 3D
-//  bool collideWith(BoundingBox bb) const {}
-
-  // TODO : New Collide box in 3D
-//  static bool collide(const Shapes shapes1, const Shapes shapes2) {}
-};

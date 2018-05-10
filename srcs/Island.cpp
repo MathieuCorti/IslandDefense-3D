@@ -6,7 +6,6 @@
 #include "helpers/Perlin.hpp"
 #include "includes/Waves.hpp"
 #include "includes/Game.hpp"
-#include "helpers/Axes.hpp"
 
 Island::Island() : _xmax(0.1), _zmax(0.1), _tess(64.0f) {
   generateTopTriangles();

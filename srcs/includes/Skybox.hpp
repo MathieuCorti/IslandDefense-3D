@@ -18,7 +18,10 @@ public:
 
 private:
 
-  GLuint loadTexture(const char *filename);
-
   GLuint _texture[6] {};
+};
+
+class TextureLoader {
+public:
+  static GLuint loadTexture(const char *filename);
 };
