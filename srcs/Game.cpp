@@ -125,31 +125,33 @@ void Game::initKeyboardMap() {
   _keyboardMap = {
       {27,  [](int, int) { exit(EXIT_SUCCESS); }},
 
-      {'q', [this](int, int) { move(GameEntity::CAMERA, LEFT);        }},
-      {'d', [this](int, int) { move(GameEntity::CAMERA, RIGHT);       }},
-      {'z', [this](int, int) { move(GameEntity::CAMERA, FORWARD);     }},
-      {'s', [this](int, int) { move(GameEntity::CAMERA, BACKWARD);    }},
-      {'a', [this](int, int) { move(GameEntity::CAMERA, UP);          }},
-      {'e', [this](int, int) { move(GameEntity::CAMERA, DOWN);        }},
-      {'Q', [this](int, int) { move(GameEntity::CAMERA, LEFT, 3);     }},
-      {'D', [this](int, int) { move(GameEntity::CAMERA, RIGHT, 3);    }},
-      {'Z', [this](int, int) { move(GameEntity::CAMERA, FORWARD, 3);  }},
+      {'q', [this](int, int) { move(GameEntity::CAMERA, LEFT); }},
+      {'d', [this](int, int) { move(GameEntity::CAMERA, RIGHT); }},
+      {'z', [this](int, int) { move(GameEntity::CAMERA, FORWARD); }},
+      {'s', [this](int, int) { move(GameEntity::CAMERA, BACKWARD); }},
+      {'a', [this](int, int) { move(GameEntity::CAMERA, UP); }},
+      {'e', [this](int, int) { move(GameEntity::CAMERA, DOWN); }},
+      {'Q', [this](int, int) { move(GameEntity::CAMERA, LEFT, 3); }},
+      {'D', [this](int, int) { move(GameEntity::CAMERA, RIGHT, 3); }},
+      {'Z', [this](int, int) { move(GameEntity::CAMERA, FORWARD, 3); }},
       {'S', [this](int, int) { move(GameEntity::CAMERA, BACKWARD, 3); }},
-      {'A', [this](int, int) { move(GameEntity::CAMERA, UP, 3);       }},
-      {'E', [this](int, int) { move(GameEntity::CAMERA, DOWN, 3);     }},
+      {'A', [this](int, int) { move(GameEntity::CAMERA, UP, 3); }},
+      {'E', [this](int, int) { move(GameEntity::CAMERA, DOWN, 3); }},
+
+      {'n', [this](int, int) { _showNormal = !_showNormal; }},
+      {'t', [this](int, int) { _showTangeant = !_showTangeant; }},
+      {'W', [this](int, int) { _showWireframe = !_showWireframe; }},
 
       // WAVES COMMANDS
-      {'n', [this](int, int) { _showNormal = !_showNormal;            }},
-      {'t', [this](int, int) { _showTangeant = !_showTangeant;        }},
-      {'W', [this](int, int) { _showWireframe = !_showWireframe;      }},
-      {'+', [this](int, int) { doubleVertices(WAVES);                 }},
-      {'-', [this](int, int) { halveSegments(WAVES);                  }},
+      {'p', [this](int, int) { toggleAnimation(GameEntity ::WAVES); }},
+      {'+', [this](int, int) { doubleVertices(GameEntity ::WAVES); }},
+      {'-', [this](int, int) { halveSegments(GameEntity ::WAVES); }},
 
       // TEST BOAT COMMANDS
-      {'j', [this](int, int) { move(GameEntity::BOAT, LEFT);          }},
-      {'l', [this](int, int) { move(GameEntity::BOAT, RIGHT);         }},
-      {'i', [this](int, int) { move(GameEntity::BOAT, FORWARD);       }},
-      {'k', [this](int, int) { move(GameEntity::BOAT, BACKWARD);      }}
+      {'j', [this](int, int) { move(GameEntity::BOAT, LEFT); }},
+      {'l', [this](int, int) { move(GameEntity::BOAT, RIGHT); }},
+      {'i', [this](int, int) { move(GameEntity::BOAT, FORWARD); }},
+      {'k', [this](int, int) { move(GameEntity::BOAT, BACKWARD); }}
   };
 }
 

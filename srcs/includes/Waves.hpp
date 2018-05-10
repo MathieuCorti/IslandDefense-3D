@@ -26,6 +26,8 @@ public:
 
   void halveSegments();
 
+  void toggleAnimation();
+
   static float _wavelength;
   static float _amplitude;
   static float _time;
@@ -37,6 +39,7 @@ private:
 
   static float sineWave(float x, float z, float wavelength, float amplitude, float kx, float kz);
 
+  bool _animate;
   Vertices _vertices;
   int _tess;
 };

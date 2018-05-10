@@ -11,8 +11,7 @@ float Waves::_amplitude = 0.1f;
 float Waves::_time = 0.0f;
 float Waves::_maxHeight = 0.0f;
 
-Waves::Waves() {
-  _tess = 64;
+Waves::Waves() : _tess(64), _animate(true) {
   update();
 }
 
@@ -46,47 +45,46 @@ float Waves::computeSlope(float x, float z) {
 }
 
 void Waves::update() {
-  _time += Game::getInstance().getDeltaTime();
-
   float xStep = 2.0f / _tess;
   float zStep = 2.0f / _tess;
   float xmax = 1.0;
   float zmax = 1.0;
 
-//  if (_animate) {
-  _vertices.clear();
-  float z;
-  for (int i = 0; i <= _tess; i++) {
-    z = -zmax + i * zStep;
-    std::vector<Vertex::Ptr> row;
-    for (int j = 0; j <= _tess; j++) {
-      float x = -xmax + j * xStep;
-      float dx = 1.0f;
-      float dy = computeSlope(x, z);
-      float y = computeHeight(x, z);
-      row.emplace_back(std::make_shared<Vertex>(Vector3f(x, y, z), Vector3f(-dy, dx, 0)));
-      _maxHeight = std::max(_maxHeight, y);
+  if (_animate) {
+    _vertices.clear();
+    float z;
+    for (int i = 0; i <= _tess; i++) {
+      z = -zmax + i * zStep;
+      std::vector<Vertex::Ptr> row;
+      for (int j = 0; j <= _tess; j++) {
+        float x = -xmax + j * xStep;
+        float dx = 1.0f;
+        float dy = computeSlope(x, z);
+        float y = computeHeight(x, z);
+        row.emplace_back(std::make_shared<Vertex>(Vector3f(x, y, z), Vector3f(-dy, dx, 0)));
+        _maxHeight = std::max(_maxHeight, y);
+      }
+      _vertices.emplace_back(row);
     }
-    _vertices.emplace_back(row);
-  }
 
-  _shapes.clear();
-  for (int i = 0; i < _vertices.size() - 1; i++) {
-    const std::vector<Vertex::Ptr> &pointRow = _vertices[i];
-    const std::vector<Vertex::Ptr> &pointUpRow = _vertices[i + 1];
-    std::vector<Triangle> parts;
-    for (int j = 0; j < pointRow.size() - 1; j++) {
-      const Vertex::Ptr p1 = pointRow.at(j);
-      const Vertex::Ptr p2 = pointRow.at(j + 1);
-      const Vertex::Ptr p3 = pointUpRow.at(j);
-      const Vertex::Ptr p4 = pointUpRow.at(j + 1);
+    _shapes.clear();
+    for (int i = 0; i < _vertices.size() - 1; i++) {
+      const std::vector<Vertex::Ptr> &pointRow = _vertices[i];
+      const std::vector<Vertex::Ptr> &pointUpRow = _vertices[i + 1];
+      std::vector<Triangle> parts;
+      for (int j = 0; j < pointRow.size() - 1; j++) {
+        const Vertex::Ptr p1 = pointRow.at(j);
+        const Vertex::Ptr p2 = pointRow.at(j + 1);
+        const Vertex::Ptr p3 = pointUpRow.at(j);
+        const Vertex::Ptr p4 = pointUpRow.at(j + 1);
 
-      parts.emplace_back(p1, p2, p3);
-      parts.emplace_back(p3, p2, p4);
+        parts.emplace_back(p1, p2, p3);
+        parts.emplace_back(p3, p2, p4);
+      }
+      _shapes.emplace_back(parts, GL_TRIANGLES, Color(0.0f, 0.5f, 1.0f, 0.8f));
     }
-    _shapes.emplace_back(parts, GL_TRIANGLES, Color(0.0f, 0.5f, 1.0f, 0.8f));
+    _time += Game::getInstance().getDeltaTime();
   }
-//  }
 }
 
 void Waves::draw() const {
@@ -136,6 +134,10 @@ void Waves::draw() const {
   glDisable(GL_NORMALIZE);
   glDisable(GL_LIGHT0);
   glDisable(GL_LIGHTING);
+}
+
+void Waves::toggleAnimation() {
+  _animate = !_animate;
 }
 
 void Waves::doubleVertices() {

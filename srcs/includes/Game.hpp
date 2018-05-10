@@ -92,6 +92,10 @@ private:
     std::dynamic_pointer_cast<Movable>(_entities[entityName])->move(direction, coef);
   }
 
+  void toggleAnimation(const GameEntity &entityName) {
+    std::dynamic_pointer_cast<Waves>(_entities[entityName])->toggleAnimation();
+  }
+
   void doubleVertices(const GameEntity &entityName) {
     std::dynamic_pointer_cast<Waves>(_entities[entityName])->doubleVertices();
   }
