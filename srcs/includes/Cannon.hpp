@@ -15,7 +15,7 @@ class Cannon : public Displayable {
 public:
   typedef std::shared_ptr<Cannon> Ptr;
 
-  explicit Cannon(float rotation = 1.0f, float speed = 3.0f, Color color = Color(0, 127, 255));
+  explicit Cannon(float rotation = 1.0f, float speed = 3.0f, float radius = 0.01, Color color = Color(0, 127, 255));
 
   void draw() const override;
 
@@ -40,8 +40,8 @@ private:
 
   float _rotation;
   float _speed;
-  float _angle;
   float _scale;
+  float _radius;
   bool _inverted;
   Vector3f _velocity;
   float _lastFire, _lastDefence;

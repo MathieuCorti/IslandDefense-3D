@@ -9,20 +9,59 @@
 
 const float g = -9.8f;
 
-Cannon::Cannon(float rotation, float speed, Color color) : _color(color),
+Cannon::Cannon(float rotation, float speed, float radius, Color color) : _color(color),
                                                            _rotation(rotation),
                                                            _speed(speed),
-                                                           _angle(0),
+                                                           _radius(radius),
                                                            _lastFire(-1.0f),
                                                            _lastDefence(-5.0f) {
-  _shapes.push_back(Shape({}, GL_TRIANGLES, color));
+  Vertices vertices;
+
+  std::vector<Vertex::Ptr> top;
+  std::vector<Vertex::Ptr> bottom;
+  Vector3f p;
+  for (int j = 0; j < 45; j++) {
+    p.x = static_cast<float>(radius * std::cos(j * 8 * M_PI / 180.0f));
+    p.y = 0.0f;
+    p.z = static_cast<float>(radius * std::sin(j * 8 * M_PI / 180.0f));
+    bottom.push_back(std::make_shared<Vertex>(p));
+    p.y = 0.1f;
+    top.push_back(std::make_shared<Vertex>(p));
+  }
+  vertices.push_back(bottom);
+  vertices.push_back(top);
+
+  Triangles triangles;
+  Vertex::Ptr centerBottom = std::make_shared<Vertex>(Vector3f(0.0f, 0.0f, 0.0f));
+  Vertex::Ptr centerTop = std::make_shared<Vertex>(Vector3f(0.0f, 0.1f, 0.0f));
+  Vertex::Ptr bl = vertices[0][vertices[0].size() - 1];
+  Vertex::Ptr br = vertices[0][0];
+  Vertex::Ptr tl = vertices[1][vertices[1].size() - 1];
+  Vertex::Ptr tr = vertices[1][0];
+  triangles.emplace_back(bl, tl, tr, Triangle::computeNormal(bl->p, tl->p, tr->p).invert());
+  triangles.emplace_back(tr, br, bl, Triangle::computeNormal(tr->p, br->p, bl->p).invert());
+  triangles.emplace_back(br, centerBottom, bl, Triangle::computeNormal(br->p, centerBottom->p, bl->p));
+  triangles.emplace_back(tr, centerTop, tl, Triangle::computeNormal(tr->p, centerTop->p, tl->p));
+  for (int i = 0; i < vertices[0].size() - 1; i++) {
+    bl = vertices[0][i];
+    br = vertices[0][i + 1];
+    tl = vertices[1][i];
+    tr = vertices[1][i + 1];
+    triangles.emplace_back(bl, tl, tr, Triangle::computeNormal(bl->p, tl->p, tr->p).invert());
+    triangles.emplace_back(tr, br, bl, Triangle::computeNormal(tr->p, br->p, bl->p).invert());
+    triangles.emplace_back(br, centerBottom, bl, Triangle::computeNormal(br->p, centerBottom->p, bl->p));
+    triangles.emplace_back(tr, centerTop, tl, Triangle::computeNormal(tr->p, centerTop->p, tl->p));
+  }
+  Shape shape = Shape(triangles, GL_TRIANGLES, color);
+  shape.computePerVertexNormal();
+  _shapes.push_back(shape);
 }
 
 void Cannon::drawDirection() const {
-  glPushMatrix();
-  glTranslatef(_coordinates.x, _coordinates.y, _coordinates.z);
-  glRotatef(static_cast<GLfloat>(_angle + _rotation * 180 / M_PI - 90), 0.0, 0.0, 1.0);
-  glPopMatrix();
+//  glPushMatrix();
+//  glTranslatef(_coordinates.x, _coordinates.y, _coordinates.z);
+//  glRotatef(static_cast<GLfloat>(_angle + _rotation * 180 / M_PI - 90), 0.0, 0.0, 1.0);
+//  glPopMatrix();
 }
 
 void Cannon::drawTrajectory() const {
@@ -60,10 +99,13 @@ Pellet::Ptr Cannon::defend() {
 }
 
 void Cannon::draw() const {
-//  glPushMatrix();
-//  drawTrajectory();
-//  drawDirection();
-//  glPopMatrix();
+  glPushMatrix();
+  glTranslatef(_coordinates.x, _coordinates.y, _coordinates.z);
+  glRotatef(_angle.x, 1.0, 0.0, 0.0);
+  glRotatef(_angle.y, 0.0, 1.0, 0.0);
+  glRotatef(_angle.z, 0.0, 0.0, 1.0);
+  Displayable::draw();
+  glPopMatrix();
 }
 
 void Cannon::speed(float value) {
@@ -78,11 +120,11 @@ void Cannon::rotation(float angle) {
 }
 
 void Cannon::setPos(float x, float y, float angle) {
-  _coordinates.x = x;
-  _coordinates.y = y;
-  _angle = angle + (_inverted ? 0 : 180);
-  _velocity.x = static_cast<float>(std::cos(_rotation + _angle * M_PI / 180.0f) * _speed);
-  _velocity.y = static_cast<float>(std::sin(_rotation + _angle * M_PI / 180.0f) * _speed);
+//  _coordinates.x = x;
+//  _coordinates.y = y;
+//  _angle = angle + (_inverted ? 0 : 180);
+//  _velocity.x = static_cast<float>(std::cos(_rotation + _angle * M_PI / 180.0f) * _speed);
+//  _velocity.y = static_cast<float>(std::sin(_rotation + _angle * M_PI / 180.0f) * _speed);
 }
 
 const Vector3f &Cannon::getVelocity() const {
