@@ -22,6 +22,9 @@ public:
   Cannon::Ptr getCannon() const;
 
 private:
+  
+  void computeAI();
+  
   Cannon::Ptr _cannon;
 };
 

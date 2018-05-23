@@ -7,8 +7,10 @@
 
 #include "includes/Boat.hpp"
 #include "includes/Waves.hpp"
+#include "includes/Island.hpp"
+#include "includes/Game.hpp"
 
-Boat::Boat(const Color color) : Movable(0.05f, Vector3f(-0.3f, 0.0f, 0.0f)) {
+Boat::Boat(const Color color) : Movable(0.05f, Vector3f(-0.8f, 0.0f, -0.5f)) {
   Vertex::Ptr ttr = std::make_shared<Vertex>(Vector3f(0.1f, 0.05f, -0.05f));
   Vertex::Ptr ttl = std::make_shared<Vertex>(Vector3f(0.1f, 0.05f, 0.05f));
   Vertex::Ptr tbr = std::make_shared<Vertex>(Vector3f(-0.1f, 0.05f, -0.05f));
@@ -19,14 +21,15 @@ Boat::Boat(const Color color) : Movable(0.05f, Vector3f(-0.3f, 0.0f, 0.0f)) {
   Triangles triangles;
   Triangle(ttr, ttl, tbl).subdivide(2, triangles); // TOP
   Triangle(tbl, tbr, ttr).subdivide(2, triangles); // TOP
-  Triangle(ttl, ttr, bbr).subdivide(2, triangles); // FRONT
+  Triangle(ttl, ttr, bbr).subdivide(2, triangles); // FRONRT
   Triangle(bbr, bbl, ttl).subdivide(2, triangles); // FRONT
   Triangle(tbr, tbl, bbl).subdivide(2, triangles); // BACK
   Triangle(bbl, bbr, tbr).subdivide(2, triangles); // BACK
   Triangle(tbl, ttl, bbl).subdivide(2, triangles); // LEFT
   Triangle(ttr, tbr, bbr).subdivide(2, triangles);  // RIGHT
-  Shape shape = Shape(triangles, GL_TRIANGLES, color);
+  Shape shape = Shape(triangles, _coordinates, GL_TRIANGLES, color);
   shape.computePerVertexNormal();
+  shape.generateBoundingBox();
   _shapes.push_back(shape);
   _cannon = std::make_shared<Cannon>(0, 3.0f, color);
 }
@@ -67,6 +70,16 @@ void Boat::update() {
   _angle.z = static_cast<float>(std::atan(slope) * 180.0f / M_PI);
   _angle.x = -_angle.z;
   _cannon->update();
+  computeAI(); // Test
+}
+
+void Boat::computeAI() {
+  static Island::Ptr island =  std::dynamic_pointer_cast<Island>(Game::getInstance().getEntities().at(ISLAND));
+
+  // TODO: Calculate Y angle
+//  _angle.y = -50;
+//  _coordinates.x -= (_coordinates.x - island->getCoordinates().x) * _speed * 0.05f;
+//  _coordinates.z -= (_coordinates.z - island->getCoordinates().z) * _speed * 0.05f;
 }
 
 Cannon::Ptr Boat::getCannon() const {

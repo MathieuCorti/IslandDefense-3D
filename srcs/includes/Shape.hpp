@@ -24,16 +24,20 @@ class Shape;
 
 typedef std::list<Shape> Shapes;
 
-//struct BoundingBox {
-//  BoundingBox(const Coordinates &upperLeft, const Coordinates &lowerRight) : upperLeft(upperLeft),
-//                                                                             lowerRight(lowerRight) {}
+struct BoundingBox {
+  BoundingBox() = default;
+  BoundingBox(const Vector3f &cubeMin, const Vector3f &cubeMax) : vecMin(cubeMin),
+                                                                  vecMax(cubeMax) {}
 
-//  Vector3f upperLeft;
-//  Vector3f lowerRight;
-//};
+  Vector3f vecMin;
+  Vector3f vecMax;
+};
 
 struct Shape {
 private:
+  BoundingBox _boundingBox;
+  static const Vector3f defaultDelta;
+  const Vector3f &_delta;
 
 public:
   Triangles _parts;
@@ -45,14 +49,17 @@ public:
 
   void computePerVertexNormal();
 
-  explicit Shape(Triangles triangle, GLenum mode = GL_TRIANGLES, Color color = BLACK);
+  explicit Shape(Triangles parts, GLenum mode = GL_TRIANGLES, Color color = BLACK);
 
-  // TODO : New Bounding box in 3D
-//  BoundingBox getBoundingBox() const {}
+  explicit Shape(Triangles parts, const Vector3f &delta, 
+                 GLenum mode = GL_TRIANGLES, Color color = BLACK);
+  
+  bool collideWith(BoundingBox other) const;
 
-  // TODO : New Collide with box in 3D
-//  bool collideWith(BoundingBox bb) const {}
+  bool collideWith(Shape other) const;
 
-  // TODO : New Collide box in 3D
-//  static bool collide(const Shapes shapes1, const Shapes shapes2) {}
+  void generateBoundingBox();
+
+  const BoundingBox &get_boundingBox() const;
+
 };

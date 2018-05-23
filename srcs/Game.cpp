@@ -62,6 +62,20 @@ void Game::update() {
       ++it;
     }
   }
+
+
+  // =============================================== TEST =============================================================
+  static Island::Ptr island = std::dynamic_pointer_cast<Island>(_entities[ISLAND]);
+  static Boat::Ptr boat = std::dynamic_pointer_cast<Boat>(_entities[BOAT]);
+
+  for (auto &thisShape: island->getShapes()) {               // Get the shapes of the projectile
+    for (auto &enemyShape: boat->getShapes()) {              // Get the shapes of the sub entity
+      if (enemyShape.collideWith(thisShape)) {               // Check collision
+        std::cout << "BOAT COLLIDE WITH ISLAND !!!!" << std::endl;
+      }
+    }
+  }
+  // =============================================== TEST =============================================================
 }
 
 void Game::draw() {
@@ -125,17 +139,17 @@ void Game::initKeyboardMap() {
   _keyboardMap = {
       {27,  [](int, int) { exit(EXIT_SUCCESS); }},
 
-      {'q', [this](int, int) { move(GameEntity::CAMERA, LEFT); }},
+      {'a', [this](int, int) { move(GameEntity::CAMERA, LEFT); }},
       {'d', [this](int, int) { move(GameEntity::CAMERA, RIGHT); }},
-      {'z', [this](int, int) { move(GameEntity::CAMERA, FORWARD); }},
+      {'w', [this](int, int) { move(GameEntity::CAMERA, FORWARD); }},
       {'s', [this](int, int) { move(GameEntity::CAMERA, BACKWARD); }},
-      {'a', [this](int, int) { move(GameEntity::CAMERA, UP); }},
+      {'q', [this](int, int) { move(GameEntity::CAMERA, UP); }},
       {'e', [this](int, int) { move(GameEntity::CAMERA, DOWN); }},
-      {'Q', [this](int, int) { move(GameEntity::CAMERA, LEFT, 3); }},
+      {'A', [this](int, int) { move(GameEntity::CAMERA, LEFT, 3); }},
       {'D', [this](int, int) { move(GameEntity::CAMERA, RIGHT, 3); }},
-      {'Z', [this](int, int) { move(GameEntity::CAMERA, FORWARD, 3); }},
+      {'w', [this](int, int) { move(GameEntity::CAMERA, FORWARD, 3); }},
       {'S', [this](int, int) { move(GameEntity::CAMERA, BACKWARD, 3); }},
-      {'A', [this](int, int) { move(GameEntity::CAMERA, UP, 3); }},
+      {'Q', [this](int, int) { move(GameEntity::CAMERA, UP, 3); }},
       {'E', [this](int, int) { move(GameEntity::CAMERA, DOWN, 3); }},
 
       {'n', [this](int, int) { _showNormal = !_showNormal; }},
