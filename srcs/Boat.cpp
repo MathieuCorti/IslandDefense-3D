@@ -8,13 +8,13 @@
 #include "includes/Boat.hpp"
 #include "includes/Waves.hpp"
 
-Boat::Boat(const Color color) : Movable(0.05f, Vector3f(-0.3f, 0.0f, 0.0f)) {
-  Vertex::Ptr ttr = std::make_shared<Vertex>(Vector3f(0.1f, 0.05f, -0.05f));
-  Vertex::Ptr ttl = std::make_shared<Vertex>(Vector3f(0.1f, 0.05f, 0.05f));
-  Vertex::Ptr tbr = std::make_shared<Vertex>(Vector3f(-0.1f, 0.05f, -0.05f));
-  Vertex::Ptr tbl = std::make_shared<Vertex>(Vector3f(-0.1f, 0.05f, 0.05f));
-  Vertex::Ptr bbr = std::make_shared<Vertex>(Vector3f(0.0f, -0.05f, -0.05f));
-  Vertex::Ptr bbl = std::make_shared<Vertex>(Vector3f(0.0f, -0.05f, 0.05f));
+Boat::Boat(const Color color) : Movable(0.05f, Vector3f(-0.15f, 0.0f, 0.0f)) {
+  Vertex::Ptr ttr = std::make_shared<Vertex>(Vector3f(0.05f, 0.025f, -0.025f));
+  Vertex::Ptr ttl = std::make_shared<Vertex>(Vector3f(0.05f, 0.025f, 0.025f));
+  Vertex::Ptr tbr = std::make_shared<Vertex>(Vector3f(-0.05f, 0.025f, -0.025f));
+  Vertex::Ptr tbl = std::make_shared<Vertex>(Vector3f(-0.05f, 0.025f, 0.025f));
+  Vertex::Ptr bbr = std::make_shared<Vertex>(Vector3f(0.0f, -0.025f, -0.025f));
+  Vertex::Ptr bbl = std::make_shared<Vertex>(Vector3f(0.0f, -0.025f, 0.025f));
 
   Triangles triangles;
   Triangle(ttr, ttl, tbl).subdivide(2, triangles); // TOP
@@ -28,7 +28,7 @@ Boat::Boat(const Color color) : Movable(0.05f, Vector3f(-0.3f, 0.0f, 0.0f)) {
   Shape shape = Shape(triangles, GL_TRIANGLES, color);
   shape.computePerVertexNormal();
   _shapes.emplace_back(shape);
-  _cannon = std::make_shared<Cannon>(0, 3.0f, 0.01f, color);
+  _cannon = std::make_shared<Cannon>(3.0f, 0.005f, color);
 }
 
 void Boat::draw() const {
@@ -52,9 +52,7 @@ void Boat::draw() const {
   glRotatef(_angle.x, 1.0, 0.0, 0.0);
   glRotatef(_angle.y, 0.0, 1.0, 0.0);
   glRotatef(_angle.z, 0.0, 0.0, 1.0);
-  glScalef(0.5, 0.5, 0.5);
   Displayable::draw();
-  _cannon->draw();
   glPopMatrix();
 
   glDisable(GL_NORMALIZE);
@@ -62,6 +60,8 @@ void Boat::draw() const {
   glDisable(GL_BLEND);
   glDisable(GL_LIGHT0);
   glDisable(GL_LIGHTING);
+
+  _cannon->draw();
 }
 
 void Boat::update() {
@@ -69,6 +69,7 @@ void Boat::update() {
   float slope = Waves::computeSlope(_coordinates.x, _coordinates.z);
   _angle.z = static_cast<float>(std::atan(slope) * 180.0f / M_PI);
   _angle.x = -_angle.z;
+  _cannon->setPos(_coordinates + Vector3f::transform({0, 0.025f, 0}, _angle), _angle);
   _cannon->update();
 }
 

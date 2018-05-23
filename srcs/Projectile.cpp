@@ -15,7 +15,6 @@ Projectile::Projectile(float t, Vector3f coordinates, Vector3f velocity, Color c
                                                                                     _color(c),
                                                                                     _startT(t),
                                                                                     _start(coordinates),
-                                                                                    _startVelocity(velocity),
                                                                                     _velocity(velocity) {}
 
 Shape Projectile::getCircle(float radius, Vector3f center) {
@@ -42,16 +41,46 @@ void Projectile::update() {
   }
 
   float t = Game::getInstance().getTime() - _startT;
-  _coordinates.x = _start.x + _startVelocity.x * t;
-  _coordinates.y = _start.y + _startVelocity.y * t + g * t * t / 2.0f;
+  _coordinates.x = _start.x + _velocity.x * t;
+  _coordinates.y = _start.y + _velocity.y * t + g * t * t / 2.0f;
+  _coordinates.z = _start.z + _velocity.z * t;
+
 
   //TODO : collisions
 
-  if (_coordinates.y < -0.8 || _coordinates.x < -1 || _coordinates.x > 1) {
+  if (_coordinates.y < -1 || _coordinates.y > 1 ||
+      _coordinates.x < -1 || _coordinates.x > 1 ||
+      _coordinates.z < -1 || _coordinates.z > 1) {
     _currentHealth = 0;
   }
 }
 
 void Projectile::draw() const {
-  //TODO
+  glEnable(GL_LIGHTING);
+  glEnable(GL_LIGHT0);
+  glEnable(GL_BLEND);
+  glEnable(GL_COLOR_MATERIAL);
+  glEnable(GL_NORMALIZE);
+
+  GLfloat specular[] = {1.0f, 0.3f, 0.5f, 1.0f};
+  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
+  GLfloat diffuse[] = {0.5f, 0.5f, 0.5f, 1.0f};
+  glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
+  GLfloat emission[] = {0.0f, 0.0f, 0.0f, 1.0f};
+  glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emission);
+  GLfloat shininess = 64.0f;
+  glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
+
+  glPushMatrix();
+  glTranslatef(_coordinates.x, _coordinates.y, _coordinates.z);
+  //TODO : get circle
+  glutSolidSphere(0.01f * 2.0f, 20, 20);
+  glPopMatrix();
+
+
+  glDisable(GL_NORMALIZE);
+  glDisable(GL_COLOR_MATERIAL);
+  glDisable(GL_BLEND);
+  glDisable(GL_LIGHT0);
+  glDisable(GL_LIGHTING);
 }

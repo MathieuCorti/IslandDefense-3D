@@ -7,14 +7,16 @@
 #include "includes/Waves.hpp"
 #include "includes/Game.hpp"
 
-Island::Island() : _xmax(0.1), _zmax(0.1), _tess(64.0f) {
-  generateTopTriangles();
+Island::Island() : _xmax(0.1f), _zmax(0.1f), _tess(64.0f), _maxHeight(-1.0f), _minHeight(-1.0f) {
+  generateTopTriangles(ORANGE);
   for (Shape &shape : _shapes) {
     shape.computePerVertexNormal();
   }
+  _cannon = std::make_shared<Cannon>(3.0f, 0.012f, GREY);
+  _cannon->setPos(Vector3f(0, (_maxHeight + _minHeight) / 2.0f, 0), _angle);
 }
 
-void Island::generateTopTriangles() {
+void Island::generateTopTriangles(Color color) {
   float xStep = 2 * _xmax / _tess;
   float zStep = 2 * _zmax / _tess;
 
@@ -42,7 +44,10 @@ void Island::generateTopTriangles() {
       if (j == 0) {
         row.emplace_back(std::make_shared<Vertex>(Vector3f(x * 3.0f, -0.8f, z * 3.0f)));
       }
-      row.emplace_back(std::make_shared<Vertex>(Vector3f(x, islandPerlin(x, z), z)));
+      float y = islandPerlin(x, z);
+      _maxHeight = _maxHeight == -1.0f ? y : std::max(_maxHeight, y);
+      _minHeight = _minHeight == -1.0f ? y : std::min(_minHeight, y);
+      row.emplace_back(std::make_shared<Vertex>(Vector3f(x, y, z)));
       if (j == _tess) {
         row.emplace_back(std::make_shared<Vertex>(Vector3f(x * 3.0f, -0.8f, z * 3.0f)));
       }
@@ -78,7 +83,7 @@ void Island::generateTopTriangles() {
       parts.emplace_back(p1, p2, p3, Triangle::computeNormal(p1->p, p2->p, p3->p));
       parts.emplace_back(p3, p2, p4, Triangle::computeNormal(p3->p, p2->p, p4->p));
     }
-    _shapes.emplace_back(parts, GL_TRIANGLES, Color(1.0f, 0.5f, 0.0f, 1.0f));
+    _shapes.emplace_back(parts, GL_TRIANGLES, color);
   }
 }
 
@@ -104,9 +109,18 @@ void Island::draw() const {
 
   glShadeModel(GL_SMOOTH);
   Displayable::draw();
+  _cannon->draw();
 
   glDisable(GL_COLOR_MATERIAL);
   glDisable(GL_BLEND);
   glDisable(GL_LIGHT0);
   glDisable(GL_LIGHTING);
+}
+
+void Island::update() {
+  _cannon->update();
+}
+
+Cannon::Ptr Island::getCannon() const {
+  return _cannon;
 }

@@ -5,14 +5,13 @@ set(CMAKE_CXX_FLAGS "-Wno-deprecated-declarations")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
 
 add_executable(IslandDefense3D
-
         main.cpp
-
         srcs/Game.cpp
         srcs/includes/Game.hpp
         srcs/helpers/Displayable.hpp
         srcs/includes/Shape.hpp
         srcs/helpers/Entity.hpp
+        srcs/includes/Entities.hpp
         srcs/helpers/Movable.hpp
         srcs/helpers/Glut.hpp
         srcs/helpers/Color.hpp
@@ -47,7 +46,8 @@ add_executable(IslandDefense3D
         srcs/Boat.cpp
         srcs/includes/Boat.hpp
         srcs/Light.cpp
-        srcs/includes/Light.hpp srcs/helpers/Triangle.h)
+        srcs/includes/Light.hpp
+        srcs/helpers/Triangle.h)
 find_package(OpenGL REQUIRED)
 find_package(GLUT REQUIRED)
 find_library(SOIL SOIL)

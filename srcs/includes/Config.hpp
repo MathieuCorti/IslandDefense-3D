@@ -22,13 +22,19 @@
 #define CAMERA_X_ROT_START 30.0f
 #define CAMERA_Y_ROT_START (-245.0f)
 
-// Colors
+// CANNON
+#define INCREASE  0.1f
+#define DECREASE  (-0.1f)
+
+// COLORS
 #define BLACK   Color(0, 0, 0)
 #define WHITE   Color(255, 255, 255)
 #define RED     Color(255, 0, 0)
 #define GREEN   Color(0, 255, 0)
 #define YELLOW  Color(255, 255, 0)
 #define BLUE    Color(0, 0, 255)
+#define ORANGE  Color(1.0f, 0.5f, 0.0f, 1.0f)
+#define GREY    Color(0.75f, 0.75f, 0.75f, 1.0f)
 
 // ENTITIES
 enum GameEntity {
