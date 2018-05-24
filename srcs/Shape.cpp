@@ -77,7 +77,7 @@ bool Shape::collideWith(Shape other) const {
 bool Shape::collideWith(BoundingBox other) const {
   
   BoundingBox own = get_boundingBox();
-lljll//  std::cout << "Own bounding box : " << std::endl;
+//  std::cout << "Own bounding box : " << std::endl;
 //  std::cout << " - vecMax -> x: " << own.vecMax.x << " | y: " << own.vecMax.y << " | z: " << own.vecMax.z << std::endl;
 //  std::cout << " - vecMin -> x: " << own.vecMin.x << " | y: " << own.vecMin.y << " | z: " << own.vecMin.z << std::endl;
 //  std::cout << "Other bounding box : " << std::endl;

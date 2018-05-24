@@ -30,5 +30,5 @@ private:
   Color _color;
   float _startT;
   Vector3f _start;
-  Vector3f _startVelocity, _velocity;
+  Vector3f _velocity;
 };

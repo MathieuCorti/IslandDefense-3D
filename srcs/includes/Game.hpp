@@ -17,6 +17,7 @@
 #include "../helpers/Glut.hpp"
 #include "../helpers/Displayable.hpp"
 #include "../helpers/Movable.hpp"
+#include "../includes/Entities.hpp"
 #include "Config.hpp"
 #include "Waves.hpp"
 
@@ -102,6 +103,26 @@ private:
 
   void halveSegments(const GameEntity &entityName) {
     std::dynamic_pointer_cast<Waves>(_entities[entityName])->halveSegments();
+  }
+
+  template<class T>
+  void fire(const GameEntity &entityName) {
+    std::dynamic_pointer_cast<T>(_entities[entityName])->getCannon()->blast();
+  }
+
+  template<class T>
+  void defend(const GameEntity &entityName) {
+    std::dynamic_pointer_cast<T>(_entities[entityName])->getCannon()->defend();
+  }
+
+  template<class T>
+  void changeCannonPower(const GameEntity &entityName, float delta) {
+    std::dynamic_pointer_cast<T>(_entities[entityName])->getCannon()->speed(delta);
+  }
+
+  template<class T>
+  void changeCannonDirection(const GameEntity &entityName, float delta) {
+    std::dynamic_pointer_cast<T>(_entities[entityName])->getCannon()->rotation(delta);
   }
 
   // Singleton

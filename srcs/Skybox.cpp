@@ -110,7 +110,7 @@ void Skybox::draw() const {
 GLuint TextureLoader::loadTexture(const char *filename) {
   GLuint tex = SOIL_load_OGL_texture(filename, SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y);
   if (!tex) {
-    std::cout << "error" << std::endl;
+    std::cerr << "error" << std::endl;
     return 0;
   }
 

@@ -139,6 +139,7 @@ void Game::initKeyboardMap() {
   _keyboardMap = {
       {27,  [](int, int) { exit(EXIT_SUCCESS); }},
 
+      // CAMERA COMMANDS
       {'a', [this](int, int) { move(GameEntity::CAMERA, LEFT); }},
       {'d', [this](int, int) { move(GameEntity::CAMERA, RIGHT); }},
       {'w', [this](int, int) { move(GameEntity::CAMERA, FORWARD); }},
@@ -152,20 +153,37 @@ void Game::initKeyboardMap() {
       {'Q', [this](int, int) { move(GameEntity::CAMERA, UP, 3); }},
       {'E', [this](int, int) { move(GameEntity::CAMERA, DOWN, 3); }},
 
+      // GRAPHICAL COMMANDS
       {'n', [this](int, int) { _showNormal = !_showNormal; }},
       {'t', [this](int, int) { _showTangeant = !_showTangeant; }},
       {'W', [this](int, int) { _showWireframe = !_showWireframe; }},
 
       // WAVES COMMANDS
-      {'p', [this](int, int) { toggleAnimation(GameEntity ::WAVES); }},
-      {'+', [this](int, int) { doubleVertices(GameEntity ::WAVES); }},
-      {'-', [this](int, int) { halveSegments(GameEntity ::WAVES); }},
+      {'p', [this](int, int) { toggleAnimation(GameEntity::WAVES); }},
+      {'+', [this](int, int) { doubleVertices(GameEntity::WAVES); }},
+      {'-', [this](int, int) { halveSegments(GameEntity::WAVES); }},
+
+      // ISLAND COMMANDS
+//      {'g', [this](int, int) { fire<Island>(GameEntity::ISLAND); }},
+//      {'b', [this](int, int) { defend<Island>(GameEntity::ISLAND); }},
+//      {'f', [this](int, int) { changeCannonPower<Island>(ISLAND, INCREASE); }},
+//      {'F', [this](int, int) { changeCannonPower<Island>(ISLAND, DECREASE); }},
+//      {'h', [this](int, int) { changeCannonDirection<Island>(ISLAND, INCREASE); }},
+//      {'H', [this](int, int) { changeCannonDirection<Island>(ISLAND, DECREASE); }},
 
       // TEST BOAT COMMANDS
       {'j', [this](int, int) { move(GameEntity::BOAT, LEFT); }},
       {'l', [this](int, int) { move(GameEntity::BOAT, RIGHT); }},
       {'i', [this](int, int) { move(GameEntity::BOAT, FORWARD); }},
-      {'k', [this](int, int) { move(GameEntity::BOAT, BACKWARD); }}
+      {'k', [this](int, int) { move(GameEntity::BOAT, BACKWARD); }},
+      // TMP
+      {'g', [this](int, int) { fire<Boat>(GameEntity::BOAT); }},
+      {'b', [this](int, int) { defend<Boat>(GameEntity::BOAT); }},
+      {'f', [this](int, int) { changeCannonPower<Boat>(GameEntity::BOAT, INCREASE); }},
+      {'F', [this](int, int) { changeCannonPower<Boat>(GameEntity::BOAT, DECREASE); }},
+      {'h', [this](int, int) { changeCannonDirection<Boat>(GameEntity::BOAT, INCREASE); }},
+      {'H', [this](int, int) { changeCannonDirection<Boat>(GameEntity::BOAT, DECREASE); }},
+
   };
 }
 
