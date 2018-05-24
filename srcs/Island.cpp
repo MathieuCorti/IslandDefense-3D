@@ -78,7 +78,9 @@ void Island::generateTopTriangles() {
       parts.emplace_back(p1, p2, p3, Triangle::computeNormal(p1->p, p2->p, p3->p));
       parts.emplace_back(p3, p2, p4, Triangle::computeNormal(p3->p, p2->p, p4->p));
     }
-    _shapes.emplace_back(parts, GL_TRIANGLES, Color(1.0f, 0.5f, 0.0f, 1.0f));
+    Shape shape = Shape(parts, GL_TRIANGLES, Color(1.0f, 0.5f, 0.0f, 1.0f));
+    shape.generateBoundingBox();
+    _shapes.emplace_back(shape);
   }
 }
 

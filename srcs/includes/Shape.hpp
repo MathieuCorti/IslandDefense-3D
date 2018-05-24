@@ -26,8 +26,8 @@ typedef std::list<Shape> Shapes;
 
 struct BoundingBox {
   BoundingBox() = default;
-  BoundingBox(const Vector3f &cubeMin, const Vector3f &cubeMax) : vecMin(cubeMin),
-                                                                  vecMax(cubeMax) {}
+  BoundingBox(const Vector3f &vecMin, const Vector3f &vecMax) : vecMin(vecMin),
+                                                                vecMax(vecMax) {}
 
   Vector3f vecMin;
   Vector3f vecMax;
@@ -60,6 +60,6 @@ public:
 
   void generateBoundingBox();
 
-  const BoundingBox &get_boundingBox() const;
+  const BoundingBox get_boundingBox() const;
 
 };

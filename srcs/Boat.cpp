@@ -26,12 +26,12 @@ Boat::Boat(const Color color) : Movable(0.05f, Vector3f(-0.8f, 0.0f, -0.5f)) {
   Triangle(tbr, tbl, bbl).subdivide(2, triangles); // BACK
   Triangle(bbl, bbr, tbr).subdivide(2, triangles); // BACK
   Triangle(tbl, ttl, bbl).subdivide(2, triangles); // LEFT
-  Triangle(ttr, tbr, bbr).subdivide(2, triangles);  // RIGHT
+  Triangle(ttr, tbr, bbr).subdivide(2, triangles); // RIGHT
   Shape shape = Shape(triangles, _coordinates, GL_TRIANGLES, color);
   shape.computePerVertexNormal();
   shape.generateBoundingBox();
-  _shapes.push_back(shape);
-  _cannon = std::make_shared<Cannon>(0, 3.0f, color);
+  _shapes.emplace_back(shape);
+  _cannon = std::make_shared<Cannon>(0, 3.0f, 0.01f, color);
 }
 
 void Boat::draw() const {
@@ -39,6 +39,7 @@ void Boat::draw() const {
   glEnable(GL_LIGHT0);
   glEnable(GL_BLEND);
   glEnable(GL_COLOR_MATERIAL);
+  glEnable(GL_NORMALIZE);
 
   GLfloat specular[] = {1.0f, 0.3f, 0.5f, 1.0f};
   glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
@@ -54,10 +55,12 @@ void Boat::draw() const {
   glRotatef(_angle.x, 1.0, 0.0, 0.0);
   glRotatef(_angle.y, 0.0, 1.0, 0.0);
   glRotatef(_angle.z, 0.0, 0.0, 1.0);
+  glScalef(0.5, 0.5, 0.5);
   Displayable::draw();
   _cannon->draw();
   glPopMatrix();
 
+  glDisable(GL_NORMALIZE);
   glDisable(GL_COLOR_MATERIAL);
   glDisable(GL_BLEND);
   glDisable(GL_LIGHT0);
