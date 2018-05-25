@@ -39,10 +39,10 @@ struct Vector3f {
   }
 
   Vector3f operator*(const float m[16]) const {
-    float px = x * m[0] + y * m[1] + z * m[2] + m[3];
-    float py = x * m[4] + y * m[5] + z * m[6] + m[7];
-    float pz = x * m[8] + y * m[9] + z * m[10] + m[11];
-    float pw = x * m[12] + y * m[13] + z * m[14] + m[15];
+    float px = x * m[0] + y * m[4] + z * m[8] + m[12];
+    float py = x * m[1] + y * m[5] + z * m[9] + m[13];
+    float pz = x * m[2] + y * m[6] + z * m[10] + m[14];
+    float pw = x * m[3] + y * m[7] + z * m[11] + m[15];
     return {px / pw, py / pw, pz / pw};
   }
 

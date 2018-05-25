@@ -72,25 +72,20 @@ Cannon::Cannon(float speed, float radius, Color color) : _color(color),
 
 void Cannon::drawTrajectory() const {
   glPushMatrix();
-  GLfloat rotation[16], translation[16], boat[16], cannon[16], curve[16], final[16];
-  _coordinates.toTranslationMatrix(translation);
-  (_angle * (M_PI / 180.0f)).toRotationMatrix(rotation);
-  Vector3f::multMatrix(translation, rotation, boat);
-  Vector3f{0, 0.025f, 0}.toTranslationMatrix(translation);
-  Vector3f{0.0f, 0.0f, static_cast<GLfloat>(_rotation / M_PI * 180.0f)}.toRotationMatrix(rotation);
-  Vector3f::multMatrix(translation, rotation, cannon);
-  Vector3f::multMatrix(boat, cannon, curve);
-  Vector3f{_radius * 10.0f, 0.0f, 0}.toTranslationMatrix(translation);
-  Vector3f::multMatrix(curve, translation, final);
-  glMultMatrixf(final);
 
-  Vector3f velocity = _velocity * boat;
+  GLfloat rotation[16], translation[16], final[16];
+  _coordinates.toTranslationMatrix(translation);
+  (Vector3f{0.0f, 0.0f, _rotation} * (M_PI / 180.0f)).toRotationMatrix(rotation);
+  Vector3f::multMatrix(translation, rotation, final);
+
+  Vector3f c = Vector3f(_radius * 10.0f, 0.0f, 0.0f) * final;
+
   glBegin(GL_LINE_STRIP);
   float t = 0;
   for (;;) {
-    float x = velocity.x * t;
-    float y = velocity.y * t + g * t * t / 2.0f;
-    float z = velocity.z * t;
+    float x = c.x + _velocity.x * t;
+    float y = c.y + _velocity.y * t + g * t * t / 2.0f;
+    float z = c.z + _velocity.z * t;
 
     if (y < -1 || y > 1 || x < -1 || x > 1 || z < -1 || z > 1) {
       break;
@@ -104,45 +99,24 @@ void Cannon::drawTrajectory() const {
 }
 
 void Cannon::draw() const {
-  glEnable(GL_LIGHTING);
-  glEnable(GL_LIGHT0);
-  glEnable(GL_BLEND);
-  glEnable(GL_COLOR_MATERIAL);
-  glEnable(GL_NORMALIZE);
-
-  GLfloat specular[] = {0.5f, 0.5f, 0.5f, 1.0f};
-  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
-  GLfloat diffuse[] = {0.5f, 0.5f, 0.5f, 1.0f};
-  glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
-  GLfloat emission[] = {0.0f, 0.0f, 0.0f, 1.0f};
-  glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emission);
-  GLfloat shininess = 64.0f;
-  glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
-
   glPushMatrix();
 
   GLfloat rotation[16], translation[16], final[16];
   _coordinates.toTranslationMatrix(translation);
-  (_angle * (M_PI / 180.0f)).toRotationMatrix(rotation);
+  (Vector3f{0.0f, 0.0f, _rotation} * (M_PI / 180.0f)).toRotationMatrix(rotation);
   Vector3f::multMatrix(translation, rotation, final);
   glMultMatrixf(final);
-  glTranslatef(0, 0.025f, 0);
-  glRotatef(static_cast<GLfloat>(_rotation / M_PI * 180.0f), 0.0f, 0.0f, 1.0f);
 
   Displayable::draw();
   _shapes.front().applyColor();
   glutSolidSphere(_radius * 2.0f, 20, 20);
+
   glPopMatrix();
 
-  glDisable(GL_NORMALIZE);
-  glDisable(GL_COLOR_MATERIAL);
-  glDisable(GL_BLEND);
-  glDisable(GL_LIGHT0);
-  glDisable(GL_LIGHTING);
-
   drawTrajectory();
-  _projectiles.draw();
-  _defences.draw();
+
+  //  _projectiles.draw();
+//  _defences.draw();
 }
 
 void Cannon::blast() {
@@ -172,18 +146,21 @@ void Cannon::speed(float value) {
 void Cannon::rotation(float angle) {
   _rotation += angle;
   _rotation = _rotation < 0 ? 0 : _rotation;
-  _rotation = static_cast<float>(_rotation > M_PI ? M_PI : _rotation);
+  _rotation = _rotation > 180 ? 180 : _rotation;
+  std::cout << _rotation << std::endl;
 }
 
 void Cannon::setPos(Vector3f coordinates, Vector3f angle) {
   _coordinates = coordinates;
   _angle = angle;
+//  std::cout << "angle : " << _angle << std::endl;
 }
 
 void Cannon::update() {
-  _velocity.x = static_cast<float>(std::cos(_angle.z * M_PI / 180.0f) * _speed);
-  _velocity.y = static_cast<float>(std::sin(_angle.z * M_PI / 180.0f) * _speed);
-//  _velocity.z = static_cast<float>(-std::sin(_angle.y * M_PI / 180.0f) * _speed);
+  _velocity.x = static_cast<float>(std::cos((_rotation + _angle.z) * M_PI / 180.0f) * _speed);
+  _velocity.y = static_cast<float>(std::sin((_rotation + _angle.z) * M_PI / 180.0f) * _speed);
+//  std::cout << "velocity : " << _velocity << std::endl;
+  _velocity.z = static_cast<float>(std::sin(_angle.y * M_PI / 180.0f) * _speed);
   _projectiles.update();
   _defences.update();
 }

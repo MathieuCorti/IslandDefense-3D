@@ -54,6 +54,7 @@ void Boat::draw() const {
   (_angle * (M_PI / 180.0f)).toRotationMatrix(rotation);
   Vector3f::multMatrix(translation, rotation, final);
   glMultMatrixf(final);
+  _cannon->draw();
 
   Displayable::draw();
   glPopMatrix();
@@ -63,8 +64,6 @@ void Boat::draw() const {
   glDisable(GL_BLEND);
   glDisable(GL_LIGHT0);
   glDisable(GL_LIGHTING);
-
-  _cannon->draw();
 }
 
 void Boat::update() {
@@ -73,7 +72,7 @@ void Boat::update() {
   _angle.z = static_cast<float>(std::atan(slope) * 180.0f / M_PI);
   _angle.x = -_angle.z;
   _angle.y = static_cast<float>(-M_PI / 4.0f * 180.0f / M_PI);
-  _cannon->setPos(_coordinates, _angle);
+  _cannon->setPos({0.0f, 0.025f, 0.0f}, _angle);
   _cannon->update();
 }
 
