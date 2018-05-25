@@ -73,10 +73,12 @@ Cannon::Cannon(float speed, float radius, Color color) : _color(color),
 void Cannon::drawTrajectory() const {
   glPushMatrix();
 
-  GLfloat rotation[16], translation[16], final[16];
+  GLfloat rotation1[16], rotation2[16], translation[16], first[16], final[16];
   _coordinates.toTranslationMatrix(translation);
-  (Vector3f{0.0f, 0.0f, _rotation} * (M_PI / 180.0f)).toRotationMatrix(rotation);
-  Vector3f::multMatrix(translation, rotation, final);
+  (_angle * (M_PI / 180.0f)).toRotationMatrix(rotation1);
+  (Vector3f{0.0f, 0.0f, _rotation} * (M_PI / 180.0f)).toRotationMatrix(rotation2);
+  Vector3f::multMatrix(translation, rotation1, first);
+  Vector3f::multMatrix(first, rotation2, final);
 
   Vector3f c = Vector3f(_radius * 10.0f, 0.0f, 0.0f) * final;
 
@@ -99,13 +101,27 @@ void Cannon::drawTrajectory() const {
 }
 
 void Cannon::draw() const {
+  glEnable(GL_LIGHTING);
+  glEnable(GL_LIGHT0);
+  glEnable(GL_BLEND);
+  glEnable(GL_COLOR_MATERIAL);
+  glEnable(GL_NORMALIZE);
+
+  GLfloat specular[] = {1.0f, 0.3f, 0.5f, 1.0f};
+  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
+  GLfloat diffuse[] = {0.5f, 0.5f, 0.5f, 1.0f};
+  glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
+  GLfloat emission[] = {0.0f, 0.0f, 0.0f, 1.0f};
+  glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emission);
+  GLfloat shininess = 64.0f;
+  glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
+
   glPushMatrix();
 
-  GLfloat rotation[16], translation[16], final[16];
-  _coordinates.toTranslationMatrix(translation);
-  (Vector3f{0.0f, 0.0f, _rotation} * (M_PI / 180.0f)).toRotationMatrix(rotation);
-  Vector3f::multMatrix(translation, rotation, final);
-  glMultMatrixf(final);
+  GLfloat m[16];
+  glMultMatrixf(_coordinates.toTranslationMatrix(m));
+  glMultMatrixf((_angle * (M_PI / 180.0f)).toRotationMatrix(m));
+  glMultMatrixf((Vector3f{0.0f, 0.0f, _rotation} * (M_PI / 180.0f)).toRotationMatrix(m));
 
   Displayable::draw();
   _shapes.front().applyColor();
@@ -113,10 +129,16 @@ void Cannon::draw() const {
 
   glPopMatrix();
 
+  glDisable(GL_NORMALIZE);
+  glDisable(GL_COLOR_MATERIAL);
+  glDisable(GL_BLEND);
+  glDisable(GL_LIGHT0);
+  glDisable(GL_LIGHTING);
+
   drawTrajectory();
 
-  //  _projectiles.draw();
-//  _defences.draw();
+  _projectiles.draw();
+  _defences.draw();
 }
 
 void Cannon::blast() {
@@ -147,13 +169,11 @@ void Cannon::rotation(float angle) {
   _rotation += angle;
   _rotation = _rotation < 0 ? 0 : _rotation;
   _rotation = _rotation > 180 ? 180 : _rotation;
-  std::cout << _rotation << std::endl;
 }
 
 void Cannon::setPos(Vector3f coordinates, Vector3f angle) {
   _coordinates = coordinates;
   _angle = angle;
-//  std::cout << "angle : " << _angle << std::endl;
 }
 
 void Cannon::update() {
