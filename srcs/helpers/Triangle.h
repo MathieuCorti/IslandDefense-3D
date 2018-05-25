@@ -43,11 +43,7 @@ typedef struct s_triangle {
     Vector3f v = {p3.x - p1.x,
                   p3.y - p1.y,
                   p3.z - p1.z};
-//    Vector3f n = {u.y * v.z - u.z * v.y,
-//                  u.z * v.x - u.x * v.z,
-//                  u.x * v.y - u.y * v.x};
     return Vector3f::cross(u, v).normalize().invert();
-//    return n.normalize().invert();
   }
 
   s_triangle &computeNormal() {
@@ -58,11 +54,6 @@ typedef struct s_triangle {
                   v3->p.y - v1->p.y,
                   v3->p.z - v1->p.z};
     n = Vector3f::cross(u, v).normalize().invert();
-//    n = {u.y * v.z - u.z * v.y,
-//         u.z * v.x - u.x * v.z,
-//         u.x * v.y - u.y * v.x};
-//    n.normalize();
-//    n.invert();
     return *this;
   }
 

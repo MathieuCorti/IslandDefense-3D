@@ -199,7 +199,7 @@ void Game::initEntities() {
   _entities.insert(std::make_pair(GameEntity::STATS, std::make_shared<Stats>()));
   _entities.insert(std::make_pair(GameEntity::WAVES, std::make_shared<Waves>()));
   _entities.insert(std::make_pair(GameEntity::SKYBOX, std::make_shared<Skybox>()));
-  _entities.insert(std::make_pair(GameEntity::ISLAND, std::make_shared<Island>()));
+//  _entities.insert(std::make_pair(GameEntity::ISLAND, std::make_shared<Island>()));
   _entities.insert(std::make_pair(GameEntity::BOAT, std::make_shared<Boat>(RED)));
   _entities.insert(std::make_pair(GameEntity::AXES, std::make_shared<Axes>()));
 }
