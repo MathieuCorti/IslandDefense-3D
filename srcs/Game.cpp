@@ -6,6 +6,7 @@
 //
 
 #include <vector>
+#include <random>
 
 #include "helpers/Axes.hpp"
 #include "includes/Game.hpp"
@@ -171,18 +172,18 @@ void Game::initKeyboardMap() {
 //      {'h', [this](int, int) { changeCannonDirection<Island>(ISLAND, INCREASE); }},
 //      {'H', [this](int, int) { changeCannonDirection<Island>(ISLAND, DECREASE); }},
 
-      // TEST BOAT COMMANDS
-      {'j', [this](int, int) { move(GameEntity::BOAT, LEFT); }},
-      {'l', [this](int, int) { move(GameEntity::BOAT, RIGHT); }},
-      {'i', [this](int, int) { move(GameEntity::BOAT, FORWARD); }},
-      {'k', [this](int, int) { move(GameEntity::BOAT, BACKWARD); }},
-      // TMP
-      {'g', [this](int, int) { fire<Boat>(GameEntity::BOAT); }},
-      {'b', [this](int, int) { defend<Boat>(GameEntity::BOAT); }},
-      {'f', [this](int, int) { changeCannonPower<Boat>(GameEntity::BOAT, INCREASE); }},
-      {'F', [this](int, int) { changeCannonPower<Boat>(GameEntity::BOAT, DECREASE); }},
-      {'h', [this](int, int) { changeCannonDirection<Boat>(GameEntity::BOAT, INCREASE); }},
-      {'H', [this](int, int) { changeCannonDirection<Boat>(GameEntity::BOAT, DECREASE); }},
+//      // TEST BOAT COMMANDS
+//      {'j', [this](int, int) { move(GameEntity::BOAT, LEFT); }},
+//      {'l', [this](int, int) { move(GameEntity::BOAT, RIGHT); }},
+//      {'i', [this](int, int) { move(GameEntity::BOAT, FORWARD); }},
+//      {'k', [this](int, int) { move(GameEntity::BOAT, BACKWARD); }},
+//      // TMP
+//      {'g', [this](int, int) { fire<Boat>(GameEntity::BOAT); }},
+//      {'b', [this](int, int) { defend<Boat>(GameEntity::BOAT); }},
+//      {'f', [this](int, int) { changeCannonPower<Boat>(GameEntity::BOAT, INCREASE); }},
+//      {'F', [this](int, int) { changeCannonPower<Boat>(GameEntity::BOAT, DECREASE); }},
+//      {'h', [this](int, int) { changeCannonDirection<Boat>(GameEntity::BOAT, INCREASE); }},
+//      {'H', [this](int, int) { changeCannonDirection<Boat>(GameEntity::BOAT, DECREASE); }},
 
   };
 }
@@ -214,8 +215,29 @@ void Game::initEntities() {
   _entities.insert(std::make_pair(GameEntity::WAVES, std::make_shared<Waves>()));
   _entities.insert(std::make_pair(GameEntity::SKYBOX, std::make_shared<Skybox>()));
   _entities.insert(std::make_pair(GameEntity::ISLAND, std::make_shared<Island>()));
-  _entities.insert(std::make_pair(GameEntity::BOAT, std::make_shared<Boat>(RED)));
+  _entities.insert(std::make_pair(GameEntity::BOATS, generateBoats()));
   _entities.insert(std::make_pair(GameEntity::AXES, std::make_shared<Axes>()));
+}
+
+std::shared_ptr<Entities<Boat> > Game::generateBoats() {
+
+  std::random_device rd, rdMin, rdx, rdz;
+  std::mt19937 gen(rd()), genMin(rdMin()), genX(rdx()), genZ(rdz());
+  std::uniform_real_distribution<float> dis(0.2f, 0.8f);
+  std::bernoulli_distribution disMinus(0.5);
+  std::uniform_real_distribution<float> disColor(0.0f, 1.0f);
+
+  auto boats = std::make_shared<Entities<Boat> >();
+  for (int i = 0; i < NBR_BOATS; ++i) {
+    boats->add(std::make_shared<Boat>(Color(disColor(gen), disColor(gen), disColor(gen), 1.0f),
+                                      Vector3f(disMinus(genMin) != 0 ? dis(genX) : -dis(genX),
+                                               0.0f,
+                                               disMinus(genMin) != 0 ? dis(genZ) : -dis(genZ))));
+  }
+
+  // TODO Remove boats that collide
+
+  return boats;
 }
 
 const float Game::getTime() const {

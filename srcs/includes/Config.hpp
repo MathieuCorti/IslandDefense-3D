@@ -22,8 +22,12 @@
 #define CAMERA_X_ROT_START 30.0f
 #define CAMERA_Y_ROT_START (-245.0f)
 
+// BOATS
+#define NBR_BOATS 20
+#define BOATS_BASE_HEALTH 10
+
 // CANNON
-#define INCREASE  (0.1f * 180.0f / M_PI)
+#define INCREASE  float(0.1f * 180.0f / M_PI)
 #define DECREASE  (-INCREASE)
 
 // COLORS
@@ -43,7 +47,7 @@ enum GameEntity {
   ISLAND,
   AXES,
   SKYBOX,
-  BOAT,
+  BOATS,
   WAVES,
   STATS,
   UI,

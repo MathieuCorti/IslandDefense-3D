@@ -10,10 +10,10 @@
 #include "../helpers/Movable.hpp"
 #include "Cannon.hpp"
 
-class Boat : public Movable {
+class Boat : public Movable, public Alive {
 public:
 
-  explicit Boat(Color color);
+  explicit Boat(Color color, Vector3f startPos);
   
   void draw() const override;
 

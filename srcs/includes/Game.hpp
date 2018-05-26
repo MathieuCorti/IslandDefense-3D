@@ -20,6 +20,7 @@
 #include "../includes/Entities.hpp"
 #include "Config.hpp"
 #include "Waves.hpp"
+#include "Boat.hpp"
 
 class Game {
 
@@ -41,6 +42,8 @@ public:
   void keyboard(unsigned char key, int x, int y) const;
   
   void mouse(int x, int y);
+
+  std::shared_ptr<Entities<Boat> > generateBoats();
 
   const float getTime() const;
 

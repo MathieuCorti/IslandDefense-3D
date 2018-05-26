@@ -10,7 +10,6 @@ template<class T>
 class Entities : public Displayable, public Alive {
 public:
   //Typedef
-  typedef std::shared_ptr<T> Ptr;
 
   explicit Entities(const Color &color = Color(1, 1, 1)) : Alive(1), _color(color) {
     for (auto &subEntity : _entities) {
@@ -23,7 +22,10 @@ public:
     }
   }
 
-  void add(const T &entity) {
+  void add(const std::shared_ptr<T> entity) {
+    if (!std::is_base_of<Alive, T>::value) {
+      throw std::runtime_error("Every member of entities should be from base class Alive");
+    }
     if (entity) {
       _entities.push_back(entity);
     }
@@ -42,5 +44,5 @@ public:
 
 private:
   Color _color;
-  std::vector<T> _entities;
+  std::vector<std::shared_ptr<T> > _entities;
 };

@@ -41,6 +41,6 @@ private:
   Vector3f _velocity;
   float _lastFire, _lastDefence;
   Color _color;
-  Entities<Projectile::Ptr> _projectiles;
-  Entities<Pellet::Ptr> _defences;
+  Entities<Projectile> _projectiles;
+  Entities<Pellet> _defences;
 };
