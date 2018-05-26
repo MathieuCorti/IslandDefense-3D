@@ -19,7 +19,6 @@ Skybox::Skybox() {
 void Skybox::draw() const {
   glPushAttrib(GL_ENABLE_BIT);
   glEnable(GL_TEXTURE_2D);
-  glDisable(GL_LIGHTING);
   glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE,  GL_MODULATE);
 
   glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
@@ -102,7 +101,6 @@ void Skybox::draw() const {
   glVertex3f(1.0f, -0.8f, -1.0f);
   glEnd();
 
-  glEnable(GL_LIGHTING);
   glDisable(GL_TEXTURE_2D);
   glPopAttrib();
 }

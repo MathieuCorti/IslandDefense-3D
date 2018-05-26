@@ -40,10 +40,12 @@ public:
   void draw();
 
   void keyboard(unsigned char key, int x, int y) const;
-  
-  void mouse(int x, int y);
 
+  void mouse(int x, int y);
+  
   std::shared_ptr<Entities<Boat> > generateBoats();
+
+  void mouseClick(int button, int state);
 
   const float getTime() const;
 
@@ -54,6 +56,8 @@ public:
   const bool getShowTangeant() const;
 
   const bool getShowNormal() const;
+
+  const bool getShowLight() const;
 
   const EntityList &getEntities() const;
 
@@ -69,6 +73,7 @@ private:
   bool _showWireframe = false;
   bool _showTangeant = false;
   bool _showNormal = false;
+  bool _showLight = true;
 
   void initDrawCallback() const;
 
@@ -119,6 +124,12 @@ private:
   }
 
   template<class T>
+  void setCannonRotation(const GameEntity &entityName, float y, float z) {
+    std::dynamic_pointer_cast<T>(_entities[entityName])->getCannon()->setAngle({0.0f, -y + 90, 0.0f});
+    std::dynamic_pointer_cast<T>(_entities[entityName])->getCannon()->setRotation(z);
+  }
+
+  template<class T>
   void changeCannonPower(const GameEntity &entityName, float delta) {
     std::dynamic_pointer_cast<T>(_entities[entityName])->getCannon()->speed(delta);
   }
@@ -138,8 +149,9 @@ private:
 
 // Extern C
 extern "C" {
-  static void drawCallback();
-  static void reshapeCallback(int w, int h);
-  static void keyboardCallback(unsigned char key, int x, int y);
-  static void mouseCallback(int x, int y);
+static void drawCallback();
+static void reshapeCallback(int w, int h);
+static void keyboardCallback(unsigned char key, int x, int y);
+static void mouseCallback(int x, int y);
+static void mouseClickCallback(int button, int state, int x, int y);
 }

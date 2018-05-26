@@ -23,7 +23,7 @@
 #define CAMERA_Y_ROT_START (-245.0f)
 
 // BOATS
-#define NBR_BOATS 20
+#define NBR_BOATS 4
 #define BOATS_BASE_HEALTH 10
 
 // ISLAND
@@ -32,8 +32,8 @@
 // CANNON
 #define INC_SPEED  float(0.1f)
 #define DEC_SPEED  (-INC_SPEED)
-#define INC_ROT  float(0.1f * 180.0f / M_PI)
-#define DEC_ROT  (-INC_ROT)
+#define INC_ROTATION  (static_cast<float>(0.05f * 180.0f / M_PI))
+#define DEC_ROTATION  (-INC_ROTATION)
 
 // COLORS
 #define BLACK   Color(0, 0, 0)

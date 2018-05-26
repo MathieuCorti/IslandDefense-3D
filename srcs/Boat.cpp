@@ -7,8 +7,8 @@
 
 #include "includes/Boat.hpp"
 #include "includes/Waves.hpp"
-#include "includes/Island.hpp"
 #include "includes/Game.hpp"
+#include "includes/Island.hpp"
 
 Boat::Boat(const Color color, const Vector3f startPos) : Alive(BOATS_BASE_HEALTH), Movable(0.05f, startPos) {
   Vertex::Ptr ttr = std::make_shared<Vertex>(Vector3f(0.05f, 0.025f, -0.025f));
@@ -35,35 +35,37 @@ Boat::Boat(const Color color, const Vector3f startPos) : Alive(BOATS_BASE_HEALTH
 }
 
 void Boat::draw() const {
-  glEnable(GL_LIGHTING);
-  glEnable(GL_LIGHT0);
+  if (Game::getInstance().getShowLight()) {
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    glEnable(GL_COLOR_MATERIAL);
+    glEnable(GL_NORMALIZE);
+
+    GLfloat specular[] = {1.0f, 0.3f, 0.5f, 1.0f};
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
+    GLfloat diffuse[] = {0.5f, 0.5f, 0.5f, 1.0f};
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
+    GLfloat emission[] = {0.0f, 0.0f, 0.0f, 1.0f};
+    glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emission);
+    GLfloat shininess = 64.0f;
+    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
+  }
+
   glEnable(GL_BLEND);
-  glEnable(GL_COLOR_MATERIAL);
-  glEnable(GL_NORMALIZE);
-
-  GLfloat specular[] = {1.0f, 0.3f, 0.5f, 1.0f};
-  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
-  GLfloat diffuse[] = {0.5f, 0.5f, 0.5f, 1.0f};
-  glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
-  GLfloat emission[] = {0.0f, 0.0f, 0.0f, 1.0f};
-  glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emission);
-  GLfloat shininess = 64.0f;
-  glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
-
   glPushMatrix();
-
   GLfloat m[16];
   glMultMatrixf(_coordinates.toTranslationMatrix(m));
   glMultMatrixf((_angle * (M_PI / 180.0f)).toRotationMatrix(m));
-
   Displayable::draw();
   glPopMatrix();
-
-  glDisable(GL_NORMALIZE);
-  glDisable(GL_COLOR_MATERIAL);
   glDisable(GL_BLEND);
-  glDisable(GL_LIGHT0);
-  glDisable(GL_LIGHTING);
+
+  if (Game::getInstance().getShowLight()) {
+    glDisable(GL_NORMALIZE);
+    glDisable(GL_COLOR_MATERIAL);
+    glDisable(GL_LIGHT0);
+    glDisable(GL_LIGHTING);
+  }
 
   _cannon->draw();
 }
@@ -73,12 +75,12 @@ void Boat::update() {
   float slope = Waves::computeSlope(_coordinates.x, _coordinates.z);
   _angle.z = static_cast<float>(std::atan(slope) * 180.0f / M_PI);
   _angle.x = -_angle.z;
-  _angle.y = static_cast<float>(-M_PI / 4.0f * 180.0f / M_PI);
 
   GLfloat rotation[16];
   (_angle * (M_PI / 180.0f)).toRotationMatrix(rotation);
 
-  _cannon->setPos(_coordinates + Vector3f{0.0f, 0.025f, 0.0f} * rotation, _angle);
+  _cannon->setCoordinates(_coordinates + Vector3f{0.0f, 0.025f, 0.0f} * rotation);
+  _cannon->setAngle(_angle);
   _cannon->update();
   computeAI(); // Test
 }

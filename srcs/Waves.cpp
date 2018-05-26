@@ -86,21 +86,23 @@ void Waves::update() {
 }
 
 void Waves::draw() const {
-  glEnable(GL_LIGHTING);
-  glEnable(GL_LIGHT0);
-  glEnable(GL_NORMALIZE);
+  if (Game::getInstance().getShowLight()) {
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    glEnable(GL_NORMALIZE);
+    glEnable(GL_COLOR_MATERIAL);
+
+    GLfloat specular[] = {0.7f, 0.7f, 0.9f, 1.0f};
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
+    GLfloat diffuse[] = {0.1f, 0.5f, 0.8f, 1.0f};
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
+    GLfloat emission[] = {0.0f, 0.0f, 0.0f, 1.0f};
+    glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emission);
+    GLfloat shininess = 80.0f;
+    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
+  }
+
   glEnable(GL_BLEND);
-  glEnable(GL_COLOR_MATERIAL);
-
-  GLfloat specular[] = {0.7f, 0.7f, 0.9f, 1.0f};
-  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
-  GLfloat diffuse[] = {0.1f, 0.5f, 0.8f, 1.0f};
-  glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
-  GLfloat emission[] = {0.0f, 0.0f, 0.0f, 1.0f};
-  glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emission);
-  GLfloat shininess = 80.0f;
-  glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
-
   Displayable::draw();
   if (Game::getInstance().getShowTangeant()) {
     glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
@@ -127,11 +129,14 @@ void Waves::draw() const {
     }
     glEnd();
   }
-  glDisable(GL_COLOR_MATERIAL);
   glDisable(GL_BLEND);
-  glDisable(GL_NORMALIZE);
-  glDisable(GL_LIGHT0);
-  glDisable(GL_LIGHTING);
+
+  if (Game::getInstance().getShowLight()) {
+    glDisable(GL_COLOR_MATERIAL);
+    glDisable(GL_NORMALIZE);
+    glDisable(GL_LIGHT0);
+    glDisable(GL_LIGHTING);
+  }
 }
 
 void Waves::toggleAnimation() {

@@ -13,8 +13,8 @@ Island::Island()
   for (Shape &shape : _shapes) {
     shape.computePerVertexNormal();
   }
-  _cannon = std::make_shared<Cannon>(3.0f, 0.012f, GREY);
-  _cannon->setPos(Vector3f(0, (_maxHeight + _minHeight) / 2.0f, 0), _angle);
+  _cannon = std::make_shared<Cannon>(1.0f, 0.012f, GREY);
+  _cannon->setCoordinates(Vector3f(0, (_maxHeight + _minHeight) / 2.0f, 0));
 }
 
 void Island::generateTopTriangles(Color color) {
@@ -29,11 +29,11 @@ void Island::generateTopTriangles(Color color) {
       for (int j = 0; j <= _tess; j++) {
         float x = -_xmax + j * xStep;
         if (j == 0) {
-          row1.emplace_back(std::make_shared<Vertex>(Vector3f(x * 3.0f, -0.8f, z * 3.0f)));
+          row1.emplace_back(std::make_shared<Vertex>(Vector3f(x, -0.8f, z)));
         }
-        row1.emplace_back(std::make_shared<Vertex>(Vector3f(x * 3.0f, -0.8f, z * 3.0f)));
+        row1.emplace_back(std::make_shared<Vertex>(Vector3f(x, -0.8f, z)));
         if (j == _tess) {
-          row1.emplace_back(std::make_shared<Vertex>(Vector3f(x * 3.0f, -0.8f, z * 3.0f)));
+          row1.emplace_back(std::make_shared<Vertex>(Vector3f(x, -0.8f, z)));
         }
       }
       _vertices.emplace_back(row1);
@@ -43,14 +43,14 @@ void Island::generateTopTriangles(Color color) {
     for (int j = 0; j <= _tess; j++) {
       float x = -_xmax + j * xStep;
       if (j == 0) {
-        row.emplace_back(std::make_shared<Vertex>(Vector3f(x * 3.0f, -0.8f, z * 3.0f)));
+        row.emplace_back(std::make_shared<Vertex>(Vector3f(x, -0.8f, z)));
       }
       float y = islandPerlin(x, z);
       _maxHeight = _maxHeight == -1.0f ? y : std::max(_maxHeight, y);
       _minHeight = _minHeight == -1.0f ? y : std::min(_minHeight, y);
       row.emplace_back(std::make_shared<Vertex>(Vector3f(x, y, z)));
       if (j == _tess) {
-        row.emplace_back(std::make_shared<Vertex>(Vector3f(x * 3.0f, -0.8f, z * 3.0f)));
+        row.emplace_back(std::make_shared<Vertex>(Vector3f(x, -0.8f, z)));
       }
     }
     _vertices.emplace_back(row);
@@ -60,11 +60,11 @@ void Island::generateTopTriangles(Color color) {
       for (int j = 0; j <= _tess; j++) {
         float x = -_xmax + j * xStep;
         if (j == 0) {
-          row1.emplace_back(std::make_shared<Vertex>(Vector3f(x * 3.0f, -0.8f, z * 3.0f)));
+          row1.emplace_back(std::make_shared<Vertex>(Vector3f(x, -0.8f, z)));
         }
-        row1.emplace_back(std::make_shared<Vertex>(Vector3f(x * 3.0f, -0.8f, z * 3.0f)));
+        row1.emplace_back(std::make_shared<Vertex>(Vector3f(x, -0.8f, z)));
         if (j == _tess) {
-          row1.emplace_back(std::make_shared<Vertex>(Vector3f(x * 3.0f, -0.8f, z * 3.0f)));
+          row1.emplace_back(std::make_shared<Vertex>(Vector3f(x, -0.8f, z)));
         }
       }
       _vertices.emplace_back(row1);
@@ -96,28 +96,35 @@ float Island::islandPerlin(float x, float z) const {
 }
 
 void Island::draw() const {
-  glEnable(GL_LIGHTING);
-  glEnable(GL_LIGHT0);
+  if (Game::getInstance().getShowLight()) {
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    glEnable(GL_COLOR_MATERIAL);
+    glEnable(GL_NORMALIZE);
+
+    GLfloat specular[] = {0.1f, 0.1f, 0.1f, 0.0f};
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
+    GLfloat diffuse[] = {0.5f, 0.5f, 0.5f, 1.0f};
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
+    GLfloat emission[] = {0.0f, 0.0f, 0.0f, 1.0f};
+    glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emission);
+    GLfloat shininess = 128.0f;
+    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
+
+    glShadeModel(GL_SMOOTH);
+  }
+
   glEnable(GL_BLEND);
-  glEnable(GL_COLOR_MATERIAL);
-
-  GLfloat specular[] = {0.1f, 0.1f, 0.1f, 0.0f};
-  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
-  GLfloat diffuse[] = {0.5f, 0.5f, 0.5f, 1.0f};
-  glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
-  GLfloat emission[] = {0.0f, 0.0f, 0.0f, 1.0f};
-  glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emission);
-  GLfloat shininess = 128.0f;
-  glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
-
-  glShadeModel(GL_SMOOTH);
   Displayable::draw();
   _cannon->draw();
-
-  glDisable(GL_COLOR_MATERIAL);
   glDisable(GL_BLEND);
-  glDisable(GL_LIGHT0);
-  glDisable(GL_LIGHTING);
+
+  if (Game::getInstance().getShowLight()) {
+    glDisable(GL_NORMALIZE);
+    glDisable(GL_COLOR_MATERIAL);
+    glDisable(GL_LIGHT0);
+    glDisable(GL_LIGHTING);
+  }
 }
 
 void Island::update() {

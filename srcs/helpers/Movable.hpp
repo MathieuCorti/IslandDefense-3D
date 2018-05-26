@@ -11,7 +11,6 @@
 #include "Displayable.hpp"
 
 enum Direction {
-  UP    , DOWN  , // X
   LEFT  , RIGHT , // Y
   FORWARD , BACKWARD    // Z
 };

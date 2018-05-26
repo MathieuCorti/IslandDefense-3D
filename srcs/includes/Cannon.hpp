@@ -20,7 +20,11 @@ public:
 
   void draw() const override;
 
-  void setPos(Vector3f coordinates, Vector3f angle);
+  void setCoordinates(Vector3f coordinates);
+
+  void setRotation(float angle);
+
+  void setAngle(Vector3f angle);
 
   void update() override;
 

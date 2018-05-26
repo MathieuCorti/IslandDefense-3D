@@ -31,6 +31,10 @@ public:
 
   void move(Direction direction, int coef) override;
 
+  float getYRot() const;
+
+  float getXRot() const;
+
   void rotation(int x, int y);
 };
 

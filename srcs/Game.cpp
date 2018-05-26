@@ -133,6 +133,15 @@ void Game::keyboard(unsigned char key, int x, int y) const {
 void Game::mouse(int x, int y) {
   static auto camera = std::dynamic_pointer_cast<Camera>(_entities[GameEntity::CAMERA]);
   camera->rotation(x, y);
+  setCannonRotation<Island>(GameEntity::ISLAND, camera->getYRot(), camera->getXRot());
+}
+
+void Game::mouseClick(int button, int state) {
+  if (button == GLUT_LEFT_BUTTON && state == GLUT_UP) {
+    fire<Island>(GameEntity::ISLAND);
+  } else if (button == GLUT_RIGHT_BUTTON && state == GLUT_UP) {
+    defend<Island>(GameEntity::ISLAND);
+  }
 }
 
 // PRIVATE
@@ -141,24 +150,22 @@ void Game::initKeyboardMap() {
   _keyboardMap = {
       {27,  [](int, int) { exit(EXIT_SUCCESS); }},
 
-      // CAMERA COMMANDS
-      {'a', [this](int, int) { move(GameEntity::CAMERA, LEFT); }},
+
+      // CAMERA COMMANDS TODO : figure if we leave them
+      {'q', [this](int, int) { move(GameEntity::CAMERA, LEFT); }},
       {'d', [this](int, int) { move(GameEntity::CAMERA, RIGHT); }},
-      {'w', [this](int, int) { move(GameEntity::CAMERA, FORWARD); }},
+      {'z', [this](int, int) { move(GameEntity::CAMERA, FORWARD); }},
       {'s', [this](int, int) { move(GameEntity::CAMERA, BACKWARD); }},
-      {'q', [this](int, int) { move(GameEntity::CAMERA, UP); }},
-      {'e', [this](int, int) { move(GameEntity::CAMERA, DOWN); }},
-      {'A', [this](int, int) { move(GameEntity::CAMERA, LEFT, 3); }},
+      {'Q', [this](int, int) { move(GameEntity::CAMERA, LEFT, 3); }},
       {'D', [this](int, int) { move(GameEntity::CAMERA, RIGHT, 3); }},
-      {'w', [this](int, int) { move(GameEntity::CAMERA, FORWARD, 3); }},
+      {'Z', [this](int, int) { move(GameEntity::CAMERA, FORWARD, 3); }},
       {'S', [this](int, int) { move(GameEntity::CAMERA, BACKWARD, 3); }},
-      {'Q', [this](int, int) { move(GameEntity::CAMERA, UP, 3); }},
-      {'E', [this](int, int) { move(GameEntity::CAMERA, DOWN, 3); }},
 
       // GRAPHICAL COMMANDS
       {'n', [this](int, int) { _showNormal = !_showNormal; }},
       {'t', [this](int, int) { _showTangeant = !_showTangeant; }},
-      {'W', [this](int, int) { _showWireframe = !_showWireframe; }},
+      {'w', [this](int, int) { _showWireframe = !_showWireframe; }},
+      {'l', [this](int, int) { _showLight = !_showLight; }},
 
       // WAVES COMMANDS
       {'p', [this](int, int) { toggleAnimation(GameEntity::WAVES); }},
@@ -166,22 +173,13 @@ void Game::initKeyboardMap() {
       {'-', [this](int, int) { halveSegments(GameEntity::WAVES); }},
 
       // ISLAND COMMANDS
+      {'z', [this](int, int) { changeCannonPower<Island>(GameEntity::ISLAND, INC_SPEED); }},
+      {'s', [this](int, int) { changeCannonPower<Island>(GameEntity::ISLAND, DEC_SPEED); }},
+      // ISLAND MOUSE COMMANDS ALTERNATIVE
       {'g', [this](int, int) { fire<Island>(GameEntity::ISLAND); }},
       {'b', [this](int, int) { defend<Island>(GameEntity::ISLAND); }},
-      {'f', [this](int, int) { changeCannonPower<Island>(ISLAND, INC_SPEED); }},
-      {'F', [this](int, int) { changeCannonPower<Island>(ISLAND, DEC_SPEED); }},
-      {'h', [this](int, int) { changeCannonDirection<Island>(ISLAND, INC_ROT); }},
-      {'H', [this](int, int) { changeCannonDirection<Island>(ISLAND, DEC_ROT); }},
-
-  
-//      // TMP
-//      {'g', [this](int, int) { fire<Boat>(GameEntity::BOAT); }},
-//      {'b', [this](int, int) { defend<Boat>(GameEntity::BOAT); }},
-//      {'f', [this](int, int) { changeCannonPower<Boat>(GameEntity::BOAT, INC_SPEED); }},
-//      {'F', [this](int, int) { changeCannonPower<Boat>(GameEntity::BOAT, DEC_SPEED); }},
-//      {'h', [this](int, int) { changeCannonDirection<Boat>(GameEntity::BOAT, INC_ROT); }},
-//      {'H', [this](int, int) { changeCannonDirection<Boat>(GameEntity::BOAT, DEC_ROT); }}
-
+      {'h', [this](int, int) { changeCannonDirection<Island>(GameEntity::ISLAND, INC_ROTATION); }},
+      {'H', [this](int, int) { changeCannonDirection<Island>(GameEntity::ISLAND, DEC_ROTATION); }},
   };
 }
 
@@ -199,6 +197,7 @@ void Game::initKeyboardCallback() const {
 
 void Game::initMouseCallback() const {
   glutPassiveMotionFunc(mouseCallback);
+  glutMouseFunc(mouseClickCallback);
 }
 
 void Game::initBlend() {
@@ -280,6 +279,10 @@ const bool Game::getShowNormal() const {
   return _showNormal;
 }
 
+const bool Game::getShowLight() const {
+  return _showLight;
+}
+
 // EXTERN C
 extern "C" {
 static void drawCallback() {
@@ -297,5 +300,8 @@ static void keyboardCallback(unsigned char key, int x, int y) {
 }
 static void mouseCallback(int x, int y) {
   Game::getInstance().mouse(x, y);
+}
+static void mouseClickCallback(int button, int state, int x, int y) {
+  Game::getInstance().mouseClick(button, state);
 }
 }
