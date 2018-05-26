@@ -9,11 +9,9 @@
 template<class T>
 class Entities : public Displayable, public Alive {
 public:
-  //Typedef
 
-  explicit Entities(const Color &color = Color(1, 1, 1)) : Alive(1), _color(color) {
-    for (auto &subEntity : _entities) {
-    }
+  explicit Entities() : Alive(1) {
+    isAlive = std::is_base_of<Alive, T>::value;
   }
 
   void draw() const override {
@@ -23,9 +21,6 @@ public:
   }
 
   void add(const std::shared_ptr<T> entity) {
-    if (!std::is_base_of<Alive, T>::value) {
-      throw std::runtime_error("Every member of entities should be from base class Alive");
-    }
     if (entity) {
       _entities.push_back(entity);
     }
@@ -34,7 +29,7 @@ public:
   void update() override {
     for (auto it = _entities.begin(); it != _entities.end();) {
       it->get()->update();
-      if (it->get()->getCurrentHealth() == 0) {
+      if (isAlive && it->get()->getCurrentHealth() == 0) {
         it = _entities.erase(it);
       } else {
         ++it;
@@ -43,6 +38,6 @@ public:
   }
 
 private:
-  Color _color;
   std::vector<std::shared_ptr<T> > _entities;
+  bool isAlive;
 };

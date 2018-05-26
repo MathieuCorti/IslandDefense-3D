@@ -128,7 +128,7 @@ struct Vector3f {
 
   static void printMatrix(const float m[16]) {
     std::cout << std::fixed << std::setprecision(5);
-    for (int i = 0; i < 16; i) {
+    for (int i = 0; i < 16;) {
       std::cout << m[i] << (m[i] >= 0 ? " " : "") << "\t";
       if (++i % 4 == 0) {
         std::cout << std::endl;

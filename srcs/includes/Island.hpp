@@ -9,7 +9,7 @@
 #include "../helpers/Displayable.hpp"
 #include "Cannon.hpp"
 
-class Island : public Displayable {
+class Island : public Displayable, public Alive {
 public:
   Island();
 

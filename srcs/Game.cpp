@@ -16,6 +16,7 @@
 #include "includes/Island.hpp"
 #include "includes/Boat.hpp"
 #include "includes/Light.hpp"
+#include "includes/GameUi.hpp"
 
 // PUBLIC
 int Game::start(int argc, char **argv) {
@@ -66,13 +67,13 @@ void Game::update() {
 
 
   // =============================================== TEST =============================================================
-//  static Island::Ptr island = std::dynamic_pointer_cast<Island>(_entities[ISLAND]);
-//  static Boat::Ptr boat = std::dynamic_pointer_cast<Boat>(_entities[BOAT]);
+//  static Boat::Ptr boat1 = std::dynamic_pointer_cast<Boat>(_entities[BOAT1]);
+//  static Boat::Ptr boat2 = std::dynamic_pointer_cast<Boat>(_entities[BOAT2]);
 //
-//  for (auto &thisShape: island->getShapes()) {               // Get the shapes of the projectile
-//    for (auto &enemyShape: boat->getShapes()) {              // Get the shapes of the sub entity
-//      if (enemyShape.collideWith(thisShape)) {               // Check collision
-//        std::cout << "BOAT COLLIDE WITH ISLAND !!!!" << std::endl;
+//  for (auto &thisShape: boat1->getShapes()) {               // Get the shapes of the projectile
+//    for (auto &enemyShape: boat2->getShapes()) {            // Get the shapes of the sub entity
+//      if (enemyShape.collideWith(thisShape)) {              // Check collision
+//        std::cout << "BOATS COLLIDE !!!!" << std::endl;
 //      }
 //    }
 //  }
@@ -165,19 +166,14 @@ void Game::initKeyboardMap() {
       {'-', [this](int, int) { halveSegments(GameEntity::WAVES); }},
 
       // ISLAND COMMANDS
-//      {'g', [this](int, int) { fire<Island>(GameEntity::ISLAND); }},
-//      {'b', [this](int, int) { defend<Island>(GameEntity::ISLAND); }},
-//      {'f', [this](int, int) { changeCannonPower<Island>(ISLAND, INCREASE); }},
-//      {'F', [this](int, int) { changeCannonPower<Island>(ISLAND, DECREASE); }},
-//      {'h', [this](int, int) { changeCannonDirection<Island>(ISLAND, INCREASE); }},
-//      {'H', [this](int, int) { changeCannonDirection<Island>(ISLAND, DECREASE); }},
+      {'g', [this](int, int) { fire<Island>(GameEntity::ISLAND); }},
+      {'b', [this](int, int) { defend<Island>(GameEntity::ISLAND); }},
+      {'f', [this](int, int) { changeCannonPower<Island>(ISLAND, INC_SPEED); }},
+      {'F', [this](int, int) { changeCannonPower<Island>(ISLAND, DEC_SPEED); }},
+      {'h', [this](int, int) { changeCannonDirection<Island>(ISLAND, INC_ROT); }},
+      {'H', [this](int, int) { changeCannonDirection<Island>(ISLAND, DEC_ROT); }},
 
-
-//      // TEST BOAT COMMANDS
-//      {'j', [this](int, int) { move(GameEntity::BOAT, LEFT); }},
-//      {'l', [this](int, int) { move(GameEntity::BOAT, RIGHT); }},
-//      {'i', [this](int, int) { move(GameEntity::BOAT, FORWARD); }},
-//      {'k', [this](int, int) { move(GameEntity::BOAT, BACKWARD); }},
+  
 //      // TMP
 //      {'g', [this](int, int) { fire<Boat>(GameEntity::BOAT); }},
 //      {'b', [this](int, int) { defend<Boat>(GameEntity::BOAT); }},
@@ -210,14 +206,17 @@ void Game::initBlend() {
 }
 
 void Game::initEntities() {
+  auto island = std::make_shared<Island>();
+  GameUi::Entities entities = { std::make_pair(std::dynamic_pointer_cast<Alive>(island), GREEN) };
   _entities.insert(std::make_pair(GameEntity::CAMERA, std::make_shared<Camera>()));
   _entities.insert(std::make_pair(GameEntity::LIGHT, std::make_shared<Light>()));
   _entities.insert(std::make_pair(GameEntity::STATS, std::make_shared<Stats>()));
   _entities.insert(std::make_pair(GameEntity::WAVES, std::make_shared<Waves>()));
   _entities.insert(std::make_pair(GameEntity::SKYBOX, std::make_shared<Skybox>()));
-  _entities.insert(std::make_pair(GameEntity::ISLAND, std::make_shared<Island>()));
+  _entities.insert(std::make_pair(GameEntity::ISLAND, island));
   _entities.insert(std::make_pair(GameEntity::BOATS, generateBoats()));
   _entities.insert(std::make_pair(GameEntity::AXES, std::make_shared<Axes>()));
+  _entities.insert(std::make_pair(GameEntity::UI, std::make_shared<GameUi>(entities)));
 }
 
 std::shared_ptr<Entities<Boat> > Game::generateBoats() {
@@ -235,9 +234,7 @@ std::shared_ptr<Entities<Boat> > Game::generateBoats() {
                                                0.0f,
                                                disMinus(genMin) != 0 ? dis(genZ) : -dis(genZ))));
   }
-
-  // TODO Remove boats that collide
-
+  
   return boats;
 }
 

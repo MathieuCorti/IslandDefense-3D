@@ -7,7 +7,8 @@
 #include "includes/Waves.hpp"
 #include "includes/Game.hpp"
 
-Island::Island() : _xmax(0.1f), _zmax(0.1f), _tess(64.0f), _maxHeight(-1.0f), _minHeight(-1.0f) {
+Island::Island()
+  : Alive(ISLAND_BASE_HEALTH), _xmax(0.1f), _zmax(0.1f), _tess(64.0f), _maxHeight(-1.0f), _minHeight(-1.0f) {
   generateTopTriangles(ORANGE);
   for (Shape &shape : _shapes) {
     shape.computePerVertexNormal();

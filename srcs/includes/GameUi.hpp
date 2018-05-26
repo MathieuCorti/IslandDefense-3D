@@ -12,12 +12,12 @@
 #include "Shape.hpp"
 #include "../helpers/Alive.hpp"
 
-class UI : public Displayable {
+class GameUi : public Displayable {
 
 public:
   typedef std::vector<std::pair<AlivePtr, Color>> Entities;
 
-  explicit UI(Entities &entities);
+  explicit GameUi(Entities &entities);
 
   void draw() const override;
 

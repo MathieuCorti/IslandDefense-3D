@@ -26,10 +26,13 @@
 #define NBR_BOATS 20
 #define BOATS_BASE_HEALTH 10
 
+// ISLAND
+#define ISLAND_BASE_HEALTH 100
+
 // CANNON
-#define INC_SPEED  (0.1f)
+#define INC_SPEED  float(0.1f)
 #define DEC_SPEED  (-INC_SPEED)
-#define INC_ROT  (0.1f * 180.0f / M_PI)
+#define INC_ROT  float(0.1f * 180.0f / M_PI)
 #define DEC_ROT  (-INC_ROT)
 
 // COLORS
@@ -50,6 +53,8 @@ enum GameEntity {
   AXES,
   SKYBOX,
   BOATS,
+  BOAT1,
+  BOAT2,
   WAVES,
   STATS,
   UI,

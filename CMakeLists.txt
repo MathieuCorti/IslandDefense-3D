@@ -22,8 +22,8 @@ add_executable(IslandDefense3D
         srcs/includes/Projectile.hpp
         srcs/Pellet.cpp
         srcs/includes/Pellet.hpp
-        srcs/UI.cpp
-        srcs/includes/UI.hpp
+        srcs/GameUi.cpp
+        srcs/includes/GameUi.hpp
         srcs/Shape.cpp
         srcs/Displayable.cpp
         srcs/Movable.cpp
