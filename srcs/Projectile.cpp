@@ -44,11 +44,11 @@ void Projectile::update() {
   _coordinates.x = _start.x + _velocity.x * t;
   _coordinates.y = _start.y + _velocity.y * t + g * t * t / 2.0f;
   _coordinates.z = _start.z + _velocity.z * t;
-
+  float wave = Waves::computeHeight(_coordinates.x, _coordinates.z);
 
   //TODO : collisions
 
-  if (_coordinates.y < -1 || _coordinates.y > 1 ||
+  if (_coordinates.y < wave || _coordinates.y > 1 ||
       _coordinates.x < -1 || _coordinates.x > 1 ||
       _coordinates.z < -1 || _coordinates.z > 1) {
     _currentHealth = 0;
@@ -74,6 +74,7 @@ void Projectile::draw() const {
   glPushMatrix();
   glTranslatef(_coordinates.x, _coordinates.y, _coordinates.z);
   //TODO : get circle
+  glColor4f(_color.r, _color.g, _color.b, _color.a);
   glutSolidSphere(0.01f * 2.0f, 20, 20);
   glPopMatrix();
 

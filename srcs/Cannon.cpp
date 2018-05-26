@@ -71,6 +71,7 @@ Cannon::Cannon(float speed, float radius, Color color) : _color(color),
 }
 
 void Cannon::drawTrajectory() const {
+  glEnable(GL_BLEND);
   glPushMatrix();
 
   GLfloat rotation1[16], rotation2[16], translation[16], first[16], final[16];
@@ -83,13 +84,13 @@ void Cannon::drawTrajectory() const {
   Vector3f c = Vector3f(_radius * 10.0f, 0.0f, 0.0f) * final;
 
   glBegin(GL_LINE_STRIP);
+  glColor4f(_color.r, _color.g, _color.b, 0.5f);
   float t = 0;
   for (;;) {
     float x = c.x + _velocity.x * t;
     float y = c.y + _velocity.y * t + g * t * t / 2.0f;
     float z = c.z + _velocity.z * t;
-
-    if (y < -1 || y > 1 || x < -1 || x > 1 || z < -1 || z > 1) {
+    if (y < Waves::computeHeight(x, z) || y > 1 || x < -1 || x > 1 || z < -1 || z > 1) {
       break;
     }
 
@@ -98,6 +99,7 @@ void Cannon::drawTrajectory() const {
   }
   glEnd();
   glPopMatrix();
+  glDisable(GL_BLEND);
 }
 
 void Cannon::draw() const {
@@ -107,7 +109,7 @@ void Cannon::draw() const {
   glEnable(GL_COLOR_MATERIAL);
   glEnable(GL_NORMALIZE);
 
-  GLfloat specular[] = {1.0f, 0.3f, 0.5f, 1.0f};
+  GLfloat specular[] = {0.5f, 0.5f, 0.5f, 1.0f};
   glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
   GLfloat diffuse[] = {0.5f, 0.5f, 0.5f, 1.0f};
   glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
@@ -142,7 +144,7 @@ void Cannon::draw() const {
 }
 
 void Cannon::blast() {
-  if (Game::getInstance().getTime() - _lastFire > 1.0f) {
+  if (Game::getInstance().getTime() - _lastFire > 1.0f / GAME_SPEED) {
     _lastFire = Game::getInstance().getTime();
     GLfloat rotation1[16], rotation2[16], translation[16], first[16], final[16];
     _coordinates.toTranslationMatrix(translation);
@@ -150,16 +152,13 @@ void Cannon::blast() {
     (Vector3f{0.0f, 0.0f, _rotation} * (M_PI / 180.0f)).toRotationMatrix(rotation2);
     Vector3f::multMatrix(translation, rotation1, first);
     Vector3f::multMatrix(first, rotation2, final);
-    Vector3f c = Vector3f(_radius * 10.0f, 0.0f, 0.0f) * final;
-    _projectiles.add(std::make_shared<Projectile>(Game::getInstance().getTime(),
-                                                  c,
-                                                  _velocity,
-                                                  _color));
+    Vector3f c = Vector3f(_radius * 12.0f, 0.0f, 0.0f) * final;
+    _projectiles.add(std::make_shared<Projectile>(Game::getInstance().getTime(), c, _velocity, _color));
   }
 }
 
 void Cannon::defend() {
-  if (Game::getInstance().getTime() - _lastDefence > 5.0f) {
+  if (Game::getInstance().getTime() - _lastDefence > 5.0f / GAME_SPEED) {
     _lastDefence = Game::getInstance().getTime();
     GLfloat rotation1[16], rotation2[16], translation[16], first[16], final[16];
     _coordinates.toTranslationMatrix(translation);
@@ -167,8 +166,8 @@ void Cannon::defend() {
     (Vector3f{0.0f, 0.0f, _rotation} * (M_PI / 180.0f)).toRotationMatrix(rotation2);
     Vector3f::multMatrix(translation, rotation1, first);
     Vector3f::multMatrix(first, rotation2, final);
-    Vector3f c = Vector3f(_radius * 10.0f, 0.0f, 0.0f) * final;
-    _defences.add(std::make_shared<Pellet>(Game::getInstance().getTime(), c, _color));
+    Vector3f c = Vector3f(_radius * 12.0f, 0.0f, 0.0f) * final;
+    _defences.add(std::make_shared<Pellet>(Game::getInstance().getTime(), c, _angle, _rotation, _color));
   }
 }
 
@@ -183,8 +182,17 @@ void Cannon::rotation(float angle) {
   _rotation = _rotation > 180 ? 180 : _rotation;
 }
 
-void Cannon::setPos(Vector3f coordinates, Vector3f angle) {
+void Cannon::setCoordinates(Vector3f coordinates) {
   _coordinates = coordinates;
+}
+
+void Cannon::setRotation(float rotation) {
+  _rotation = rotation;
+  _rotation = _rotation < 0 ? 0 : _rotation;
+  _rotation = _rotation > 180 ? 180 : _rotation;
+}
+
+void Cannon::setAngle(Vector3f angle) {
   _angle = angle;
 }
 
@@ -197,8 +205,9 @@ void Cannon::update() {
   Vector3f::multMatrix(first, rotation2, final);
   Vector3f base = Vector3f(0.0f, 0.0f, 0.0f) * final;
   Vector3f tip = Vector3f(_radius * 10.0f, 0.0f, 0.0f) * final;
-
-  _velocity = (tip - base) * 10.0f * _speed;
+  _velocity = (tip - base);
+  _velocity.normalize();
+  _velocity = _velocity * _speed;
 
   _projectiles.update();
   _defences.update();

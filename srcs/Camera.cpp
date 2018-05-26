@@ -9,7 +9,7 @@
 #include "includes/Camera.hpp"
 #include "includes/Game.hpp"
 
-Camera::Camera() : Movable(CAMERA_TRANSLATION_SPEED, Vector3f(-0.8f, 0.53f, -0.30f)),
+Camera::Camera() : Movable(CAMERA_TRANSLATION_SPEED, Vector3f(-0.01f, 0.53f, -0.01f)),
                    _xRot(CAMERA_X_ROT_START), _yRot(CAMERA_Y_ROT_START),
                    _rotationSpeed(CAMERA_ROTATION_SPEED),
                    _lastMouseX(0), _lastMouseY(0) {
@@ -36,14 +36,6 @@ void Camera::move(Direction direction, int coef) {
   float xRotRad, yRotRad;
 
   switch (direction) {
-    case UP:
-      _xRot += 1;
-      _xRot = _xRot > 90 ? 90 : _xRot * coef;
-      break;
-    case DOWN:
-      _xRot -= 1;
-      _xRot = _xRot < -90 ? -90 : _xRot * coef;
-      break;
     case LEFT:
       yRotRad = (_yRot / 180.0f * (float) M_PI);
       _coordinates.x -= std::cos(yRotRad) * _speed * _time * coef;
@@ -69,6 +61,14 @@ void Camera::move(Direction direction, int coef) {
       _coordinates.y += std::sin(xRotRad) * _speed * _time * coef;
       break;
   }
+}
+
+float Camera::getYRot() const {
+  return _yRot;
+}
+
+float Camera::getXRot() const {
+  return _xRot;
 }
 
 void Camera::update() {

@@ -70,12 +70,12 @@ void Boat::update() {
   float slope = Waves::computeSlope(_coordinates.x, _coordinates.z);
   _angle.z = static_cast<float>(std::atan(slope) * 180.0f / M_PI);
   _angle.x = -_angle.z;
-  _angle.y = static_cast<float>(-M_PI / 4.0f * 180.0f / M_PI);
 
   GLfloat rotation[16];
   (_angle * (M_PI / 180.0f)).toRotationMatrix(rotation);
 
-  _cannon->setPos(_coordinates + Vector3f{0.0f, 0.025f, 0.0f} * rotation, _angle);
+  _cannon->setCoordinates(_coordinates + Vector3f{0.0f, 0.025f, 0.0f} * rotation);
+  _cannon->setAngle(_angle);
   _cannon->update();
 }
 

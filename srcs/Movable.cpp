@@ -10,12 +10,6 @@ Movable::Movable(float _speed) : _speed(_speed) {}
 
 void Movable::move(Direction direction, int coef) {
   switch (direction) {
-    case UP:
-      setY(getCoordinates().y + getSpeed() * coef);
-      break;
-    case DOWN:
-      setY(getCoordinates().y - getSpeed() * coef);
-      break;
     case LEFT:
       setX(getCoordinates().x - getSpeed() * coef);
       break;

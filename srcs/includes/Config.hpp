@@ -25,8 +25,8 @@
 // CANNON
 #define INC_SPEED  (0.1f)
 #define DEC_SPEED  (-INC_SPEED)
-#define INC_ROT  (0.1f * 180.0f / M_PI)
-#define DEC_ROT  (-INC_ROT)
+#define INC_ROTATION  (static_cast<float>(0.05f * 180.0f / M_PI))
+#define DEC_ROTATION  (-INC_ROTATION)
 
 // COLORS
 #define BLACK   Color(0, 0, 0)
