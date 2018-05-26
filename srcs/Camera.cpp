@@ -64,9 +64,9 @@ void Camera::move(Direction direction, int coef) {
     case BACKWARD:
       yRotRad = (_yRot / 180.0f * (float) M_PI);
       xRotRad = (_xRot / 180.0f * (float) M_PI);
-      _coordinates.x -= std::sin(yRotRad) * _speed * _time;
-      _coordinates.z += std::cos(yRotRad) * _speed * _time;
-      _coordinates.y += std::sin(xRotRad) * _speed * _time;
+      _coordinates.x -= std::sin(yRotRad) * _speed * _time * coef;
+      _coordinates.z += std::cos(yRotRad) * _speed * _time * coef;
+      _coordinates.y += std::sin(xRotRad) * _speed * _time * coef;
       break;
   }
 }

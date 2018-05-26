@@ -1,5 +1,5 @@
 //
-//  Boat.cpp 
+//  Boat.cpp
 //  IslandDefense3D
 //
 //  Created by Mathieu Corti on 5/7/18.
@@ -51,10 +51,11 @@ void Boat::draw() const {
   glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
 
   glPushMatrix();
-  glTranslatef(_coordinates.x, _coordinates.y, _coordinates.z);
-  glRotatef(_angle.x, 1.0, 0.0, 0.0);
-  glRotatef(_angle.y, 0.0, 1.0, 0.0);
-  glRotatef(_angle.z, 0.0, 0.0, 1.0);
+
+  GLfloat m[16];
+  glMultMatrixf(_coordinates.toTranslationMatrix(m));
+  glMultMatrixf((_angle * (M_PI / 180.0f)).toRotationMatrix(m));
+
   Displayable::draw();
   glPopMatrix();
 
@@ -72,7 +73,12 @@ void Boat::update() {
   float slope = Waves::computeSlope(_coordinates.x, _coordinates.z);
   _angle.z = static_cast<float>(std::atan(slope) * 180.0f / M_PI);
   _angle.x = -_angle.z;
-  _cannon->setPos(_coordinates + Vector3f::transform({0, 0.025f, 0}, _angle), _angle);
+  _angle.y = static_cast<float>(-M_PI / 4.0f * 180.0f / M_PI);
+
+  GLfloat rotation[16];
+  (_angle * (M_PI / 180.0f)).toRotationMatrix(rotation);
+
+  _cannon->setPos(_coordinates + Vector3f{0.0f, 0.025f, 0.0f} * rotation, _angle);
   _cannon->update();
   computeAI(); // Test
 }

@@ -2,6 +2,7 @@
 // Created by wilmot_g on 24/03/18.
 //
 
+#include <iomanip>
 #include "helpers/Glut.hpp"
 
 #include "includes/Cannon.hpp"
@@ -70,14 +71,23 @@ Cannon::Cannon(float speed, float radius, Color color) : _color(color),
 }
 
 void Cannon::drawTrajectory() const {
+  glPushMatrix();
+
+  GLfloat rotation1[16], rotation2[16], translation[16], first[16], final[16];
+  _coordinates.toTranslationMatrix(translation);
+  (_angle * (M_PI / 180.0f)).toRotationMatrix(rotation1);
+  (Vector3f{0.0f, 0.0f, _rotation} * (M_PI / 180.0f)).toRotationMatrix(rotation2);
+  Vector3f::multMatrix(translation, rotation1, first);
+  Vector3f::multMatrix(first, rotation2, final);
+
+  Vector3f c = Vector3f(_radius * 10.0f, 0.0f, 0.0f) * final;
+
   glBegin(GL_LINE_STRIP);
   float t = 0;
   for (;;) {
-    Vector3f coordinates = Vector3f::transform({_radius * 10.0f, 0, 0}, _angle) + _coordinates;
-    Vector3f velocity = Vector3f::transform(_velocity, _angle);
-    float x = coordinates.x + velocity.x * t;
-    float y = coordinates.y + velocity.y * t + g * t * t / 2.0f;
-    float z = coordinates.z + velocity.z * t;
+    float x = c.x + _velocity.x * t;
+    float y = c.y + _velocity.y * t + g * t * t / 2.0f;
+    float z = c.z + _velocity.z * t;
 
     if (y < -1 || y > 1 || x < -1 || x > 1 || z < -1 || z > 1) {
       break;
@@ -87,6 +97,7 @@ void Cannon::drawTrajectory() const {
     t += 0.01;
   }
   glEnd();
+  glPopMatrix();
 }
 
 void Cannon::draw() const {
@@ -96,7 +107,7 @@ void Cannon::draw() const {
   glEnable(GL_COLOR_MATERIAL);
   glEnable(GL_NORMALIZE);
 
-  GLfloat specular[] = {0.5f, 0.5f, 0.5f, 1.0f};
+  GLfloat specular[] = {1.0f, 0.3f, 0.5f, 1.0f};
   glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
   GLfloat diffuse[] = {0.5f, 0.5f, 0.5f, 1.0f};
   glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
@@ -106,14 +117,16 @@ void Cannon::draw() const {
   glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
 
   glPushMatrix();
-  glTranslatef(_coordinates.x, _coordinates.y, _coordinates.z);
-  glRotatef(_angle.x, 1.0, 0.0, 0.0);
-  glRotatef(_angle.y, 0.0, 1.0, 0.0);
-  glRotatef(_angle.z, 0.0, 0.0, 1.0);
+
+  GLfloat m[16];
+  glMultMatrixf(_coordinates.toTranslationMatrix(m));
+  glMultMatrixf((_angle * (M_PI / 180.0f)).toRotationMatrix(m));
+  glMultMatrixf((Vector3f{0.0f, 0.0f, _rotation} * (M_PI / 180.0f)).toRotationMatrix(m));
 
   Displayable::draw();
   _shapes.front().applyColor();
   glutSolidSphere(_radius * 2.0f, 20, 20);
+
   glPopMatrix();
 
   glDisable(GL_NORMALIZE);
@@ -123,6 +136,7 @@ void Cannon::draw() const {
   glDisable(GL_LIGHTING);
 
   drawTrajectory();
+
   _projectiles.draw();
   _defences.draw();
 }
@@ -130,9 +144,16 @@ void Cannon::draw() const {
 void Cannon::blast() {
   if (Game::getInstance().getTime() - _lastFire > 1.0f) {
     _lastFire = Game::getInstance().getTime();
+    GLfloat rotation1[16], rotation2[16], translation[16], first[16], final[16];
+    _coordinates.toTranslationMatrix(translation);
+    (_angle * (M_PI / 180.0f)).toRotationMatrix(rotation1);
+    (Vector3f{0.0f, 0.0f, _rotation} * (M_PI / 180.0f)).toRotationMatrix(rotation2);
+    Vector3f::multMatrix(translation, rotation1, first);
+    Vector3f::multMatrix(first, rotation2, final);
+    Vector3f c = Vector3f(_radius * 10.0f, 0.0f, 0.0f) * final;
     _projectiles.add(std::make_shared<Projectile>(Game::getInstance().getTime(),
-                                                  Vector3f::transform({_radius * 10.0f, 0, 0}, _angle) + _coordinates,
-                                                  Vector3f::transform(_velocity, _angle),
+                                                  c,
+                                                  _velocity,
                                                   _color));
   }
 }
@@ -140,7 +161,14 @@ void Cannon::blast() {
 void Cannon::defend() {
   if (Game::getInstance().getTime() - _lastDefence > 5.0f) {
     _lastDefence = Game::getInstance().getTime();
-    _defences.add(std::make_shared<Pellet>(Game::getInstance().getTime(), Vector3f(), _color));
+    GLfloat rotation1[16], rotation2[16], translation[16], first[16], final[16];
+    _coordinates.toTranslationMatrix(translation);
+    (_angle * (M_PI / 180.0f)).toRotationMatrix(rotation1);
+    (Vector3f{0.0f, 0.0f, _rotation} * (M_PI / 180.0f)).toRotationMatrix(rotation2);
+    Vector3f::multMatrix(translation, rotation1, first);
+    Vector3f::multMatrix(first, rotation2, final);
+    Vector3f c = Vector3f(_radius * 10.0f, 0.0f, 0.0f) * final;
+    _defences.add(std::make_shared<Pellet>(Game::getInstance().getTime(), c, _color));
   }
 }
 
@@ -152,7 +180,7 @@ void Cannon::speed(float value) {
 void Cannon::rotation(float angle) {
   _rotation += angle;
   _rotation = _rotation < 0 ? 0 : _rotation;
-  _rotation = static_cast<float>(_rotation > M_PI ? M_PI : _rotation);
+  _rotation = _rotation > 180 ? 180 : _rotation;
 }
 
 void Cannon::setPos(Vector3f coordinates, Vector3f angle) {
@@ -161,10 +189,23 @@ void Cannon::setPos(Vector3f coordinates, Vector3f angle) {
 }
 
 void Cannon::update() {
-  _angle.z += _rotation / M_PI * 180.0f;
-  _velocity.x = static_cast<float>(std::cos(_angle.y * M_PI / 180.0f) * _speed);
-  _velocity.y = static_cast<float>(std::sin(_angle.y * M_PI / 180.0f) * _speed);
-  _velocity.z = static_cast<float>(-std::sin(_rotation * M_PI / 180.0f) * _speed);
+  GLfloat rotation1[16], rotation2[16], translation[16], first[16], final[16];
+  _coordinates.toTranslationMatrix(translation);
+  (_angle * (M_PI / 180.0f)).toRotationMatrix(rotation1);
+  (Vector3f{0.0f, 0.0f, _rotation} * (M_PI / 180.0f)).toRotationMatrix(rotation2);
+  Vector3f::multMatrix(translation, rotation1, first);
+  Vector3f::multMatrix(first, rotation2, final);
+  Vector3f base = Vector3f(0.0f, 0.0f, 0.0f) * final;
+  Vector3f tip = Vector3f(_radius * 10.0f, 0.0f, 0.0f) * final;
+
+  _velocity = base - tip; // * _speed
+  std::cout << "base     : " << base << std::endl << "tip      : " << tip << std::endl << "velocity : " << _velocity
+            << std::endl << std::endl;
+
+  _velocity.x = static_cast<float>(std::cos((_rotation + _angle.z) * M_PI / 180.0f) * _speed);
+  _velocity.y = static_cast<float>(std::sin((_rotation + _angle.z) * M_PI / 180.0f) * _speed);
+  _velocity.z = static_cast<float>(-std::sin(_angle.y * M_PI / 180.0f) * _speed);
+  std::cout << "velocity : " << _velocity << std::endl;
   _projectiles.update();
   _defences.update();
 }

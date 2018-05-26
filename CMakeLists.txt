@@ -47,7 +47,8 @@ add_executable(IslandDefense3D
         srcs/includes/Boat.hpp
         srcs/Light.cpp
         srcs/includes/Light.hpp
-        srcs/helpers/Triangle.h)
+        srcs/helpers/Triangle.h
+        )
 find_package(OpenGL REQUIRED)
 find_package(GLUT REQUIRED)
 find_library(SOIL SOIL)

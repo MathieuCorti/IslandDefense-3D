@@ -23,8 +23,8 @@
 #define CAMERA_Y_ROT_START (-245.0f)
 
 // CANNON
-#define INCREASE  0.1f
-#define DECREASE  (-0.1f)
+#define INCREASE  (0.1f * 180.0f / M_PI)
+#define DECREASE  (-INCREASE)
 
 // COLORS
 #define BLACK   Color(0, 0, 0)
