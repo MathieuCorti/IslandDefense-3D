@@ -165,10 +165,10 @@ void Game::initKeyboardMap() {
       // TMP
       {'g', [this](int, int) { fire<Boat>(GameEntity::BOAT); }},
       {'b', [this](int, int) { defend<Boat>(GameEntity::BOAT); }},
-      {'f', [this](int, int) { changeCannonPower<Boat>(GameEntity::BOAT, INCREASE); }},
-      {'F', [this](int, int) { changeCannonPower<Boat>(GameEntity::BOAT, DECREASE); }},
-      {'h', [this](int, int) { changeCannonDirection<Boat>(GameEntity::BOAT, INCREASE); }},
-      {'H', [this](int, int) { changeCannonDirection<Boat>(GameEntity::BOAT, DECREASE); }},
+      {'f', [this](int, int) { changeCannonPower<Boat>(GameEntity::BOAT, INC_SPEED); }},
+      {'F', [this](int, int) { changeCannonPower<Boat>(GameEntity::BOAT, DEC_SPEED); }},
+      {'h', [this](int, int) { changeCannonDirection<Boat>(GameEntity::BOAT, INC_ROT); }},
+      {'H', [this](int, int) { changeCannonDirection<Boat>(GameEntity::BOAT, DEC_ROT); }},
 
   };
 }

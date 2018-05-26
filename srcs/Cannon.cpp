@@ -198,14 +198,8 @@ void Cannon::update() {
   Vector3f base = Vector3f(0.0f, 0.0f, 0.0f) * final;
   Vector3f tip = Vector3f(_radius * 10.0f, 0.0f, 0.0f) * final;
 
-  _velocity = base - tip; // * _speed
-  std::cout << "base     : " << base << std::endl << "tip      : " << tip << std::endl << "velocity : " << _velocity
-            << std::endl << std::endl;
+  _velocity = (tip - base) * 10.0f * _speed;
 
-  _velocity.x = static_cast<float>(std::cos((_rotation + _angle.z) * M_PI / 180.0f) * _speed);
-  _velocity.y = static_cast<float>(std::sin((_rotation + _angle.z) * M_PI / 180.0f) * _speed);
-  _velocity.z = static_cast<float>(-std::sin(_angle.y * M_PI / 180.0f) * _speed);
-  std::cout << "velocity : " << _velocity << std::endl;
   _projectiles.update();
   _defences.update();
 }
