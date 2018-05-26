@@ -50,6 +50,10 @@ struct Vector3f {
     return {x + v2.x, y + v2.y, z + v2.z};
   }
 
+  Vector3f operator-(const Vector3f &v2) const {
+    return {x - v2.x, y - v2.y, z - v2.z};
+  }
+
   static Vector3f cross(const Vector3f &v1, const Vector3f &v2) {
     return {(v1.y * v2.z) - (v1.z * v2.y),
             (v1.z * v2.x) - (v1.x * v2.z),
