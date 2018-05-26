@@ -103,21 +103,23 @@ void Cannon::drawTrajectory() const {
 }
 
 void Cannon::draw() const {
-  glEnable(GL_LIGHTING);
-  glEnable(GL_LIGHT0);
+  if (Game::getInstance().getShowLight()) {
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    glEnable(GL_COLOR_MATERIAL);
+    glEnable(GL_NORMALIZE);
+
+    GLfloat specular[] = {0.5f, 0.5f, 0.5f, 1.0f};
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
+    GLfloat diffuse[] = {0.5f, 0.5f, 0.5f, 1.0f};
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
+    GLfloat emission[] = {0.0f, 0.0f, 0.0f, 1.0f};
+    glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emission);
+    GLfloat shininess = 64.0f;
+    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
+  }
+
   glEnable(GL_BLEND);
-  glEnable(GL_COLOR_MATERIAL);
-  glEnable(GL_NORMALIZE);
-
-  GLfloat specular[] = {0.5f, 0.5f, 0.5f, 1.0f};
-  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
-  GLfloat diffuse[] = {0.5f, 0.5f, 0.5f, 1.0f};
-  glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
-  GLfloat emission[] = {0.0f, 0.0f, 0.0f, 1.0f};
-  glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emission);
-  GLfloat shininess = 64.0f;
-  glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
-
   glPushMatrix();
 
   GLfloat m[16];
@@ -130,12 +132,14 @@ void Cannon::draw() const {
   glutSolidSphere(_radius * 2.0f, 20, 20);
 
   glPopMatrix();
-
-  glDisable(GL_NORMALIZE);
-  glDisable(GL_COLOR_MATERIAL);
   glDisable(GL_BLEND);
-  glDisable(GL_LIGHT0);
-  glDisable(GL_LIGHTING);
+
+  if (Game::getInstance().getShowLight()) {
+    glDisable(GL_NORMALIZE);
+    glDisable(GL_COLOR_MATERIAL);
+    glDisable(GL_LIGHT0);
+    glDisable(GL_LIGHTING);
+  }
 
   drawTrajectory();
 

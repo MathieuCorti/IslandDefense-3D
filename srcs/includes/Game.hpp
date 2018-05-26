@@ -54,6 +54,8 @@ public:
 
   const bool getShowNormal() const;
 
+  const bool getShowLight() const;
+
   const EntityList &getEntities() const;
 
   Game(const Game &) = delete;
@@ -68,6 +70,7 @@ private:
   bool _showWireframe = false;
   bool _showTangeant = false;
   bool _showNormal = false;
+  bool _showLight = true;
 
   void initDrawCallback() const;
 

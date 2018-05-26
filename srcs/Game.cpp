@@ -147,7 +147,8 @@ void Game::initKeyboardMap() {
       // GRAPHICAL COMMANDS
       {'n', [this](int, int) { _showNormal = !_showNormal; }},
       {'t', [this](int, int) { _showTangeant = !_showTangeant; }},
-      {'W', [this](int, int) { _showWireframe = !_showWireframe; }},
+      {'w', [this](int, int) { _showWireframe = !_showWireframe; }},
+      {'l', [this](int, int) { _showLight = !_showLight; }},
 
       // WAVES COMMANDS
       {'p', [this](int, int) { toggleAnimation(GameEntity::WAVES); }},
@@ -162,12 +163,6 @@ void Game::initKeyboardMap() {
       {'b', [this](int, int) { defend<Island>(GameEntity::ISLAND); }},
       {'h', [this](int, int) { changeCannonDirection<Island>(GameEntity::ISLAND, INC_ROTATION); }},
       {'H', [this](int, int) { changeCannonDirection<Island>(GameEntity::ISLAND, DEC_ROTATION); }},
-
-      // TEST BOAT COMMANDS TODO : REMOVE
-      {'j', [this](int, int) { move(GameEntity::BOAT, LEFT); }},
-      {'l', [this](int, int) { move(GameEntity::BOAT, RIGHT); }},
-      {'i', [this](int, int) { move(GameEntity::BOAT, FORWARD); }},
-      {'k', [this](int, int) { move(GameEntity::BOAT, BACKWARD); }},
   };
 }
 
@@ -243,6 +238,10 @@ const bool Game::getShowTangeant() const {
 
 const bool Game::getShowNormal() const {
   return _showNormal;
+}
+
+const bool Game::getShowLight() const {
+  return _showLight;
 }
 
 // EXTERN C
