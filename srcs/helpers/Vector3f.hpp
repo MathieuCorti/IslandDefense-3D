@@ -10,9 +10,10 @@
 #include <cmath>
 #include <ostream>
 #include <iostream>
-#include <GL/gl.h>
 #include <cstring>
 #include <iomanip>
+
+#include "Glut.hpp"
 
 struct Vector3f {
   Vector3f(float x, float y, float z) : x(x), y(y), z(z) {}

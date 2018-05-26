@@ -84,7 +84,7 @@ void Boat::update() {
 }
 
 void Boat::computeAI() {
-  static Island::Ptr island =  std::dynamic_pointer_cast<Island>(Game::getInstance().getEntities().at(ISLAND));
+//  static Island::Ptr island =  std::dynamic_pointer_cast<Island>(Game::getInstance().getEntities().at(ISLAND));
 
   // TODO: Calculate Y angle
 //  _angle.y = -50;

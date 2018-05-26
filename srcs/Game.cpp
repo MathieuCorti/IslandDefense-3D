@@ -65,16 +65,16 @@ void Game::update() {
 
 
   // =============================================== TEST =============================================================
-  static Island::Ptr island = std::dynamic_pointer_cast<Island>(_entities[ISLAND]);
-  static Boat::Ptr boat = std::dynamic_pointer_cast<Boat>(_entities[BOAT]);
-
-  for (auto &thisShape: island->getShapes()) {               // Get the shapes of the projectile
-    for (auto &enemyShape: boat->getShapes()) {              // Get the shapes of the sub entity
-      if (enemyShape.collideWith(thisShape)) {               // Check collision
-        std::cout << "BOAT COLLIDE WITH ISLAND !!!!" << std::endl;
-      }
-    }
-  }
+//  static Island::Ptr island = std::dynamic_pointer_cast<Island>(_entities[ISLAND]);
+//  static Boat::Ptr boat = std::dynamic_pointer_cast<Boat>(_entities[BOAT]);
+//
+//  for (auto &thisShape: island->getShapes()) {               // Get the shapes of the projectile
+//    for (auto &enemyShape: boat->getShapes()) {              // Get the shapes of the sub entity
+//      if (enemyShape.collideWith(thisShape)) {               // Check collision
+//        std::cout << "BOAT COLLIDE WITH ISLAND !!!!" << std::endl;
+//      }
+//    }
+//  }
   // =============================================== TEST =============================================================
 }
 
@@ -213,7 +213,7 @@ void Game::initEntities() {
   _entities.insert(std::make_pair(GameEntity::STATS, std::make_shared<Stats>()));
   _entities.insert(std::make_pair(GameEntity::WAVES, std::make_shared<Waves>()));
   _entities.insert(std::make_pair(GameEntity::SKYBOX, std::make_shared<Skybox>()));
-//  _entities.insert(std::make_pair(GameEntity::ISLAND, std::make_shared<Island>()));
+  _entities.insert(std::make_pair(GameEntity::ISLAND, std::make_shared<Island>()));
   _entities.insert(std::make_pair(GameEntity::BOAT, std::make_shared<Boat>(RED)));
   _entities.insert(std::make_pair(GameEntity::AXES, std::make_shared<Axes>()));
 }
