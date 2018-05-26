@@ -135,14 +135,14 @@ void Game::initKeyboardMap() {
       {27,  [](int, int) { exit(EXIT_SUCCESS); }},
 
       // CAMERA COMMANDS TODO : figure if we leave them
-//      {'q', [this](int, int) { move(GameEntity::CAMERA, LEFT); }},
-//      {'d', [this](int, int) { move(GameEntity::CAMERA, RIGHT); }},
-//      {'z', [this](int, int) { move(GameEntity::CAMERA, FORWARD); }},
-//      {'s', [this](int, int) { move(GameEntity::CAMERA, BACKWARD); }},
-//      {'Q', [this](int, int) { move(GameEntity::CAMERA, LEFT, 3); }},
-//      {'D', [this](int, int) { move(GameEntity::CAMERA, RIGHT, 3); }},
-//      {'Z', [this](int, int) { move(GameEntity::CAMERA, FORWARD, 3); }},
-//      {'S', [this](int, int) { move(GameEntity::CAMERA, BACKWARD, 3); }},
+      {'a', [this](int, int) { move(GameEntity::CAMERA, LEFT); }},
+      {'d', [this](int, int) { move(GameEntity::CAMERA, RIGHT); }},
+      {'w', [this](int, int) { move(GameEntity::CAMERA, FORWARD); }},
+      {'s', [this](int, int) { move(GameEntity::CAMERA, BACKWARD); }},
+      {'A', [this](int, int) { move(GameEntity::CAMERA, LEFT, 3); }},
+      {'D', [this](int, int) { move(GameEntity::CAMERA, RIGHT, 3); }},
+      {'W', [this](int, int) { move(GameEntity::CAMERA, FORWARD, 3); }},
+      {'S', [this](int, int) { move(GameEntity::CAMERA, BACKWARD, 3); }},
 
       // GRAPHICAL COMMANDS
       {'n', [this](int, int) { _showNormal = !_showNormal; }},
