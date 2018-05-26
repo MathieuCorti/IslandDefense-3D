@@ -27,8 +27,10 @@
 #define BOATS_BASE_HEALTH 10
 
 // CANNON
-#define INCREASE  float(0.1f * 180.0f / M_PI)
-#define DECREASE  (-INCREASE)
+#define INC_SPEED  (0.1f)
+#define DEC_SPEED  (-INC_SPEED)
+#define INC_ROT  (0.1f * 180.0f / M_PI)
+#define DEC_ROT  (-INC_ROT)
 
 // COLORS
 #define BLACK   Color(0, 0, 0)
