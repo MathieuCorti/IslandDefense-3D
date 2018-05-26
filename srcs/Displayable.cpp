@@ -47,3 +47,7 @@ const Shapes &Displayable::getShapes() const {
 bool Displayable::isDisplayed() const {
   return _isDisplayed;
 }
+
+const std::list<Displayable *> &Displayable::getCollidables() {
+  return _collidables;
+}

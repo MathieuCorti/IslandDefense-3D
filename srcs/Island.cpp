@@ -15,6 +15,7 @@ Island::Island()
   }
   _cannon = std::make_shared<Cannon>(1.0f, 0.012f, GREY);
   _cannon->setCoordinates(Vector3f(0, (_maxHeight + _minHeight) / 2.0f, 0));
+  _collidables.push_back(this);
 }
 
 void Island::generateTopTriangles(Color color) {

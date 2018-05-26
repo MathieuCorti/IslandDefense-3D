@@ -37,6 +37,17 @@ public:
     }
   }
 
+  const std::list<Displayable *> &getCollidables() override {
+    _collidables.clear();
+    for (auto &entityBag : _entities) {
+      _collidables.push_back(entityBag.get());
+      for (auto &entity : entityBag->getCollidables()) {
+        _collidables.push_back(entity);
+      }
+    }
+    return _collidables;
+  }
+
 private:
   std::vector<std::shared_ptr<T> > _entities;
   bool isAlive;

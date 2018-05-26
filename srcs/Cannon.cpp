@@ -68,6 +68,7 @@ Cannon::Cannon(float speed, float radius, Color color) : _color(color),
   Shape shape = Shape(triangles, GL_TRIANGLES, color);
   shape.computePerVertexNormal();
   _shapes.push_back(shape);
+  _collidables.push_back(this);
 }
 
 void Cannon::drawTrajectory() const {

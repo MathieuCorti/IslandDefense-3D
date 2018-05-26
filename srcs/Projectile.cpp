@@ -14,7 +14,11 @@ Projectile::Projectile(float t, Vector3f coordinates, Vector3f velocity, Color c
                                                                                     _color(c),
                                                                                     _startT(t),
                                                                                     _start(coordinates),
-                                                                                    _velocity(velocity) {}
+                                                                                    _velocity(velocity) {
+  Triangles triangles;
+  Shape shape = Shape(triangles, _coordinates, GL_TRIANGLES, BLACK);
+  _shapes.push_back(shape);
+}
 
 Shape Projectile::getCircle(float radius, Vector3f center) {
 //  Shape shape;
@@ -45,12 +49,35 @@ void Projectile::update() {
   _coordinates.z = _start.z + _velocity.z * t;
   float wave = Waves::computeHeight(_coordinates.x, _coordinates.z);
 
-  //TODO : collisions
+  auto entities = Game::getInstance().getEntities();                      //Get all entities
+  for (auto &entityBag: entities) {                                       //Get one entity
+    for (auto entity : entityBag.second->getCollidables()) {              //Get all the subentities
+      if (entity != this) {                                               //Do not collide with yourself
+        auto aliveEntity = dynamic_cast<Alive *>(entity);                 //Can it be collided with ?
+        std::cout << "Can it be collided with ?" << std::endl;
+        if (aliveEntity != nullptr) {
+          std::cout << "It is alive" << std::endl;  
+          for (auto &thisShape: _shapes) {                                //Get the shapes of the projectile
+            std::cout << "Get the shapes of the projectile" << std::endl;
+            for (auto &enemyShape: entity->getShapes()) {                 //Get the shapes of the subentity
+              std::cout << "Get the shapes of the subentity" << std::endl;
+              if (enemyShape.collideWith(thisShape)) {                    //Check collision
+                std::cout << "\n\n\nTOUCHE\n\n\n" << std::endl;
+                aliveEntity->takeDamage(PROJECTILE_DAMAGES);              //Deal damage
+                _isDisplayed = false;                                     //Collision, remove projectile
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 
   if (_coordinates.y < wave || _coordinates.y > 1 ||
       _coordinates.x < -1 || _coordinates.x > 1 ||
       _coordinates.z < -1 || _coordinates.z > 1) {
     _currentHealth = 0;
+    _isDisplayed = false;
   }
 }
 

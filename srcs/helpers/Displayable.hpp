@@ -30,7 +30,10 @@ public:
 
   bool isDisplayed() const;
 
+  virtual const std::list<Displayable *> &getCollidables();
+
 protected:
+  std::list<Displayable *> _collidables;
   Shapes _shapes = Shapes();
   bool   _isDisplayed = true;
 };

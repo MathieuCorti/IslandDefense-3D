@@ -32,6 +32,10 @@ Boat::Boat(const Color color, const Vector3f startPos) : Alive(BOATS_BASE_HEALTH
   shape.generateBoundingBox();
   _shapes.emplace_back(shape);
   _cannon = std::make_shared<Cannon>(3.0f, 0.005f, color);
+  _collidables.push_back(this);
+  for (auto e : _cannon->getCollidables()) {
+    _collidables.push_back(e);
+  }
 }
 
 void Boat::draw() const {
@@ -82,7 +86,7 @@ void Boat::update() {
   _cannon->setCoordinates(_coordinates + Vector3f{0.0f, 0.025f, 0.0f} * rotation);
   _cannon->setAngle(_angle);
   _cannon->update();
-  computeAI(); // Test
+//  computeAI(); // Test
 }
 
 void Boat::computeAI() {
