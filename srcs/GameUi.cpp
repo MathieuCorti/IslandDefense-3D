@@ -9,10 +9,21 @@
 
 #include <iostream>
 #include "includes/GameUi.hpp"
+#include "includes/Game.hpp"
+#include "includes/Camera.hpp"
 
 GameUi::GameUi(Entities &entities) : _entities(entities) {}
 
 void GameUi::draw() const {
+  static auto camera = std::dynamic_pointer_cast<Camera>(Game::getInstance().getEntities().at(CAMERA));
+
+  auto camRot = camera->getRotation();
+  auto camCoord = camera->getCoordinates();
+  // TODO: Fix the life bar
+  glRotatef(camRot.first, 1.0, 0.0, 0.0);
+  glRotatef(camRot.second, 0.0, 1.0, 0.0);
+  glTranslatef(-camCoord.x, -camCoord.y, -camCoord.z);
+  
   for (int i = 0; i < _entities.size(); ++i) {
     glBegin(GL_QUADS);
     glColor4f(_entities[i].second.r, _entities[i].second.g, _entities[i].second.b, _entities[i].second.a);

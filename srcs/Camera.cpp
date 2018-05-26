@@ -74,3 +74,11 @@ float Camera::getXRot() const {
 void Camera::update() {
   _time = Game::getInstance().getDeltaTime();
 }
+
+Vector3f Camera::getCoordinates() {
+  return _coordinates;
+}
+
+std::pair<float, float> Camera::getRotation() {
+  return std::make_pair(_xRot, _yRot);
+}
