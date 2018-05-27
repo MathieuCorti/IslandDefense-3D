@@ -32,7 +32,7 @@ void GameUi::draw() const {
     float delta = i / 10.0f == 0 ? 0 : i / 10.0f;
     double barLength = -1 * (0.4 + 5 * ((100 - _entities[i].first->getPercentHealthLeft()) / 1000));
     glVertex2d(-0.94, 0.9 - delta);
-    glVertex2d(-0.94, 0.84 - deltaGet the shapes of the subentity);
+    glVertex2d(-0.94, 0.84 - delta);
     glVertex2d(barLength, 0.84 - delta);
     glVertex2d(barLength, 0.9 - delta);
     glEnd();
