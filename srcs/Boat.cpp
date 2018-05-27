@@ -10,7 +10,7 @@
 #include "includes/Game.hpp"
 #include "includes/Island.hpp"
 
-Boat::Boat(const Color color, const Vector3f startPos) : Alive(BOATS_BASE_HEALTH), Movable(0.05f, startPos) {
+Boat::Boat(const Color color, const Vector3f startPos) : Alive(BOATS_BASE_HEALTH), Movable(BOAT_SPEED, startPos) {
   Vertex::Ptr ttr = std::make_shared<Vertex>(Vector3f(0.05f, 0.025f, -0.025f));
   Vertex::Ptr ttl = std::make_shared<Vertex>(Vector3f(0.05f, 0.025f, 0.025f));
   Vertex::Ptr tbr = std::make_shared<Vertex>(Vector3f(-0.05f, 0.025f, -0.025f));
@@ -82,15 +82,21 @@ void Boat::update() {
   _cannon->setCoordinates(_coordinates + Vector3f{0.0f, 0.025f, 0.0f} * rotation);
   _cannon->setAngle(_angle);
   _cannon->update();
-//  computeAI(); // Test
+  computeAI();
 }
 
 void Boat::computeAI() {
-  static Island::Ptr island =  std::dynamic_pointer_cast<Island>(Game::getInstance().getEntities().at(ISLAND));
-
-  // TODO: Calculate Y angle
-  _coordinates.x -= (_coordinates.x - island->getCoordinates().x) * _speed * 0.01f;
-  _coordinates.z -= (_coordinates.z - island->getCoordinates().z) * _speed * 0.01f;
+  static auto island =  std::dynamic_pointer_cast<Island>(Game::getInstance().getEntities().at(ISLAND));
+  
+  _coordinates.x -= (_coordinates.x - island->getCoordinates().x) * _speed;
+  _coordinates.z -= (_coordinates.z - island->getCoordinates().z) * _speed;
+  
+  // Auto destruction
+  if (_coordinates.x < 0.2f && _coordinates.x > -0.2f 
+    && _coordinates.z < 0.2f && _coordinates.z > -0.2f) {
+    island->takeDamage(_currentHealth);
+    _currentHealth = 0;
+  }
 }
 
 Cannon::Ptr Boat::getCannon() const {

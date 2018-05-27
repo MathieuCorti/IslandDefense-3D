@@ -54,6 +54,7 @@ void Game::update() {
   }
 
   updateTime();
+  generateBoats();
 
   // Update entities
   for (auto it = _entities.cbegin(); it != _entities.cend();) {
@@ -64,20 +65,7 @@ void Game::update() {
       ++it;
     }
   }
-
-
-  // =============================================== TEST =============================================================
-//  static Boat::Ptr boat1 = std::dynamic_pointer_cast<Boat>(_entities[BOAT1]);
-//  static Boat::Ptr boat2 = std::dynamic_pointer_cast<Boat>(_entities[BOAT2]);
-//
-//  for (auto &thisShape: boat1->getShapes()) {               // Get the shapes of the projectile
-//    for (auto &enemyShape: boat2->getShapes()) {            // Get the shapes of the sub entity
-//      if (enemyShape.collideWith(thisShape)) {              // Check collision
-//        std::cout << "BOATS COLLIDE !!!!" << std::endl;
-//      }
-//    }
-//  }
-  // =============================================== TEST =============================================================
+  
 }
 
 void Game::draw() {
@@ -219,15 +207,22 @@ void Game::initEntities() {
 }
 
 std::shared_ptr<Entities<Boat> > Game::generateBoats() {
-
+  
+  static auto boats = std::make_shared<Entities<Boat> >();
+  static float lastGeneration = -5;
+  
+  if (_time -lastGeneration < 5) {
+    return boats;
+  }
+  
+  lastGeneration = _time;
   std::random_device rd, rdMin, rdx, rdz;
   std::mt19937 gen(rd()), genMin(rdMin()), genX(rdx()), genZ(rdz());
-  std::uniform_real_distribution<float> dis(0.2f, 0.8f);
+  std::uniform_real_distribution<float> dis(0.5f, 0.95f);
   std::bernoulli_distribution disMinus(0.5);
   std::uniform_real_distribution<float> disColor(0.0f, 1.0f);
 
-  auto boats = std::make_shared<Entities<Boat> >();
-  for (int i = 0; i < NBR_BOATS; ++i) {
+  for (int i = 0; i < NBR_BOATS_PER_GEN; ++i) {
     boats->add(std::make_shared<Boat>(Color(disColor(gen), disColor(gen), disColor(gen), 1.0f),
                                       Vector3f(disMinus(genMin) != 0 ? dis(genX) : -dis(genX),
                                                0.0f,

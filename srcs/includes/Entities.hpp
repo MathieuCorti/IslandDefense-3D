@@ -22,7 +22,6 @@ public:
 
   void add(const std::shared_ptr<T> entity) {
     if (entity) {
-      std::cout << "add" << std::endl;
       _entities.push_back(entity);
     }
   }
@@ -30,9 +29,8 @@ public:
   void update() override {
     for (auto it = _entities.begin(); it != _entities.end();) {
       it->get()->update();
-      if (isAlive && it->get()->getCurrentHealth() == 0) {
+      if (!it->get()->isDisplayed() || (isAlive && it->get()->getCurrentHealth() == 0)) {
         it = _entities.erase(it);
-        std::cout << "remove" << std::endl;
       } else {
         ++it;
       }

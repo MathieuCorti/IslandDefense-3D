@@ -23,7 +23,8 @@
 #define CAMERA_Y_ROT_START (-245.0f)
 
 // BOATS
-#define NBR_BOATS 4
+#define BOAT_SPEED 0.0008f
+#define NBR_BOATS_PER_GEN 2
 #define BOATS_BASE_HEALTH 1
 
 // ISLAND
