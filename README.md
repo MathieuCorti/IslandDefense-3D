@@ -1,6 +1,9 @@
 # IslandDefense-3D
 C++ - School project - OpenGL/GLUT 3D game.
 
+Incarnate the island defender and survive as long as possible while fighting an endless swarm of enemy boats.
+Boats will shoot at you and detonate when they reach you.
+
 Includes bonus mouse controls, perlin noise generated island and skybox.
 
 ## Visuals
