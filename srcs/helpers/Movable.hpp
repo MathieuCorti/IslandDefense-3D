@@ -11,8 +11,8 @@
 #include "Displayable.hpp"
 
 enum Direction {
-  LEFT  , RIGHT , // Y
-  FORWARD , BACKWARD    // Z
+  LEFT, RIGHT, // Y
+  FORWARD, BACKWARD    // Z
 };
 
 class Movable : public Displayable {
@@ -26,7 +26,7 @@ public:
 
   virtual void move(Direction direction, int coef);
 
-  void moveTo(Vector3f& coordinates);
+  void moveTo(Vector3f &coordinates);
 
   float getSpeed() const;
 

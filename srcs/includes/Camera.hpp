@@ -36,9 +36,9 @@ public:
   float getXRot() const;
 
   void rotation(int x, int y);
-  
+
   Vector3f getCoordinates();
-  
+
   std::pair<float, float> getRotation();
 };
 

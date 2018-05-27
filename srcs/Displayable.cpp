@@ -4,7 +4,6 @@
 
 #include "includes/Shape.hpp"
 #include "includes/Game.hpp"
-#include "helpers/Axes.hpp"
 
 void Displayable::draw() const {
   for (Shape shape: _shapes) {

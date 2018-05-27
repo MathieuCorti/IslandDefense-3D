@@ -9,8 +9,6 @@
 
 #include <iostream>
 #include "includes/GameUi.hpp"
-#include "includes/Game.hpp"
-#include "includes/Camera.hpp"
 
 GameUi::GameUi(Entities &entities) : _entities(entities) {}
 
@@ -37,7 +35,7 @@ void GameUi::draw() const {
     glVertex2d(barLength, 0.9 - delta);
     glEnd();
   }
-  
+
   glMatrixMode(GL_PROJECTION);
   glPopMatrix();
   glMatrixMode(GL_MODELVIEW);

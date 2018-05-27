@@ -4,7 +4,6 @@
 
 #include "includes/Waves.hpp"
 #include "includes/Game.hpp"
-#include "helpers/Axes.hpp"
 #include "includes/Skybox.hpp"
 
 Skybox::Skybox() {
@@ -19,7 +18,7 @@ Skybox::Skybox() {
 void Skybox::draw() const {
   glPushAttrib(GL_ENABLE_BIT);
   glEnable(GL_TEXTURE_2D);
-  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE,  GL_MODULATE);
+  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
   glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -106,7 +105,8 @@ void Skybox::draw() const {
 }
 
 GLuint TextureLoader::loadTexture(const char *filename) {
-  GLuint tex = SOIL_load_OGL_texture(filename, SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y);
+  GLuint tex = SOIL_load_OGL_texture(filename, SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
+                                     SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y);
   if (!tex) {
     std::cerr << "error" << std::endl;
     return 0;

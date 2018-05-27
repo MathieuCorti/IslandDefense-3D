@@ -18,7 +18,7 @@ public:
 
 private:
 
-  GLuint _texture[6] {};
+  GLuint _texture[6]{};
 };
 
 class TextureLoader {

@@ -10,12 +10,12 @@ const Vector3f Shape::defaultDelta = Vector3f();
 
 Shape::Shape(Triangles parts, GLenum mode, Color color) : _delta(defaultDelta),
                                                           _color(color),
-                                                         _parts(std::move(parts)),
-                                                         _mode(mode),
-                                                         _size(1) {}
+                                                          _parts(std::move(parts)),
+                                                          _mode(mode),
+                                                          _size(1) {}
 
-Shape::Shape(Triangles parts, 
-             const Vector3f &delta, 
+Shape::Shape(Triangles parts,
+             const Vector3f &delta,
              GLenum mode, Color color) : _delta(delta),
                                          _color(color),
                                          _parts(std::move(parts)),
@@ -47,10 +47,10 @@ void Shape::computePerVertexNormal() {
 
 void Shape::generateBoundingBox() {
   std::vector<Vector3f> triangleParts;
-  for (auto& triangle: _parts) {
+  for (auto &triangle: _parts) {
     triangleParts.emplace_back(triangle.v1->p);
   }
-  
+
   // TODO: Remove duplicates
 
   auto xExtremes = std::minmax_element(triangleParts.begin(), triangleParts.end(),
@@ -75,16 +75,16 @@ bool Shape::collideWith(Shape other) const {
 }
 
 bool Shape::collideWith(BoundingBox other) const {
-  
+
   BoundingBox own = get_boundingBox();
 
   // AABBtoAABB
-  return(own.vecMax.x > other.vecMin.x &&
-         own.vecMin.x < other.vecMax.x &&
-         own.vecMax.y > other.vecMin.y &&
-         own.vecMin.y < other.vecMax.y &&
-         own.vecMax.z > other.vecMin.z &&
-         own.vecMin.z < other.vecMax.z);
+  return (own.vecMax.x > other.vecMin.x &&
+          own.vecMin.x < other.vecMax.x &&
+          own.vecMax.y > other.vecMin.y &&
+          own.vecMin.y < other.vecMax.y &&
+          own.vecMax.z > other.vecMin.z &&
+          own.vecMin.z < other.vecMax.z);
 }
 
 const BoundingBox Shape::get_boundingBox() const {

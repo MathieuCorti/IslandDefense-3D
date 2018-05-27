@@ -53,15 +53,6 @@ void Stats::draw() const {
     glutBitmapCharacter(GLUT_BITMAP_9_BY_15, *bufp);
   }
 
-  /* Tesselation */
-    // TODO: Update this
-//  glColor3f(_color.r, _color.g, _color.b);
-//  snprintf(buffer, sizeof buffer, "tess       : %5.0f", (float) Waves::g_tesselation);
-//  glRasterPos2i(static_cast<GLint>(w - 20 - 9 * strlen(buffer)), h - 60);
-//  for (bufp = buffer; *bufp; bufp++) {
-//    glutBitmapCharacter(GLUT_BITMAP_9_BY_15, *bufp);
-//  }
-
   glPopMatrix();
   glMatrixMode(GL_PROJECTION);
 

@@ -17,21 +17,21 @@ protected:
 
 public:
 
-  explicit Entity(Vector3f& coordinates) : _coordinates(coordinates) {}
+  explicit Entity(Vector3f &coordinates) : _coordinates(coordinates) {}
 
   Vector3f getCoordinates() const {
-    return  _coordinates;
+    return _coordinates;
   }
 
   Vector3f getAngle() const {
-    return  _angle;
+    return _angle;
   }
 
-  void setCoordinates(const Vector3f& coordinates) {
+  void setCoordinates(const Vector3f &coordinates) {
     Entity::_coordinates = coordinates;
   }
 
-  void setAngle(const Vector3f& angle) {
+  void setAngle(const Vector3f &angle) {
     Entity::_angle = angle;
   }
 

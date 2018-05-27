@@ -7,7 +7,6 @@
 
 #include "includes/Cannon.hpp"
 #include "includes/Game.hpp"
-#include "includes/Island.hpp"
 
 const float g = -9.8f;
 

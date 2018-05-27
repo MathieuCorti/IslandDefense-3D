@@ -25,7 +25,7 @@ void Movable::move(Direction direction, int coef) {
   }
 }
 
-void Movable::moveTo(Vector3f& coordinates) {
+void Movable::moveTo(Vector3f &coordinates) {
   setCoordinates(coordinates);
 }
 

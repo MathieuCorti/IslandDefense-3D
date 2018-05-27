@@ -14,6 +14,7 @@
 #include "Alive.hpp"
 
 class Shape;
+
 typedef std::list<Shape> Shapes;
 
 class Displayable : public Entity {
@@ -35,5 +36,5 @@ public:
 protected:
   std::list<Displayable *> _collidables;
   Shapes _shapes = Shapes();
-  bool   _isDisplayed = true;
+  bool _isDisplayed = true;
 };

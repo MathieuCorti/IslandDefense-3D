@@ -26,6 +26,7 @@ typedef std::list<Shape> Shapes;
 
 struct BoundingBox {
   BoundingBox() = default;
+
   BoundingBox(const Vector3f &vecMin, const Vector3f &vecMax) : vecMin(vecMin),
                                                                 vecMax(vecMax) {}
 
@@ -51,9 +52,9 @@ public:
 
   explicit Shape(Triangles parts, GLenum mode = GL_TRIANGLES, Color color = BLACK);
 
-  explicit Shape(Triangles parts, const Vector3f &delta, 
+  explicit Shape(Triangles parts, const Vector3f &delta,
                  GLenum mode = GL_TRIANGLES, Color color = BLACK);
-  
+
   bool collideWith(BoundingBox other) const;
 
   bool collideWith(Shape other) const;

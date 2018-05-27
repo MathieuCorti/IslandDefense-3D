@@ -52,13 +52,12 @@ extern "C" {
 	SOIL_LOAD_RGB forces the image to load as Red Green Blue
 	SOIL_LOAD_RGBA forces the image to load as Red Green Blue Alpha
 **/
-enum
-{
-	SOIL_LOAD_AUTO = 0,
-	SOIL_LOAD_L = 1,
-	SOIL_LOAD_LA = 2,
-	SOIL_LOAD_RGB = 3,
-	SOIL_LOAD_RGBA = 4
+enum {
+  SOIL_LOAD_AUTO = 0,
+  SOIL_LOAD_L = 1,
+  SOIL_LOAD_LA = 2,
+  SOIL_LOAD_RGB = 3,
+  SOIL_LOAD_RGBA = 4
 };
 
 /**
@@ -68,9 +67,8 @@ enum
 	SOIL will just re-use that texture ID (great for
 	reloading image assets in-game!)
 **/
-enum
-{
-	SOIL_CREATE_NEW_ID = 0
+enum {
+  SOIL_CREATE_NEW_ID = 0
 };
 
 /**
@@ -92,18 +90,17 @@ enum
 	SOIL_FLAG_CoCg_Y: Google YCoCg; RGB=>CoYCg, RGBA=>CoCgAY
 	SOIL_FLAG_TEXTURE_RECTANGE: uses ARB_texture_rectangle ; pixel indexed & no repeat or MIPmaps or cubemaps
 **/
-enum
-{
-	SOIL_FLAG_POWER_OF_TWO = 1,
-	SOIL_FLAG_MIPMAPS = 2,
-	SOIL_FLAG_TEXTURE_REPEATS = 4,
-	SOIL_FLAG_MULTIPLY_ALPHA = 8,
-	SOIL_FLAG_INVERT_Y = 16,
-	SOIL_FLAG_COMPRESS_TO_DXT = 32,
-	SOIL_FLAG_DDS_LOAD_DIRECT = 64,
-	SOIL_FLAG_NTSC_SAFE_RGB = 128,
-	SOIL_FLAG_CoCg_Y = 256,
-	SOIL_FLAG_TEXTURE_RECTANGLE = 512
+enum {
+  SOIL_FLAG_POWER_OF_TWO = 1,
+  SOIL_FLAG_MIPMAPS = 2,
+  SOIL_FLAG_TEXTURE_REPEATS = 4,
+  SOIL_FLAG_MULTIPLY_ALPHA = 8,
+  SOIL_FLAG_INVERT_Y = 16,
+  SOIL_FLAG_COMPRESS_TO_DXT = 32,
+  SOIL_FLAG_DDS_LOAD_DIRECT = 64,
+  SOIL_FLAG_NTSC_SAFE_RGB = 128,
+  SOIL_FLAG_CoCg_Y = 256,
+  SOIL_FLAG_TEXTURE_RECTANGLE = 512
 };
 
 /**
@@ -112,11 +109,10 @@ enum
 	(BMP supports uncompressed RGB)
 	(DDS supports DXT1 and DXT5)
 **/
-enum
-{
-	SOIL_SAVE_TYPE_TGA = 0,
-	SOIL_SAVE_TYPE_BMP = 1,
-	SOIL_SAVE_TYPE_DDS = 2
+enum {
+  SOIL_SAVE_TYPE_TGA = 0,
+  SOIL_SAVE_TYPE_BMP = 1,
+  SOIL_SAVE_TYPE_DDS = 2
 };
 
 /**
@@ -134,11 +130,10 @@ enum
 	SOIL_HDR_RGBdivA:	RGB / A
 	SOIL_HDR_RGBdivA2:	RGB / (A*A)
 **/
-enum
-{
-	SOIL_HDR_RGBE = 0,
-	SOIL_HDR_RGBdivA = 1,
-	SOIL_HDR_RGBdivA2 = 2
+enum {
+  SOIL_HDR_RGBE = 0,
+  SOIL_HDR_RGBdivA = 1,
+  SOIL_HDR_RGBdivA2 = 2
 };
 
 /**
@@ -150,13 +145,13 @@ enum
 	\return 0-failed, otherwise returns the OpenGL texture handle
 **/
 unsigned int
-	SOIL_load_OGL_texture
-	(
-		const char *filename,
-		int force_channels,
-		unsigned int reuse_texture_ID,
-		unsigned int flags
-	);
+SOIL_load_OGL_texture
+    (
+        const char *filename,
+        int force_channels,
+        unsigned int reuse_texture_ID,
+        unsigned int flags
+    );
 
 /**
 	Loads 6 images from disk into an OpenGL cubemap texture.
@@ -172,18 +167,18 @@ unsigned int
 	\return 0-failed, otherwise returns the OpenGL texture handle
 **/
 unsigned int
-	SOIL_load_OGL_cubemap
-	(
-		const char *x_pos_file,
-		const char *x_neg_file,
-		const char *y_pos_file,
-		const char *y_neg_file,
-		const char *z_pos_file,
-		const char *z_neg_file,
-		int force_channels,
-		unsigned int reuse_texture_ID,
-		unsigned int flags
-	);
+SOIL_load_OGL_cubemap
+    (
+        const char *x_pos_file,
+        const char *x_neg_file,
+        const char *y_pos_file,
+        const char *y_neg_file,
+        const char *z_pos_file,
+        const char *z_neg_file,
+        int force_channels,
+        unsigned int reuse_texture_ID,
+        unsigned int flags
+    );
 
 /**
 	Loads 1 image from disk and splits it into an OpenGL cubemap texture.
@@ -195,14 +190,14 @@ unsigned int
 	\return 0-failed, otherwise returns the OpenGL texture handle
 **/
 unsigned int
-	SOIL_load_OGL_single_cubemap
-	(
-		const char *filename,
-		const char face_order[6],
-		int force_channels,
-		unsigned int reuse_texture_ID,
-		unsigned int flags
-	);
+SOIL_load_OGL_single_cubemap
+    (
+        const char *filename,
+        const char face_order[6],
+        int force_channels,
+        unsigned int reuse_texture_ID,
+        unsigned int flags
+    );
 
 /**
 	Loads an HDR image from disk into an OpenGL texture.
@@ -213,14 +208,14 @@ unsigned int
 	\return 0-failed, otherwise returns the OpenGL texture handle
 **/
 unsigned int
-	SOIL_load_OGL_HDR_texture
-	(
-		const char *filename,
-		int fake_HDR_format,
-		int rescale_to_max,
-		unsigned int reuse_texture_ID,
-		unsigned int flags
-	);
+SOIL_load_OGL_HDR_texture
+    (
+        const char *filename,
+        int fake_HDR_format,
+        int rescale_to_max,
+        unsigned int reuse_texture_ID,
+        unsigned int flags
+    );
 
 /**
 	Loads an image from RAM into an OpenGL texture.
@@ -232,14 +227,14 @@ unsigned int
 	\return 0-failed, otherwise returns the OpenGL texture handle
 **/
 unsigned int
-	SOIL_load_OGL_texture_from_memory
-	(
-		const unsigned char *const buffer,
-		int buffer_length,
-		int force_channels,
-		unsigned int reuse_texture_ID,
-		unsigned int flags
-	);
+SOIL_load_OGL_texture_from_memory
+    (
+        const unsigned char *const buffer,
+        int buffer_length,
+        int force_channels,
+        unsigned int reuse_texture_ID,
+        unsigned int flags
+    );
 
 /**
 	Loads 6 images from memory into an OpenGL cubemap texture.
@@ -261,24 +256,24 @@ unsigned int
 	\return 0-failed, otherwise returns the OpenGL texture handle
 **/
 unsigned int
-	SOIL_load_OGL_cubemap_from_memory
-	(
-		const unsigned char *const x_pos_buffer,
-		int x_pos_buffer_length,
-		const unsigned char *const x_neg_buffer,
-		int x_neg_buffer_length,
-		const unsigned char *const y_pos_buffer,
-		int y_pos_buffer_length,
-		const unsigned char *const y_neg_buffer,
-		int y_neg_buffer_length,
-		const unsigned char *const z_pos_buffer,
-		int z_pos_buffer_length,
-		const unsigned char *const z_neg_buffer,
-		int z_neg_buffer_length,
-		int force_channels,
-		unsigned int reuse_texture_ID,
-		unsigned int flags
-	);
+SOIL_load_OGL_cubemap_from_memory
+    (
+        const unsigned char *const x_pos_buffer,
+        int x_pos_buffer_length,
+        const unsigned char *const x_neg_buffer,
+        int x_neg_buffer_length,
+        const unsigned char *const y_pos_buffer,
+        int y_pos_buffer_length,
+        const unsigned char *const y_neg_buffer,
+        int y_neg_buffer_length,
+        const unsigned char *const z_pos_buffer,
+        int z_pos_buffer_length,
+        const unsigned char *const z_neg_buffer,
+        int z_neg_buffer_length,
+        int force_channels,
+        unsigned int reuse_texture_ID,
+        unsigned int flags
+    );
 
 /**
 	Loads 1 image from RAM and splits it into an OpenGL cubemap texture.
@@ -291,15 +286,15 @@ unsigned int
 	\return 0-failed, otherwise returns the OpenGL texture handle
 **/
 unsigned int
-	SOIL_load_OGL_single_cubemap_from_memory
-	(
-		const unsigned char *const buffer,
-		int buffer_length,
-		const char face_order[6],
-		int force_channels,
-		unsigned int reuse_texture_ID,
-		unsigned int flags
-	);
+SOIL_load_OGL_single_cubemap_from_memory
+    (
+        const unsigned char *const buffer,
+        int buffer_length,
+        const char face_order[6],
+        int force_channels,
+        unsigned int reuse_texture_ID,
+        unsigned int flags
+    );
 
 /**
 	Creates a 2D OpenGL texture from raw image data.  Note that the raw data is
@@ -313,13 +308,13 @@ unsigned int
 	\return 0-failed, otherwise returns the OpenGL texture handle
 **/
 unsigned int
-	SOIL_create_OGL_texture
-	(
-		const unsigned char *const data,
-		int width, int height, int channels,
-		unsigned int reuse_texture_ID,
-		unsigned int flags
-	);
+SOIL_create_OGL_texture
+    (
+        const unsigned char *const data,
+        int width, int height, int channels,
+        unsigned int reuse_texture_ID,
+        unsigned int flags
+    );
 
 /**
 	Creates an OpenGL cubemap texture by splitting up 1 image into 6 parts.
@@ -333,27 +328,27 @@ unsigned int
 	\return 0-failed, otherwise returns the OpenGL texture handle
 **/
 unsigned int
-	SOIL_create_OGL_single_cubemap
-	(
-		const unsigned char *const data,
-		int width, int height, int channels,
-		const char face_order[6],
-		unsigned int reuse_texture_ID,
-		unsigned int flags
-	);
+SOIL_create_OGL_single_cubemap
+    (
+        const unsigned char *const data,
+        int width, int height, int channels,
+        const char face_order[6],
+        unsigned int reuse_texture_ID,
+        unsigned int flags
+    );
 
 /**
 	Captures the OpenGL window (RGB) and saves it to disk
 	\return 0 if it failed, otherwise returns 1
 **/
 int
-	SOIL_save_screenshot
-	(
-		const char *filename,
-		int image_type,
-		int x, int y,
-		int width, int height
-	);
+SOIL_save_screenshot
+    (
+        const char *filename,
+        int image_type,
+        int x, int y,
+        int width, int height
+    );
 
 /**
 	Loads an image from disk into an array of unsigned chars.
@@ -364,13 +359,13 @@ int
 	count).
 	\return 0 if failed, otherwise returns 1
 **/
-unsigned char*
-	SOIL_load_image
-	(
-		const char *filename,
-		int *width, int *height, int *channels,
-		int force_channels
-	);
+unsigned char *
+SOIL_load_image
+    (
+        const char *filename,
+        int *width, int *height, int *channels,
+        int force_channels
+    );
 
 /**
 	Loads an image from memory into an array of unsigned chars.
@@ -381,27 +376,27 @@ unsigned char*
 	count).
 	\return 0 if failed, otherwise returns 1
 **/
-unsigned char*
-	SOIL_load_image_from_memory
-	(
-		const unsigned char *const buffer,
-		int buffer_length,
-		int *width, int *height, int *channels,
-		int force_channels
-	);
+unsigned char *
+SOIL_load_image_from_memory
+    (
+        const unsigned char *const buffer,
+        int buffer_length,
+        int *width, int *height, int *channels,
+        int force_channels
+    );
 
 /**
 	Saves an image from an array of unsigned chars (RGBA) to disk
 	\return 0 if failed, otherwise returns 1
 **/
 int
-	SOIL_save_image
-	(
-		const char *filename,
-		int image_type,
-		int width, int height, int channels,
-		const unsigned char *const data
-	);
+SOIL_save_image
+    (
+        const char *filename,
+        int image_type,
+        int width, int height, int channels,
+        const unsigned char *const data
+    );
 
 /**
 	Frees the image data (note, this is just C's "free()"...this function is
@@ -409,21 +404,21 @@ int
 	"delete []" instead [8^)
 **/
 void
-	SOIL_free_image_data
-	(
-		unsigned char *img_data
-	);
+SOIL_free_image_data
+    (
+        unsigned char *img_data
+    );
 
 /**
 	This function resturn a pointer to a string describing the last thing
 	that happened inside SOIL.  It can be used to determine why an image
 	failed to load.
 **/
-const char*
-	SOIL_last_result
-	(
-		void
-	);
+const char *
+SOIL_last_result
+    (
+        void
+    );
 
 
 #ifdef __cplusplus

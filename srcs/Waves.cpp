@@ -4,7 +4,6 @@
 
 #include "includes/Waves.hpp"
 #include "includes/Game.hpp"
-#include "helpers/Axes.hpp"
 
 float Waves::_time = 0.0f;
 float Waves::_maxHeight = 0.0f;
