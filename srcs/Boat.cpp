@@ -103,7 +103,7 @@ void Boat::computeAI(const Vector3f &cannonPos) {
                         (islandPos.y + 0.2f - cannonPos.y - g * _duration * _duration / 2.0f) / _duration,
                         (islandPos.z - cannonPos.z) / _duration);
   _cannon->setAngle(_angle);
-  _cannon->setRotation(static_cast<float>(std::atan2(v.y, v.x) * 180.0f / M_PI));
+  _cannon->setRotation(static_cast<float>(std::atan2(v.y, v.x) * 180.0f / M_PI) - _angle.z);
   _cannon->update();
   _cannon->setVelocity(v);
   if (rand() % 20 == 0) {
