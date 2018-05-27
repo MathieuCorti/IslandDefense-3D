@@ -36,6 +36,8 @@ public:
 
   void defend();
 
+  const std::list<Displayable *> &getCollidables() override;
+
 private:
   void drawTrajectory() const;
 

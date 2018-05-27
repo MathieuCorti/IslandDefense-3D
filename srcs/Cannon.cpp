@@ -68,7 +68,6 @@ Cannon::Cannon(float speed, float radius, Color color) : _color(color),
   Shape shape = Shape(triangles, GL_TRIANGLES, color);
   shape.computePerVertexNormal();
   _shapes.push_back(shape);
-  _collidables.push_back(this);
 }
 
 void Cannon::drawTrajectory() const {
@@ -82,7 +81,7 @@ void Cannon::drawTrajectory() const {
   Vector3f::multMatrix(translation, rotation1, first);
   Vector3f::multMatrix(first, rotation2, final);
 
-  Vector3f c = Vector3f(_radius * 10.0f, 0.0f, 0.0f) * final;
+  Vector3f c = Vector3f(_radius * 12.0f, 0.0f, 0.0f) * final;
 
   glBegin(GL_LINE_STRIP);
   glColor4f(_color.r, _color.g, _color.b, 0.5f);
@@ -216,4 +215,14 @@ void Cannon::update() {
 
   _projectiles.update();
   _defences.update();
+}
+
+const std::list<Displayable *> &Cannon::getCollidables() {
+  _collidables.clear();
+  for (auto e : _defences.getCollidables()) {
+    _collidables.push_back(e);
+    std::cout << "lal" << std::endl;
+  }
+  _collidables.push_back(this);
+  return _collidables;
 }

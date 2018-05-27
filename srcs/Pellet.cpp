@@ -12,6 +12,7 @@ Pellet::Pellet(float t, Vector3f coordinates, Vector3f angle, float rotation, Co
                                                                                          _radius(0) {
   _rotation = rotation;
   _angle = angle;
+  _collidables.push_back(this);
   update();
 }
 
@@ -38,8 +39,9 @@ void Pellet::updateShape() {
     br = vertices[0][i + 1];
     triangles.emplace_back(bl, centerBottom, br, Triangle::computeNormal(bl->p, centerBottom->p, br->p));
   }
-  Shape shape = Shape(triangles, GL_TRIANGLES, _color);
+  Shape shape = Shape(triangles, _coordinates, GL_TRIANGLES, _color);
   shape.computePerVertexNormal();
+  shape.generateBoundingBox();
   _shapes.clear();
   _shapes.emplace_back(shape);
 }

@@ -64,8 +64,9 @@ void Projectile::updateShape(float radius) {
     }
   }
 
-  Shape shape = Shape(triangles, GL_TRIANGLES, _color);
+  Shape shape = Shape(triangles, _coordinates, GL_TRIANGLES, _color);
   _shapes.clear();
+  shape.generateBoundingBox();
   _shapes.emplace_back(shape);
 }
 
@@ -74,13 +75,13 @@ void Projectile::update() {
     return;
   }
 
-  updateShape(0.02f);
-
   float t = Game::getInstance().getTime() - _startT;
   _coordinates.x = _start.x + _velocity.x * t;
   _coordinates.y = _start.y + _velocity.y * t + g * t * t / 2.0f;
   _coordinates.z = _start.z + _velocity.z * t;
   float wave = Waves::computeHeight(_coordinates.x, _coordinates.z);
+
+  updateShape(0.02f);
 
   auto entities = Game::getInstance().getEntities();                      //Get all entities
   for (auto &entityBag: entities) {                                       //Get one entity
@@ -93,6 +94,8 @@ void Projectile::update() {
               if (enemyShape.collideWith(thisShape)) {                    //Check collision
                 aliveEntity->takeDamage(PROJECTILE_DAMAGES);              //Deal damage
                 _isDisplayed = false;                                     //Collision, remove projectile
+                _currentHealth = 0;
+                return;
               }
             }
           }

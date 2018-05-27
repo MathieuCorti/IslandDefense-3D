@@ -21,7 +21,7 @@ Boat::Boat(const Color color, const Vector3f startPos) : Alive(BOATS_BASE_HEALTH
   Triangles triangles;
   Triangle(ttr, ttl, tbl).subdivide(2, triangles); // TOP
   Triangle(tbl, tbr, ttr).subdivide(2, triangles); // TOP
-  Triangle(ttl, ttr, bbr).subdivide(2, triangles); // FRONRT®
+  Triangle(ttl, ttr, bbr).subdivide(2, triangles); // FRONT
   Triangle(bbr, bbl, ttl).subdivide(2, triangles); // FRONT
   Triangle(tbr, tbl, bbl).subdivide(2, triangles); // BACK
   Triangle(bbl, bbr, tbr).subdivide(2, triangles); // BACK
@@ -32,10 +32,6 @@ Boat::Boat(const Color color, const Vector3f startPos) : Alive(BOATS_BASE_HEALTH
   shape.generateBoundingBox();
   _shapes.emplace_back(shape);
   _cannon = std::make_shared<Cannon>(3.0f, 0.005f, color);
-  _collidables.push_back(this);
-  for (auto e : _cannon->getCollidables()) {
-    _collidables.push_back(e);
-  }
 }
 
 void Boat::draw() const {
@@ -99,4 +95,13 @@ void Boat::computeAI() {
 
 Cannon::Ptr Boat::getCannon() const {
   return _cannon;
+}
+
+const std::list<Displayable *> &Boat::getCollidables() {
+  _collidables.clear();
+  for (auto e : _cannon->getCollidables()) {
+    _collidables.push_back(e);
+  }
+  _collidables.push_back(this);
+  return _collidables;
 }

@@ -135,3 +135,12 @@ void Island::update() {
 Cannon::Ptr Island::getCannon() const {
   return _cannon;
 }
+
+const std::list<Displayable *> &Island::getCollidables() {
+  _collidables.clear();
+  for (auto e : _cannon->getCollidables()) {
+    _collidables.push_back(e);
+  }
+  _collidables.push_back(this);
+  return _collidables;
+}

@@ -19,6 +19,8 @@ public:
 
   Cannon::Ptr getCannon() const;
 
+  const std::list<Displayable *> &getCollidables() override;
+
 private:
 
   float islandPerlin(float x, float y) const;

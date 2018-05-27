@@ -22,6 +22,7 @@ public:
 
   void add(const std::shared_ptr<T> entity) {
     if (entity) {
+      std::cout << "add" << std::endl;
       _entities.push_back(entity);
     }
   }
@@ -31,6 +32,7 @@ public:
       it->get()->update();
       if (isAlive && it->get()->getCurrentHealth() == 0) {
         it = _entities.erase(it);
+        std::cout << "remove" << std::endl;
       } else {
         ++it;
       }
@@ -40,7 +42,6 @@ public:
   const std::list<Displayable *> &getCollidables() override {
     _collidables.clear();
     for (auto &entityBag : _entities) {
-      _collidables.push_back(entityBag.get());
       for (auto &entity : entityBag->getCollidables()) {
         _collidables.push_back(entity);
       }

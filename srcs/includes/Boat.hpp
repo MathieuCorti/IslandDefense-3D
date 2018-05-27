@@ -21,6 +21,8 @@ public:
 
   Cannon::Ptr getCannon() const;
 
+  const std::list<Displayable *> &getCollidables() override;
+
 private:
   
   void computeAI();
