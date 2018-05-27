@@ -5,6 +5,7 @@
 //  Created by Mathieu Corti on 5/7/18.
 //
 
+#include <chrono>
 #include "includes/Boat.hpp"
 #include "includes/Waves.hpp"
 #include "includes/Game.hpp"
@@ -32,6 +33,11 @@ Boat::Boat(const Color color, const Vector3f startPos) : Alive(BOATS_BASE_HEALTH
   shape.generateBoundingBox();
   _shapes.emplace_back(shape);
   _cannon = std::make_shared<Cannon>(3.0f, 0.005f, color);
+
+  std::uniform_real_distribution<float> dis(0.5f, 0.8f);
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  _duration = dis(gen);
 }
 
 void Boat::draw() const {
@@ -76,60 +82,72 @@ void Boat::update() {
   _angle.z = static_cast<float>(std::atan(slope) * 180.0f / M_PI);
   _angle.x = -_angle.z;
 
-  computeAI();
-
   GLfloat rotation[16];
   (_angle * (M_PI / 180.0f)).toRotationMatrix(rotation);
+  Vector3f cannonPos = _coordinates + Vector3f{0.0f, 0.025f, 0.0f} * rotation;
+  _cannon->setCoordinates(cannonPos);
 
-  _cannon->setCoordinates(_coordinates + Vector3f{0.0f, 0.025f, 0.0f} * rotation);
+  computeAI(cannonPos);
+}
+
+void Boat::computeAI(const Vector3f &cannonPos) {
+  static Island::Ptr island = std::dynamic_pointer_cast<Island>(Game::getInstance().getEntities().at(ISLAND));
+  Vector3f islandPos = island->getCoordinates();
+  Vector3f look = Vector3f(_coordinates.x - islandPos.x, 0, _coordinates.z - islandPos.z).normalize();
+  Vector3f xAxis = Vector3f((islandPos.x + 1) - islandPos.x, 0, islandPos.z);
+  _coordinates.x -= look.x * _speed * 0.1f;
+  _coordinates.z -= look.z * _speed * 0.1f;
+  _angle.y = 180.0f + static_cast<float>((std::atan2(xAxis.z, xAxis.x) - std::atan2(look.z, look.x)) * 180.0f / M_PI);
+
+  Vector3f v = Vector3f((islandPos.x - cannonPos.x) / _duration,
+                        (islandPos.y + 0.2f - cannonPos.y - g * _duration * _duration / 2.0f) / _duration,
+                        (islandPos.z - cannonPos.z) / _duration);
   _cannon->setAngle(_angle);
+  _cannon->setRotation(static_cast<float>(std::atan2(v.y, v.x) * 180.0f / M_PI));
   _cannon->update();
-  computeAI();
-  
-  // Check collisions
-  static auto lastCheck = -CHECK_COLLISIONS_EVERY;
-  if (Game::getInstance().getTime() - lastCheck < CHECK_COLLISIONS_EVERY) {
-    return;
+  _cannon->setVelocity(v);
+  if (rand() % 20 == 0) {
+    _cannon->blast(4.0);
   }
-  lastCheck = Game::getInstance().getTime();
-  static auto boats =  std::dynamic_pointer_cast<Entities<Boat> >(Game::getInstance().getEntities().at(BOATS));
-  for (auto entity : boats->getCollidables()) {                         //Get all the subentities
-    if (entity != this) {                                               //Do not collide with yourself
-      auto aliveEntity = dynamic_cast<Alive *>(entity);                 //Can it be collided with ?
+  if (rand() % 50 == 0) {
+    _cannon->defend();
+  }
+
+  // Check collisions
+  static auto lastCheck = -CHECK_COLLISIONS_EVERY / GAME_SPEED;
+  if (Game::getInstance().getTime() - lastCheck > CHECK_COLLISIONS_EVERY / GAME_SPEED) {
+    lastCheck = Game::getInstance().getTime();
+    for (auto entity : island->getCollidables()) {                        //Get all the subentities
+      auto aliveEntity = dynamic_cast<Alive *>(entity);                   //Can it be collided with ?
       if (aliveEntity != nullptr) {
-        for (auto &thisShape: _shapes) {                                //Get the shapes of the projectile
-          for (auto &enemyShape: entity->getShapes()) {                 //Get the shapes of the subentity
-            if (enemyShape.collideWith(thisShape)) {                    //Check collision
-              aliveEntity->takeDamage(aliveEntity->getCurrentHealth()); //Deal damage
+        for (auto &thisShape: _shapes) {                                  //Get the shapes of the projectile
+          for (auto &enemyShape: entity->getShapes()) {                   //Get the shapes of the subentity
+            if (enemyShape.collideWith(thisShape)) {                      //Check collision
+              aliveEntity->takeDamage(getCurrentHealth() * KAMIKAZE);     //Deal damage
               _currentHealth = 0;
+              return;
             }
           }
         }
       }
     }
-  }
-}
-
-void Boat::computeAI() {
-  static auto island =  std::dynamic_pointer_cast<Island>(Game::getInstance().getEntities().at(ISLAND));
-  
-  _coordinates.x -= (_coordinates.x - island->getCoordinates().x) * _speed;
-  _coordinates.z -= (_coordinates.z - island->getCoordinates().z) * _speed;
-
-  Vector3f direction = Vector3f(_coordinates.x - island->getCoordinates().x,
-                                0,
-                                _coordinates.z - island->getCoordinates().z);
-  Vector3f xAxis = Vector3f((island->getCoordinates().x + 1) - island->getCoordinates().x,
-                            0,
-                            island->getCoordinates().z);
-  _angle.y = 180 + static_cast<float>((std::atan2(xAxis.z, xAxis.x) - std::atan2(direction.z, direction.x)) * 180.0f / M_PI);
-  std::cout << _coordinates << std::endl << _angle.y << std::endl << std::endl;
-  
-  // Auto destruction
-  if (_coordinates.x < 0.2f && _coordinates.x > -0.2f 
-    && _coordinates.z < 0.2f && _coordinates.z > -0.2f) {
-    island->takeDamage(_currentHealth);
-    _currentHealth = 0;
+    static auto boats = std::dynamic_pointer_cast<Entities<Boat> >(Game::getInstance().getEntities().at(BOATS));
+    for (auto entity : boats->getCollidables()) {                         //Get all the subentities
+      if (entity != this) {                                               //Do not collide with yourself
+        auto aliveEntity = dynamic_cast<Alive *>(entity);                 //Can it be collided with ?
+        if (aliveEntity != nullptr) {
+          for (auto &thisShape: _shapes) {                                //Get the shapes of the projectile
+            for (auto &enemyShape: entity->getShapes()) {                 //Get the shapes of the subentity
+              if (enemyShape.collideWith(thisShape)) {                    //Check collision
+                aliveEntity->takeDamage(getCurrentHealth());              //Deal damage
+                _currentHealth = 0;
+                return;
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
 

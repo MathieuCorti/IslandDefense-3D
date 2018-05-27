@@ -25,7 +25,7 @@ void Projectile::updateShape(float radius) {
   int numSlices = 20;
   int numSegments = 20;
   Vector3f p, n;
-  for (int i = 0; i < numSlices; i++) {
+  for (int i = 0; i < numSlices; ++i) {
     std::vector<Vertex::Ptr> points;
     auto phi = static_cast<float>(i * (2.0f * M_PI / numSlices));
     for (int j = 0; j < numSegments; j++) {
@@ -47,7 +47,7 @@ void Projectile::updateShape(float radius) {
   }
 
   Triangles triangles;
-  for (int i = 0; i < vertices.size() - 1; i++) {
+  for (int i = 0; i < vertices.size() - 1; ++i) {
     Vertex::Ptr bl = vertices[i][vertices[i].size() - 1];
     Vertex::Ptr br = vertices[i][0];
     Vertex::Ptr tl = vertices[i + 1][vertices[i + 1].size() - 1];
@@ -83,24 +83,23 @@ void Projectile::update() {
 
   updateShape(0.02f);
 
-  static auto lastCheck = -CHECK_COLLISIONS_EVERY;
-  if (Game::getInstance().getTime() - lastCheck < CHECK_COLLISIONS_EVERY) {
-    return;
-  }
-  lastCheck = Game::getInstance().getTime();
-  auto entities = Game::getInstance().getEntities();                      //Get all entities
-  for (auto &entityBag: entities) {                                       //Get one entity
-    for (auto entity : entityBag.second->getCollidables()) {              //Get all the subentities
-      if (entity != this) {                                               //Do not collide with yourself
-        auto aliveEntity = dynamic_cast<Alive *>(entity);                 //Can it be collided with ?
-        if (aliveEntity != nullptr) {
-          for (auto &thisShape: _shapes) {                                //Get the shapes of the projectile
-            for (auto &enemyShape: entity->getShapes()) {                 //Get the shapes of the subentity
-              if (enemyShape.collideWith(thisShape)) {                    //Check collision
-                aliveEntity->takeDamage(PROJECTILE_DAMAGES);              //Deal damage
-                _isDisplayed = false;                                     //Collision, remove projectile
-                _currentHealth = 0;
-                return;
+  static auto lastCheck = -CHECK_COLLISIONS_EVERY / GAME_SPEED;
+  if (Game::getInstance().getTime() - lastCheck > CHECK_COLLISIONS_EVERY / GAME_SPEED) {
+    lastCheck = Game::getInstance().getTime();
+    auto entities = Game::getInstance().getEntities();                      //Get all entities
+    for (auto &entityBag: entities) {                                       //Get one entity
+      for (auto entity : entityBag.second->getCollidables()) {              //Get all the subentities
+        if (entity != this) {                                               //Do not collide with yourself
+          auto aliveEntity = dynamic_cast<Alive *>(entity);                 //Can it be collided with ?
+          if (aliveEntity != nullptr) {
+            for (auto &thisShape: _shapes) {                                //Get the shapes of the projectile
+              for (auto &enemyShape: entity->getShapes()) {                 //Get the shapes of the subentity
+                if (enemyShape.collideWith(thisShape)) {                    //Check collision
+                  aliveEntity->takeDamage(PROJECTILE_DAMAGES);              //Deal damage
+                  _isDisplayed = false;                                     //Collision, remove projectile
+                  _currentHealth = 0;
+                  return;
+                }
               }
             }
           }

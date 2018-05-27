@@ -6,7 +6,7 @@
 #include "includes/Game.hpp"
 
 Pellet::Pellet(float t, Vector3f coordinates, Vector3f angle, float rotation, Color c) : Displayable(coordinates),
-                                                                                         Alive(1),
+                                                                                         Alive(5),
                                                                                          _color(c),
                                                                                          _startT(t),
                                                                                          _radius(0) {
@@ -34,7 +34,7 @@ void Pellet::updateShape() {
   Vertex::Ptr bl = vertices[0][vertices[0].size() - 1];
   Vertex::Ptr br = vertices[0][0];
   triangles.emplace_back(bl, centerBottom, br, Triangle::computeNormal(bl->p, centerBottom->p, br->p));
-  for (int i = 0; i < vertices[0].size() - 1; i++) {
+  for (int i = 0; i < vertices[0].size() - 1; ++i) {
     bl = vertices[0][i];
     br = vertices[0][i + 1];
     triangles.emplace_back(bl, centerBottom, br, Triangle::computeNormal(bl->p, centerBottom->p, br->p));

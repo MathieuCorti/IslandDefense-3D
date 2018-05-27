@@ -25,6 +25,7 @@ add_executable(IslandDefense3D
         srcs/GameUi.cpp
         srcs/includes/GameUi.hpp
         srcs/Shape.cpp
+        srcs/helpers/DefeatScreen.hpp
         srcs/Displayable.cpp
         srcs/Movable.cpp
         srcs/includes/Config.hpp

@@ -25,8 +25,9 @@ public:
 
 private:
   
-  void computeAI();
+  void computeAI(const Vector3f &);
   
   Cannon::Ptr _cannon;
+  float _duration;
 };
 

@@ -24,6 +24,10 @@ public:
 
   void setRotation(float angle);
 
+  void setSpeed(float speed);
+
+  void setVelocity(const Vector3f &);
+
   void setAngle(Vector3f angle);
 
   void update() override;
@@ -32,7 +36,7 @@ public:
 
   void rotation(float angle);
 
-  void blast();
+  void blast(float);
 
   void defend();
 

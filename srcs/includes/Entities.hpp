@@ -37,12 +37,14 @@ public:
     }
   }
 
+  int size() {
+    return static_cast<int>(_entities.size());
+  }
+
   const std::list<Displayable *> &getCollidables() override {
     _collidables.clear();
-    for (auto &entityBag : _entities) {
-      for (auto &entity : entityBag->getCollidables()) {
-        _collidables.push_back(entity);
-      }
+    for (auto entityBag : _entities) {
+      _collidables.push_back(entityBag.get());
     }
     return _collidables;
   }

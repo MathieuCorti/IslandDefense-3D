@@ -15,7 +15,7 @@
 class GameUi : public Displayable {
 
 public:
-  typedef std::vector<std::pair<AlivePtr, Color>> Entities;
+  typedef std::vector<std::pair<AlivePtr, Color> > Entities;
 
   explicit GameUi(Entities &entities);
 

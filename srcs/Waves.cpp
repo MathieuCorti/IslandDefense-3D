@@ -51,7 +51,7 @@ void Waves::update() {
   if (_animate) {
     _vertices.clear();
     float z;
-    for (int i = 0; i <= _tess; i++) {
+    for (int i = 0; i <= _tess; ++i) {
       z = -zmax + i * zStep;
       std::vector<Vertex::Ptr> row;
       for (int j = 0; j <= _tess; j++) {
@@ -66,7 +66,7 @@ void Waves::update() {
     }
 
     _shapes.clear();
-    for (int i = 0; i < _vertices.size() - 1; i++) {
+    for (int i = 0; i < _vertices.size() - 1; ++i) {
       const std::vector<Vertex::Ptr> &pointRow = _vertices[i];
       const std::vector<Vertex::Ptr> &pointUpRow = _vertices[i + 1];
       std::vector<Triangle> parts;

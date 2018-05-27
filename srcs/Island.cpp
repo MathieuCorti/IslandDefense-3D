@@ -23,7 +23,7 @@ void Island::generateTopTriangles(Color color) {
   float zStep = 2 * _zmax / _tess;
 
   float z;
-  for (int i = 0; i <= _tess; i++) {
+  for (int i = 0; i <= _tess; ++i) {
     if (i == 0) {
       z = -_zmax;
       std::vector<Vertex::Ptr> row1;
@@ -72,7 +72,7 @@ void Island::generateTopTriangles(Color color) {
     }
   }
 
-  for (int i = 0; i < _vertices.size() - 1; i++) {
+  for (int i = 0; i < _vertices.size() - 1; ++i) {
     const std::vector<Vertex::Ptr> &pointRow = _vertices[i];
     const std::vector<Vertex::Ptr> &pointUpRow = _vertices[i + 1];
     std::vector<Triangle> parts;

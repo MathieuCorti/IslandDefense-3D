@@ -19,7 +19,7 @@ typedef struct s_vertex {
   Vector3f n;
 } Vertex;
 
-typedef std::vector<std::vector<Vertex::Ptr>> Vertices;
+typedef std::vector<std::vector<Vertex::Ptr> > Vertices;
 
 typedef struct s_triangle {
   s_triangle(Vertex::Ptr v1, Vertex::Ptr v2, Vertex::Ptr v3, Vector3f n) : v1(std::move(v1)),

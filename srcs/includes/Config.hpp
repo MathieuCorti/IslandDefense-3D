@@ -14,10 +14,10 @@
 #define GAME_NAME "Island Defense 3D"
 #define GAME_WIDTH 600
 #define GAME_HEIGHT 600
-#define GAME_SPEED 3
+#define GAME_SPEED 2
 
 // COLLISIONS
-#define CHECK_COLLISIONS_EVERY 0.08f
+#define CHECK_COLLISIONS_EVERY 0.04f
 
 // CAMERA
 #define CAMERA_TRANSLATION_SPEED 1.0f
@@ -26,19 +26,23 @@
 #define CAMERA_Y_ROT_START (-245.0f)
 
 // BOATS
-#define BOAT_SPEED 0.0005f
+#define BOAT_SPEED 0.005f
 #define BOAT_GEN_DELTA 5
 #define NBR_BOATS_PER_GEN 2
 #define BOATS_BASE_HEALTH 1
+#define MAX_BOATS 5
+#define KAMIKAZE 5
 
 // ISLAND
-#define ISLAND_BASE_HEALTH 100
+#define ISLAND_BASE_HEALTH 50
 
 // CANNON
 #define INC_SPEED  float(0.1f)
 #define DEC_SPEED  (-INC_SPEED)
 #define INC_ROTATION  (static_cast<float>(0.05f * 180.0f / M_PI))
 #define DEC_ROTATION  (-INC_ROTATION)
+#define SHOT_TIMER 1.0f
+#define DEFENCE_TIMER 5.0f
 
 // COLORS
 #define BLACK   Color(0, 0, 0)
@@ -46,6 +50,7 @@
 #define YELLOW  Color(255, 255, 0)
 #define ORANGE  Color(1.0f, 0.5f, 0.0f, 1.0f)
 #define GREY    Color(0.75f, 0.75f, 0.75f, 1.0f)
+#define RED     Color(1.0f, 0.0f, 0.0f, 1.0f)
 
 // ENTITIES
 enum GameEntity {

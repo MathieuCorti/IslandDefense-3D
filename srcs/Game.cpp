@@ -14,9 +14,9 @@
 #include "includes/Skybox.hpp"
 #include "includes/Stats.hpp"
 #include "includes/Island.hpp"
-#include "includes/Boat.hpp"
 #include "includes/Light.hpp"
 #include "includes/GameUi.hpp"
+#include "helpers/DefeatScreen.hpp"
 
 // PUBLIC
 int Game::start(int argc, char **argv) {
@@ -45,12 +45,12 @@ void Game::idleFunc() {
 }
 
 bool Game::gameOver() const {
-  return false;
+  return std::dynamic_pointer_cast<Island>(_entities.at(GameEntity::ISLAND))->getCurrentHealth() == 0;
 }
 
 void Game::update() {
   if (gameOver()) {
-    return;
+
   }
 
   updateTime();
@@ -65,7 +65,6 @@ void Game::update() {
       ++it;
     }
   }
-  
 }
 
 void Game::draw() {
@@ -93,6 +92,9 @@ void Game::draw() {
         printf("%s\n", gluErrorString(err));
       }
     }
+  } else {
+    DefeatScreen s("You lost", RED);
+    s.draw();
   }
 
   _frames++;
@@ -199,22 +201,21 @@ void Game::initEntities() {
   _entities.insert(std::make_pair(GameEntity::WAVES, std::make_shared<Waves>()));
   _entities.insert(std::make_pair(GameEntity::SKYBOX, std::make_shared<Skybox>()));
   auto island = std::make_shared<Island>();
-  GameUi::Entities entities = { std::make_pair(std::dynamic_pointer_cast<Alive>(island), GREEN) };
+  GameUi::Entities entities = {std::make_pair(std::dynamic_pointer_cast<Alive>(island), GREEN)};
   _entities.insert(std::make_pair(GameEntity::ISLAND, island));
   _entities.insert(std::make_pair(GameEntity::BOATS, generateBoats()));
   _entities.insert(std::make_pair(GameEntity::UI, std::make_shared<GameUi>(entities)));
-  _entities.insert(std::make_pair(GameEntity::AXES, std::make_shared<Axes>()));
+//  _entities.insert(std::make_pair(GameEntity::AXES, std::make_shared<Axes>()));
 }
 
 std::shared_ptr<Entities<Boat> > Game::generateBoats() {
-  
   static auto boats = std::make_shared<Entities<Boat> >();
   static float lastGeneration = -BOAT_GEN_DELTA;
-  
+
   if (_time -lastGeneration < BOAT_GEN_DELTA) {
     return boats;
   }
-  
+
   lastGeneration = _time;
   std::random_device rd, rdMin, rdx, rdz;
   std::mt19937 gen(rd()), genMin(rdMin()), genX(rdx()), genZ(rdz());
@@ -222,13 +223,13 @@ std::shared_ptr<Entities<Boat> > Game::generateBoats() {
   std::bernoulli_distribution disMinus(0.5);
   std::uniform_real_distribution<float> disColor(0.0f, 1.0f);
 
-  for (int i = 0; i < NBR_BOATS_PER_GEN; ++i) {
+  for (int i = 0; i < NBR_BOATS_PER_GEN && boats->size() < MAX_BOATS; ++i) {
     boats->add(std::make_shared<Boat>(Color(disColor(gen), disColor(gen), disColor(gen), 1.0f),
                                       Vector3f(disMinus(genMin) != 0 ? dis(genX) : -dis(genX),
                                                0.0f,
                                                disMinus(genMin) != 0 ? dis(genZ) : -dis(genZ))));
   }
-  
+
   return boats;
 }
 

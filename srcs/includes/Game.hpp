@@ -26,7 +26,7 @@ class Game {
 
 // TYPEDEFS
 private:
-  typedef std::map<unsigned char, std::function<void(int x, int y)>> KeyboardMap;
+  typedef std::map<unsigned char, std::function<void(int x, int y)> > KeyboardMap;
   typedef std::map<GameEntity, Displayable::Ptr> EntityList;
 
 public:
@@ -42,7 +42,7 @@ public:
   void keyboard(unsigned char key, int x, int y) const;
 
   void mouse(int x, int y);
-  
+
   std::shared_ptr<Entities<Boat> > generateBoats();
 
   void mouseClick(int button, int state);
@@ -115,7 +115,7 @@ private:
 
   template<class T>
   void fire(const GameEntity &entityName) {
-    std::dynamic_pointer_cast<T>(_entities[entityName])->getCannon()->blast();
+    std::dynamic_pointer_cast<T>(_entities[entityName])->getCannon()->blast(1);
   }
 
   template<class T>

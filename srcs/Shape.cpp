@@ -78,23 +78,6 @@ bool Shape::collideWith(BoundingBox other) const {
   
   BoundingBox own = get_boundingBox();
 
-
-//  std::cout << "Own bounding box : " << std::endl;
-//  std::cout << " - vecMax -> x: " << own.vecMax.x << " | y: " << own.vecMax.y << " | z: " << own.vecMax.z << std::endl;
-//  std::cout << " - vecMin -> x: " << own.vecMin.x << " | y: " << own.vecMin.y << " | z: " << own.vecMin.z << std::endl;
-//  std::cout << "Other bounding box : " << std::endl;
-//  std::cout << " - vecMax -> x: " << other.vecMax.x << " | y: " << other.vecMax.y << " | z: " << other.vecMax.z << std::endl;
-//  std::cout << " - vecMin -> x: " << other.vecMin.x << " | y: " << other.vecMin.y << " | z: " << other.vecMin.z << std::endl;
-//  
-//  if (own.vecMax.x > other.vecMin.x &&
-//      own.vecMin.x < other.vecMax.x &&
-//      own.vecMax.y > other.vecMin.y &&
-//      own.vecMin.y < other.vecMax.y &&
-//      own.vecMax.z > other.vecMin.z &&
-//      own.vecMin.z < other.vecMax.z) {
-//    std::cout << "COLLIDE" << std::endl;
-//  }
-  
   // AABBtoAABB
   return(own.vecMax.x > other.vecMin.x &&
          own.vecMin.x < other.vecMax.x &&

@@ -7,6 +7,7 @@
 
 #include "includes/Cannon.hpp"
 #include "includes/Game.hpp"
+#include "includes/Island.hpp"
 
 const float g = -9.8f;
 
@@ -51,7 +52,7 @@ Cannon::Cannon(float speed, float radius, Color color) : _color(color),
   triangles.emplace_back(tr, mr, ml, Triangle::computeNormal(tr->p, mr->p, ml->p));
   triangles.emplace_back(br, centerBottom, bl, Triangle::computeNormal(br->p, centerBottom->p, bl->p));
   triangles.emplace_back(tl, centerTop, tr, Triangle::computeNormal(tl->p, centerTop->p, tr->p));
-  for (int i = 0; i < vertices[0].size() - 1; i++) {
+  for (int i = 0; i < vertices[0].size() - 1; ++i) {
     bl = vertices[0][i];
     br = vertices[0][i + 1];
     ml = vertices[1][i];
@@ -85,11 +86,15 @@ void Cannon::drawTrajectory() const {
 
   glBegin(GL_LINE_STRIP);
   glColor4f(_color.r, _color.g, _color.b, 0.5f);
+
+  static Island::Ptr island = std::dynamic_pointer_cast<Island>(Game::getInstance().getEntities().at(ISLAND));
+  Vector3f islandPos = island->getCoordinates();
   float t = 0;
   for (;;) {
     float x = c.x + _velocity.x * t;
     float y = c.y + _velocity.y * t + g * t * t / 2.0f;
     float z = c.z + _velocity.z * t;
+
     if (y < Waves::computeHeight(x, z) || y > 1 || x < -1 || x > 1 || z < -1 || z > 1) {
       break;
     }
@@ -147,8 +152,8 @@ void Cannon::draw() const {
   _defences.draw();
 }
 
-void Cannon::blast() {
-  if (Game::getInstance().getTime() - _lastFire > 1.0f / GAME_SPEED) {
+void Cannon::blast(float handicap) {
+  if (Game::getInstance().getTime() - _lastFire > SHOT_TIMER / GAME_SPEED * handicap) {
     _lastFire = Game::getInstance().getTime();
     GLfloat rotation1[16], rotation2[16], translation[16], first[16], final[16];
     _coordinates.toTranslationMatrix(translation);
@@ -162,7 +167,7 @@ void Cannon::blast() {
 }
 
 void Cannon::defend() {
-  if (Game::getInstance().getTime() - _lastDefence > 5.0f / GAME_SPEED) {
+  if (Game::getInstance().getTime() - _lastDefence > DEFENCE_TIMER / GAME_SPEED) {
     _lastDefence = Game::getInstance().getTime();
     GLfloat rotation1[16], rotation2[16], translation[16], first[16], final[16];
     _coordinates.toTranslationMatrix(translation);
@@ -196,6 +201,14 @@ void Cannon::setRotation(float rotation) {
   _rotation = _rotation > 180 ? 180 : _rotation;
 }
 
+void Cannon::setSpeed(float speed) {
+  _speed = speed;
+}
+
+void Cannon::setVelocity(const Vector3f &velocity) {
+  _velocity = velocity;
+}
+
 void Cannon::setAngle(Vector3f angle) {
   _angle = angle;
 }
@@ -221,7 +234,6 @@ const std::list<Displayable *> &Cannon::getCollidables() {
   _collidables.clear();
   for (auto e : _defences.getCollidables()) {
     _collidables.push_back(e);
-    std::cout << "lal" << std::endl;
   }
   _collidables.push_back(this);
   return _collidables;
