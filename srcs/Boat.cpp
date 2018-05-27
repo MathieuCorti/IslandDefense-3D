@@ -76,21 +76,28 @@ void Boat::update() {
   _angle.z = static_cast<float>(std::atan(slope) * 180.0f / M_PI);
   _angle.x = -_angle.z;
 
+  computeAI();
+
   GLfloat rotation[16];
   (_angle * (M_PI / 180.0f)).toRotationMatrix(rotation);
 
   _cannon->setCoordinates(_coordinates + Vector3f{0.0f, 0.025f, 0.0f} * rotation);
   _cannon->setAngle(_angle);
   _cannon->update();
-//  computeAI(); // Test
 }
 
 void Boat::computeAI() {
-  static Island::Ptr island =  std::dynamic_pointer_cast<Island>(Game::getInstance().getEntities().at(ISLAND));
-
-  // TODO: Calculate Y angle
+  static Island::Ptr island = std::dynamic_pointer_cast<Island>(Game::getInstance().getEntities().at(ISLAND));
   _coordinates.x -= (_coordinates.x - island->getCoordinates().x) * _speed * 0.01f;
   _coordinates.z -= (_coordinates.z - island->getCoordinates().z) * _speed * 0.01f;
+  Vector3f direction = Vector3f(_coordinates.x - island->getCoordinates().x,
+                                0,
+                                _coordinates.z - island->getCoordinates().z);
+  Vector3f xAxis = Vector3f((island->getCoordinates().x + 1) - island->getCoordinates().x,
+                            0,
+                            island->getCoordinates().z);
+  _angle.y = 180 + static_cast<float>((std::atan2(xAxis.z, xAxis.x) - std::atan2(direction.z, direction.x)) * 180.0f / M_PI);
+  std::cout << _coordinates << std::endl << _angle.y << std::endl << std::endl;
 }
 
 Cannon::Ptr Boat::getCannon() const {

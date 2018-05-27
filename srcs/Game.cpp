@@ -215,7 +215,7 @@ void Game::initEntities() {
   _entities.insert(std::make_pair(GameEntity::ISLAND, island));
   _entities.insert(std::make_pair(GameEntity::BOATS, generateBoats()));
   _entities.insert(std::make_pair(GameEntity::UI, std::make_shared<GameUi>(entities)));
-//  _entities.insert(std::make_pair(GameEntity::AXES, std::make_shared<Axes>()));
+  _entities.insert(std::make_pair(GameEntity::AXES, std::make_shared<Axes>()));
 }
 
 std::shared_ptr<Entities<Boat> > Game::generateBoats() {
