@@ -85,6 +85,29 @@ void Boat::update() {
   _cannon->setAngle(_angle);
   _cannon->update();
   computeAI();
+  
+  // Check collisions
+  static auto lastCheck = -CHECK_COLLISIONS_EVERY;
+  if (Game::getInstance().getTime() - lastCheck < CHECK_COLLISIONS_EVERY) {
+    return;
+  }
+  lastCheck = Game::getInstance().getTime();
+  static auto boats =  std::dynamic_pointer_cast<Entities<Boat> >(Game::getInstance().getEntities().at(BOATS));
+  for (auto entity : boats->getCollidables()) {                         //Get all the subentities
+    if (entity != this) {                                               //Do not collide with yourself
+      auto aliveEntity = dynamic_cast<Alive *>(entity);                 //Can it be collided with ?
+      if (aliveEntity != nullptr) {
+        for (auto &thisShape: _shapes) {                                //Get the shapes of the projectile
+          for (auto &enemyShape: entity->getShapes()) {                 //Get the shapes of the subentity
+            if (enemyShape.collideWith(thisShape)) {                    //Check collision
+              aliveEntity->takeDamage(aliveEntity->getCurrentHealth()); //Deal damage
+              _currentHealth = 0;
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 void Boat::computeAI() {

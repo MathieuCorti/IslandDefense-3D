@@ -83,6 +83,11 @@ void Projectile::update() {
 
   updateShape(0.02f);
 
+  static auto lastCheck = -CHECK_COLLISIONS_EVERY;
+  if (Game::getInstance().getTime() - lastCheck < CHECK_COLLISIONS_EVERY) {
+    return;
+  }
+  lastCheck = Game::getInstance().getTime();
   auto entities = Game::getInstance().getEntities();                      //Get all entities
   for (auto &entityBag: entities) {                                       //Get one entity
     for (auto entity : entityBag.second->getCollidables()) {              //Get all the subentities

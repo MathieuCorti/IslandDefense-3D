@@ -209,9 +209,9 @@ void Game::initEntities() {
 std::shared_ptr<Entities<Boat> > Game::generateBoats() {
   
   static auto boats = std::make_shared<Entities<Boat> >();
-  static float lastGeneration = -5;
+  static float lastGeneration = -BOAT_GEN_DELTA;
   
-  if (_time -lastGeneration < 5) {
+  if (_time -lastGeneration < BOAT_GEN_DELTA) {
     return boats;
   }
   

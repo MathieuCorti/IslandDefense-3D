@@ -16,6 +16,9 @@
 #define GAME_HEIGHT 600
 #define GAME_SPEED 3
 
+// COLLISIONS
+#define CHECK_COLLISIONS_EVERY 0.08f
+
 // CAMERA
 #define CAMERA_TRANSLATION_SPEED 1.0f
 #define CAMERA_ROTATION_SPEED 0.01f
@@ -23,7 +26,8 @@
 #define CAMERA_Y_ROT_START (-245.0f)
 
 // BOATS
-#define BOAT_SPEED 0.0008f
+#define BOAT_SPEED 0.0005f
+#define BOAT_GEN_DELTA 5
 #define NBR_BOATS_PER_GEN 2
 #define BOATS_BASE_HEALTH 1
 
@@ -38,11 +42,8 @@
 
 // COLORS
 #define BLACK   Color(0, 0, 0)
-#define WHITE   Color(255, 255, 255)
-#define RED     Color(255, 0, 0)
 #define GREEN   Color(0, 255, 0)
 #define YELLOW  Color(255, 255, 0)
-#define BLUE    Color(0, 0, 255)
 #define ORANGE  Color(1.0f, 0.5f, 0.0f, 1.0f)
 #define GREY    Color(0.75f, 0.75f, 0.75f, 1.0f)
 
@@ -54,10 +55,8 @@ enum GameEntity {
   AXES,
   SKYBOX,
   BOATS,
-  BOAT1,
-  BOAT2,
   WAVES,
   STATS,
-  UI,
+  UI,                 // SHOULD STAY AT THE END
   GAME_ENTITIES_EOF
 };
