@@ -1,7 +1,11 @@
 # IslandDefense-3D
 C++ - School project - OpenGL/GLUT 3D game.
 
-Includes mouse controls, perlin noise generated island, skybox
+Includes bonus mouse controls, perlin noise generated island and skybox.
+
+## Visuals
+
+![Visuals 01](assets/demo.png)
 
 ## Controls
 
