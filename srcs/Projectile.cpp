@@ -87,15 +87,10 @@ void Projectile::update() {
     for (auto entity : entityBag.second->getCollidables()) {              //Get all the subentities
       if (entity != this) {                                               //Do not collide with yourself
         auto aliveEntity = dynamic_cast<Alive *>(entity);                 //Can it be collided with ?
-        std::cout << "Can it be collided with ?" << std::endl;
         if (aliveEntity != nullptr) {
-          std::cout << "It is alive" << std::endl;
           for (auto &thisShape: _shapes) {                                //Get the shapes of the projectile
-            std::cout << "Get the shapes of the projectile" << std::endl;
             for (auto &enemyShape: entity->getShapes()) {                 //Get the shapes of the subentity
-              std::cout << "Get the shapes of the subentity" << std::endl;
               if (enemyShape.collideWith(thisShape)) {                    //Check collision
-                std::cout << "\n\n\nTOUCHE\n\n\n" << std::endl;
                 aliveEntity->takeDamage(PROJECTILE_DAMAGES);              //Deal damage
                 _isDisplayed = false;                                     //Collision, remove projectile
               }
