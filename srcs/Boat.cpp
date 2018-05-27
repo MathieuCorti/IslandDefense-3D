@@ -76,6 +76,8 @@ void Boat::update() {
   _angle.z = static_cast<float>(std::atan(slope) * 180.0f / M_PI);
   _angle.x = -_angle.z;
 
+  computeAI();
+
   GLfloat rotation[16];
   (_angle * (M_PI / 180.0f)).toRotationMatrix(rotation);
 
@@ -90,6 +92,15 @@ void Boat::computeAI() {
   
   _coordinates.x -= (_coordinates.x - island->getCoordinates().x) * _speed;
   _coordinates.z -= (_coordinates.z - island->getCoordinates().z) * _speed;
+
+  Vector3f direction = Vector3f(_coordinates.x - island->getCoordinates().x,
+                                0,
+                                _coordinates.z - island->getCoordinates().z);
+  Vector3f xAxis = Vector3f((island->getCoordinates().x + 1) - island->getCoordinates().x,
+                            0,
+                            island->getCoordinates().z);
+  _angle.y = 180 + static_cast<float>((std::atan2(xAxis.z, xAxis.x) - std::atan2(direction.z, direction.x)) * 180.0f / M_PI);
+  std::cout << _coordinates << std::endl << _angle.y << std::endl << std::endl;
   
   // Auto destruction
   if (_coordinates.x < 0.2f && _coordinates.x > -0.2f 
