@@ -6,6 +6,7 @@
 //
 
 #include <chrono>
+#include <random>
 #include "includes/Boat.hpp"
 #include "includes/Waves.hpp"
 #include "includes/Game.hpp"
