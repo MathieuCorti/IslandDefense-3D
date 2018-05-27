@@ -87,8 +87,6 @@ void Cannon::drawTrajectory() const {
   glBegin(GL_LINE_STRIP);
   glColor4f(_color.r, _color.g, _color.b, 0.5f);
 
-  static Island::Ptr island = std::dynamic_pointer_cast<Island>(Game::getInstance().getEntities().at(ISLAND));
-  Vector3f islandPos = island->getCoordinates();
   float t = 0;
   for (;;) {
     float x = c.x + _velocity.x * t;

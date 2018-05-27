@@ -17,7 +17,7 @@ Includes bonus mouse controls, perlin noise generated island and skybox.
 | w | forward |
 | s | backward |
 | A | left (speed) |
-| S | right (speed) |
+| D | right (speed) |
 | W | forward (speed) |
 | S | backward (speed) |
 
