@@ -164,7 +164,7 @@ void Game::initKeyboardMap() {
       // GRAPHICAL COMMANDS
       {'n', [this](int, int) { _showNormal = !_showNormal; }},
       {'t', [this](int, int) { _showTangeant = !_showTangeant; }},
-      {'w', [this](int, int) { _showWireframe = !_showWireframe; }},
+      {'i', [this](int, int) { _showWireframe = !_showWireframe; }},
       {'l', [this](int, int) { _showLight = !_showLight; }},
 
       // WAVES COMMANDS
@@ -173,8 +173,8 @@ void Game::initKeyboardMap() {
       {'-', [this](int, int) { halveSegments(GameEntity::WAVES); }},
 
       // ISLAND COMMANDS
-      {'z', [this](int, int) { changeCannonPower<Island>(GameEntity::ISLAND, INC_SPEED); }},
-      {'s', [this](int, int) { changeCannonPower<Island>(GameEntity::ISLAND, DEC_SPEED); }},
+      {'e', [this](int, int) { changeCannonPower<Island>(GameEntity::ISLAND, INC_SPEED); }},
+      {'r', [this](int, int) { changeCannonPower<Island>(GameEntity::ISLAND, DEC_SPEED); }},
       // ISLAND MOUSE COMMANDS ALTERNATIVE
       {'g', [this](int, int) { fire<Island>(GameEntity::ISLAND); }},
       {'b', [this](int, int) { defend<Island>(GameEntity::ISLAND); }},
@@ -205,13 +205,13 @@ void Game::initBlend() {
 }
 
 void Game::initEntities() {
-  auto island = std::make_shared<Island>();
-  GameUi::Entities entities = { std::make_pair(std::dynamic_pointer_cast<Alive>(island), GREEN) };
   _entities.insert(std::make_pair(GameEntity::CAMERA, std::make_shared<Camera>()));
   _entities.insert(std::make_pair(GameEntity::LIGHT, std::make_shared<Light>()));
   _entities.insert(std::make_pair(GameEntity::STATS, std::make_shared<Stats>()));
   _entities.insert(std::make_pair(GameEntity::WAVES, std::make_shared<Waves>()));
   _entities.insert(std::make_pair(GameEntity::SKYBOX, std::make_shared<Skybox>()));
+  auto island = std::make_shared<Island>();
+  GameUi::Entities entities = { std::make_pair(std::dynamic_pointer_cast<Alive>(island), GREEN) };
   _entities.insert(std::make_pair(GameEntity::ISLAND, island));
   _entities.insert(std::make_pair(GameEntity::BOATS, generateBoats()));
   _entities.insert(std::make_pair(GameEntity::AXES, std::make_shared<Axes>()));

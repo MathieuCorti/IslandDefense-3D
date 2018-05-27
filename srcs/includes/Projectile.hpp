@@ -24,7 +24,7 @@ public:
 
   void draw() const override;
 
-  static Shape getCircle(float, Vector3f);
+  void updateShape(float);
 
 private:
   Color _color;

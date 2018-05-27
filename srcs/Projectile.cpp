@@ -20,28 +20,61 @@ Projectile::Projectile(float t, Vector3f coordinates, Vector3f velocity, Color c
   _shapes.push_back(shape);
 }
 
-Shape Projectile::getCircle(float radius, Vector3f center) {
-//  Shape shape;
-//  Vector3f coordinates;
-//
-//  shape._mode = GL_LINE_STRIP;
-//  coordinates.x = static_cast<float>(radius * std::cos(359 * M_PI / 180.0f));
-//  coordinates.y = static_cast<float>(radius * std::sin(359 * M_PI / 180.0f));
-//  coordinates.z = 0;
-//  shape._parts.emplace_back(center.x + coordinates.x, center.y + coordinates.y, center.z + coordinates.z);
-//  for (int j = 0; j < 360; j++) {
-//    coordinates.x = static_cast<float>(radius * std::cos(j * M_PI / 180.0f));
-//    coordinates.y = static_cast<float>(radius * std::sin(j * M_PI / 180.0f));
-//    shape._parts.emplace_back(center.x + coordinates.x, center.y + coordinates.y, center.z + coordinates.z);
-//  }
-//  return shape;
-  return Shape({});
+void Projectile::updateShape(float radius) {
+  Vertices vertices;
+  int numSlices = 20;
+  int numSegments = 20;
+  Vector3f p, n;
+  for (int i = 0; i < numSlices; i++) {
+    std::vector<Vertex::Ptr> points;
+    auto phi = static_cast<float>(i * (2.0f * M_PI / numSlices));
+    for (int j = 0; j < numSegments; j++) {
+      float xzRadius = fabsf(radius * cosf(phi));
+      auto theta = static_cast<float>(j * (2.0f * M_PI / numSegments));
+      p.x = xzRadius * cosf(theta);
+      p.y = radius * sinf(phi);
+      p.z = xzRadius * sinf(theta);
+      float fRcpLen = 1.0f / sqrtf((p.x * p.x) + (p.y * p.y) + (p.z * p.z));
+      n.x = p.x * fRcpLen;
+      n.y = p.y * fRcpLen;
+      n.z = p.z * fRcpLen;
+      points.push_back(std::make_shared<Vertex>(p, n));
+      if (i == 0 || i == numSlices - 1) {
+        break;
+      }
+    }
+    vertices.push_back(points);
+  }
+
+  Triangles triangles;
+  for (int i = 0; i < vertices.size() - 1; i++) {
+    Vertex::Ptr bl = vertices[i][vertices[i].size() - 1];
+    Vertex::Ptr br = vertices[i][0];
+    Vertex::Ptr tl = vertices[i + 1][vertices[i + 1].size() - 1];
+    Vertex::Ptr tr = vertices[i + 1][0];
+    triangles.emplace_back(bl, tl, tr);
+    triangles.emplace_back(tr, br, bl);
+    for (int j = 0; j < vertices[i].size() - 1; j++) {
+      bl = vertices[i][vertices[i].size() == 1 ? 0 : j];
+      br = vertices[i][vertices[i].size() == 1 ? 0 : j + 1];
+      tl = vertices[i + 1][vertices[i + 1].size() == 1 ? 0 : j];
+      tr = vertices[i + 1][vertices[i + 1].size() == 1 ? 0 : j + 1];
+      triangles.emplace_back(bl, tl, tr);
+      triangles.emplace_back(tr, br, bl);
+    }
+  }
+
+  Shape shape = Shape(triangles, GL_TRIANGLES, _color);
+  _shapes.clear();
+  _shapes.emplace_back(shape);
 }
 
 void Projectile::update() {
   if (getCurrentHealth() == 0) {
     return;
   }
+
+  updateShape(0.02f);
 
   float t = Game::getInstance().getTime() - _startT;
   _coordinates.x = _start.x + _velocity.x * t;
@@ -56,7 +89,7 @@ void Projectile::update() {
         auto aliveEntity = dynamic_cast<Alive *>(entity);                 //Can it be collided with ?
         std::cout << "Can it be collided with ?" << std::endl;
         if (aliveEntity != nullptr) {
-          std::cout << "It is alive" << std::endl;  
+          std::cout << "It is alive" << std::endl;
           for (auto &thisShape: _shapes) {                                //Get the shapes of the projectile
             std::cout << "Get the shapes of the projectile" << std::endl;
             for (auto &enemyShape: entity->getShapes()) {                 //Get the shapes of the subentity
@@ -101,9 +134,7 @@ void Projectile::draw() const {
   glEnable(GL_BLEND);
   glPushMatrix();
   glTranslatef(_coordinates.x, _coordinates.y, _coordinates.z);
-  //TODO : get circle
-  glColor4f(_color.r, _color.g, _color.b, _color.a);
-  glutSolidSphere(0.01f * 2.0f, 20, 20);
+  Displayable::draw();
   glPopMatrix();
   glDisable(GL_BLEND);
 

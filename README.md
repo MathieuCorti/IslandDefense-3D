@@ -25,8 +25,8 @@ C++ - School project - OpenGL/GLUT 3D game.
 ### Island
 |  Key   |   Action    |
 | ------ | ----------- |
-| z | increase cannon speed |
-| s | decrease cannon speed |
+| e | increase cannon speed |
+| r | decrease cannon speed |
 | g | fire |
 | b | defend |
 | h | change cannon direction (increase rotation) |
@@ -38,7 +38,7 @@ C++ - School project - OpenGL/GLUT 3D game.
 | ------ | ----------- |
 | n | toggle normals |
 | t | toggle tangeants |
-| w | toggle wireframe |
+| i | toggle wireframe |
 | l | show light |
 
 ### General
